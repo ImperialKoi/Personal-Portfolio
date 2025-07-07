@@ -1,17 +1,30 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface EditorProps {
   content: string;
   fileName: string;
 }
 
+// Track which files have been animated before
+const animatedFiles = new Set<string>();
+
 export const Editor = ({ content, fileName }: EditorProps) => {
   const [displayedContent, setDisplayedContent] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    // Reset when file changes
+    // Check if this file has been animated before
+    const hasBeenAnimated = animatedFiles.has(fileName);
+    
+    if (hasBeenAnimated) {
+      // Show content immediately without animation
+      setDisplayedContent(content);
+      setIsTyping(false);
+      return;
+    }
+    
+    // First time seeing this file - run typing animation
     setDisplayedContent('');
     setIsTyping(true);
     
@@ -29,6 +42,8 @@ export const Editor = ({ content, fileName }: EditorProps) => {
         timeoutId = setTimeout(typeContent, Math.random() * 20 + 5);
       } else {
         setIsTyping(false);
+        // Mark this file as having been animated
+        animatedFiles.add(fileName);
       }
     };
 
@@ -39,7 +54,7 @@ export const Editor = ({ content, fileName }: EditorProps) => {
       clearTimeout(timer);
       clearTimeout(timeoutId);
     };
-  }, [content]);
+  }, [content, fileName]);
 
   const getLanguageFromExtension = (fileName: string) => {
     const ext = fileName.split('.').pop()?.toLowerCase();
