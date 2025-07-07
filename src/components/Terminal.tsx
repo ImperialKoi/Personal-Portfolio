@@ -238,7 +238,7 @@ export const Terminal = ({ onToggle }: TerminalProps) => {
       {/* Terminal Content */}
       <div 
         ref={terminalRef}
-        className="flex-1 p-4 overflow-y-auto text-sm font-mono"
+        className="h-64 p-4 overflow-y-auto text-sm font-mono"
       >
         {history.map((line, index) => (
           <div 

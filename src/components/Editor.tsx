@@ -6,25 +6,26 @@ interface EditorProps {
   fileName: string;
 }
 
-// Track which files have been animated before
-const animatedFiles = new Set<string>();
+// Track which files have been seen before (even partially)
+const seenFiles = new Set<string>();
 
 export const Editor = ({ content, fileName }: EditorProps) => {
   const [displayedContent, setDisplayedContent] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    // Check if this file has been animated before
-    const hasBeenAnimated = animatedFiles.has(fileName);
+    // Check if this file has been seen before
+    const hasBeenSeen = seenFiles.has(fileName);
     
-    if (hasBeenAnimated) {
+    if (hasBeenSeen) {
       // Show content immediately without animation
       setDisplayedContent(content);
       setIsTyping(false);
       return;
     }
     
-    // First time seeing this file - run typing animation
+    // First time seeing this file - mark as seen and run typing animation
+    seenFiles.add(fileName);
     setDisplayedContent('');
     setIsTyping(true);
     
@@ -42,8 +43,6 @@ export const Editor = ({ content, fileName }: EditorProps) => {
         timeoutId = setTimeout(typeContent, Math.random() * 20 + 5);
       } else {
         setIsTyping(false);
-        // Mark this file as having been animated
-        animatedFiles.add(fileName);
       }
     };
 
