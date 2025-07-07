@@ -17,18 +17,28 @@ export const Editor = ({ content, fileName }: EditorProps) => {
     
     // Typing animation
     let index = 0;
+    let timeoutId: NodeJS.Timeout;
+    let isCancelled = false;
+    
     const typeContent = () => {
+      if (isCancelled) return;
+      
       if (index < content.length) {
         setDisplayedContent(content.substring(0, index + 1));
         index++;
-        setTimeout(typeContent, Math.random() * 20 + 5); // Variable speed for realism
+        timeoutId = setTimeout(typeContent, Math.random() * 20 + 5);
       } else {
         setIsTyping(false);
       }
     };
 
     const timer = setTimeout(typeContent, 100);
-    return () => clearTimeout(timer);
+    
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+      clearTimeout(timeoutId);
+    };
   }, [content]);
 
   const getLanguageFromExtension = (fileName: string) => {
