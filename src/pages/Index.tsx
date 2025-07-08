@@ -6,6 +6,7 @@ import { Editor } from '@/components/Editor';
 import { StatusBar } from '@/components/StatusBar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 export type FileType = {
   name: string;
@@ -145,15 +146,19 @@ const skills = {
             onTabClose={closeTab}
           />
           
-          <div className="flex-1 flex flex-col">
-            <div className={`flex-1 ${showTerminal ? 'h-2/3' : 'h-full'}`}>
+          <div className="flex-1">
+            {showTerminal ? (
+              <ResizablePanelGroup direction="vertical" className="h-full">
+                <ResizablePanel defaultSize={70} minSize={30}>
+                  <Editor content={activeTab?.content || ''} fileName={activeFile} />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel defaultSize={30} minSize={20}>
+                  <Terminal onToggle={() => setShowTerminal(!showTerminal)} />
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            ) : (
               <Editor content={activeTab?.content || ''} fileName={activeFile} />
-            </div>
-            
-            {showTerminal && (
-              <div className="h-1/3 border-t border-[#2d2d30]">
-                <Terminal onToggle={() => setShowTerminal(!showTerminal)} />
-              </div>
             )}
           </div>
         </div>
