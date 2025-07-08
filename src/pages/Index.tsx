@@ -6,6 +6,7 @@ import { Editor } from '@/components/Editor';
 import { StatusBar } from '@/components/StatusBar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
+import { BootSequence } from '@/components/BootSequence';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 export type FileType = {
@@ -24,6 +25,7 @@ export type TabType = {
 };
 
 const Index = () => {
+  const [isBooting, setIsBooting] = useState(true);
   const [activeFile, setActiveFile] = useState<string>('about.md');
   const [showTerminal, setShowTerminal] = useState(true);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
@@ -112,8 +114,12 @@ const skills = {
 
   const activeTab = tabs.find(t => t.id === activeFile);
 
+  if (isBooting) {
+    return <BootSequence onBootComplete={() => setIsBooting(false)} />;
+  }
+
   return (
-    <div className="h-screen bg-[#1e1e1e] text-[#d4d4d4] flex flex-col font-mono overflow-hidden">
+    <div className="h-screen bg-[#1e1e1e] text-[#d4d4d4] flex flex-col font-mono overflow-hidden animate-fade-in">
       {/* Title Bar */}
       <div className="h-8 bg-[#323233] flex items-center px-4 text-sm border-b border-[#2d2d30]">
         <div className="flex items-center space-x-2">
