@@ -5,7 +5,7 @@ import { FileType } from '@/pages/Index';
 
 interface FileExplorerProps {
   files: FileType[];
-  onFileSelect: (fileName: string, content: string) => void;
+  onFileSelect: (fileName: string, content: string, projectUrl?: string) => void;
   activeFile?: string;
 }
 
@@ -35,7 +35,7 @@ const getFileIcon = (extension: string = '') => {
 
 const FileItem = ({ file, onFileSelect, activeFile, level = 0 }: {
   file: FileType;
-  onFileSelect: (fileName: string, content: string) => void;
+  onFileSelect: (fileName: string, content: string, projectUrl?: string) => void;
   activeFile?: string;
   level?: number;
 }) => {
@@ -46,7 +46,7 @@ const FileItem = ({ file, onFileSelect, activeFile, level = 0 }: {
       setIsOpen(!isOpen);
     } else {
       const content = getFileContent(file.name);
-      onFileSelect(file.name, content);
+      onFileSelect(file.name, content, file.url);
     }
   };
 

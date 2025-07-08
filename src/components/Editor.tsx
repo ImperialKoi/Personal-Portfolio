@@ -1,17 +1,23 @@
 
 import { useState, useEffect, useRef } from 'react';
+import { ProjectPreview } from './ProjectPreview';
 
 interface EditorProps {
   content: string;
   fileName: string;
+  projectUrl?: string;
 }
 
 // Track which files have been seen before (even partially)
 const seenFiles = new Set<string>();
 
-export const Editor = ({ content, fileName }: EditorProps) => {
+export const Editor = ({ content, fileName, projectUrl }: EditorProps) => {
   const [displayedContent, setDisplayedContent] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  // Check if this is a project file that should show preview
+  const isProjectFile = fileName.includes('.js') || fileName.includes('.tsx') || fileName.includes('.py');
+  const shouldShowPreview = isProjectFile && projectUrl;
 
   useEffect(() => {
     // Check if this file has been seen before
@@ -150,6 +156,20 @@ export const Editor = ({ content, fileName }: EditorProps) => {
   const language = getLanguageFromExtension(fileName);
   const formattedContent = formatContent(displayedContent, language);
 
+  // Show project preview for project files with URLs
+  if (shouldShowPreview) {
+    const projectData = getProjectData(fileName);
+    return (
+      <ProjectPreview
+        projectName={projectData.name}
+        websiteUrl={projectUrl}
+        summary={projectData.summary}
+        technologies={projectData.technologies}
+        description={projectData.description}
+      />
+    );
+  }
+
   return (
     <div className="h-full bg-[#1e1e1e] text-[#d4d4d4] font-mono text-sm overflow-auto">
       <div className="p-4">
@@ -174,4 +194,58 @@ export const Editor = ({ content, fileName }: EditorProps) => {
       </div>
     </div>
   );
+
+  function getProjectData(fileName: string) {
+    const projectMap: Record<string, any> = {
+      'ecommerce-app.js': {
+        name: 'E-commerce Application',
+        summary: `A full-featured e-commerce platform built with React and Node.js.
+
+Features:
+• Product catalog with search and filtering
+• Shopping cart and checkout process
+• User authentication and profiles
+• Payment integration with Stripe
+• Admin dashboard for product management
+• Real-time inventory tracking`,
+        technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Stripe', 'JWT'],
+        description: 'A comprehensive e-commerce solution providing seamless shopping experience with modern web technologies and secure payment processing.'
+      },
+      'weather-dashboard.tsx': {
+        name: 'Weather Dashboard',
+        summary: `Real-time weather monitoring application with interactive charts.
+
+Features:
+• Current weather conditions
+• 7-day forecast with hourly details
+• Interactive weather maps
+• Location-based weather alerts
+• Historical weather data visualization
+• Responsive design for mobile and desktop`,
+        technologies: ['React', 'TypeScript', 'Chart.js', 'OpenWeather API', 'Tailwind CSS'],
+        description: 'An intuitive weather dashboard that provides comprehensive weather information with beautiful visualizations and real-time updates.'
+      },
+      'task-manager.py': {
+        name: 'Task Management System',
+        summary: `Python-based task management system with CLI interface.
+
+Features:
+• Create, edit, and delete tasks
+• Priority levels and due dates
+• Category-based organization
+• Progress tracking and reports
+• Export tasks to various formats
+• Team collaboration features`,
+        technologies: ['Python', 'SQLite', 'Click', 'Pandas', 'Rich'],
+        description: 'A powerful command-line task management system designed for developers and teams who prefer terminal-based workflows.'
+      }
+    };
+
+    return projectMap[fileName] || {
+      name: fileName,
+      summary: 'Project details not available.',
+      technologies: [],
+      description: 'No description available.'
+    };
+  }
 };

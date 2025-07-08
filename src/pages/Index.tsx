@@ -15,6 +15,7 @@ export type FileType = {
   content?: string;
   children?: FileType[];
   extension?: string;
+  url?: string;
 };
 
 export type TabType = {
@@ -22,6 +23,7 @@ export type TabType = {
   name: string;
   content: string;
   isDirty?: boolean;
+  projectUrl?: string;
 };
 
 const Index = () => {
@@ -63,8 +65,8 @@ const skills = {
           name: 'projects',
           type: 'folder',
           children: [
-            { name: 'ecommerce-app.js', type: 'file', extension: 'js' },
-            { name: 'weather-dashboard.tsx', type: 'file', extension: 'tsx' },
+            { name: 'ecommerce-app.js', type: 'file', extension: 'js', url: 'https://shopify.com' },
+            { name: 'weather-dashboard.tsx', type: 'file', extension: 'tsx', url: 'https://weather.com' },
             { name: 'task-manager.py', type: 'file', extension: 'py' },
           ]
         },
@@ -97,10 +99,10 @@ const skills = {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const openFile = (fileName: string, content: string) => {
+  const openFile = (fileName: string, content: string, projectUrl?: string) => {
     setActiveFile(fileName);
     if (!tabs.find(t => t.id === fileName)) {
-      setTabs(prev => [...prev, { id: fileName, name: fileName, content }]);
+      setTabs(prev => [...prev, { id: fileName, name: fileName, content, projectUrl }]);
     }
   };
 
@@ -156,7 +158,7 @@ const skills = {
             {showTerminal ? (
               <ResizablePanelGroup direction="vertical" className="h-full">
                 <ResizablePanel defaultSize={70} minSize={30}>
-                  <Editor content={activeTab?.content || ''} fileName={activeFile} />
+                  <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={30} minSize={20}>
@@ -164,7 +166,7 @@ const skills = {
                 </ResizablePanel>
               </ResizablePanelGroup>
             ) : (
-              <Editor content={activeTab?.content || ''} fileName={activeFile} />
+              <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} />
             )}
           </div>
         </div>
