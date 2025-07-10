@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 interface BootSequenceProps {
-  onBootComplete: () => void;
+  onBootComplete: (mode?: 'default' | 'simple') => void;
 }
 
 const bootMessages = [
@@ -57,21 +57,37 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
     }, 500);
 
     // Allow user to skip by pressing any key
-    const handleKeyPress = () => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (isComplete) {
-        onBootComplete();
+        if (e.key === 't' || e.key === 'T') {
+          onBootComplete('default');
+        } else if (e.key === 's' || e.key === 'S') {
+          onBootComplete('simple');
+        } else {
+          onBootComplete('default');
+        }
+      } else if (e.key === 't' || e.key === 'T') {
+        onBootComplete('default');
+      } else if (e.key === 's' || e.key === 'S') {
+        onBootComplete('simple');
+      }
+    };
+
+    const handleClick = () => {
+      if (isComplete) {
+        onBootComplete('default');
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
-    window.addEventListener('click', handleKeyPress);
+    window.addEventListener('click', handleClick);
 
     return () => {
       clearTimeout(initialDelay);
       clearTimeout(timeoutId);
       clearInterval(cursorInterval);
       window.removeEventListener('keydown', handleKeyPress);
-      window.removeEventListener('click', handleKeyPress);
+      window.removeEventListener('click', handleClick);
     };
   }, [onBootComplete, isComplete]);
 
@@ -90,7 +106,7 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
       
       {isComplete && (
         <div className="fixed bottom-8 left-8 right-8 text-center text-green-300 animate-pulse">
-          Click anywhere or press any key to continue...
+          Press 'T' for Portfolio IDE or 'S' for Simple Mode...
         </div>
       )}
     </div>

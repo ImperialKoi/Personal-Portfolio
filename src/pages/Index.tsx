@@ -8,6 +8,8 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
 import { BootSequence } from '@/components/BootSequence';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Simple from '@/pages/Simple';
 
 export type FileType = {
   name: string;
@@ -26,10 +28,8 @@ export type TabType = {
   projectUrl?: string;
 };
 
-const Index = () => {
-  const [isBooting, setIsBooting] = useState(true);
+const PortfolioIDE = () => {
   const [activeFile, setActiveFile] = useState<string>('about.md');
-  const [showTerminal, setShowTerminal] = useState(true);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [tabs, setTabs] = useState<TabType[]>([
     { id: 'about.md', name: 'about.md', content: `# Hello! I'm Jane Doe 👋
@@ -134,9 +134,6 @@ const skills = {
 
   const activeTab = tabs.find(t => t.id === activeFile);
 
-  if (isBooting) {
-    return <BootSequence onBootComplete={() => setIsBooting(false)} />;
-  }
 
   return (
     <div className="h-screen bg-[#1e1e1e] text-[#d4d4d4] flex flex-col font-mono overflow-hidden animate-fade-in">
@@ -173,27 +170,23 @@ const skills = {
           />
           
           <div className="flex-1">
-            {showTerminal ? (
-              <ResizablePanelGroup direction="vertical" className="h-full">
-                <ResizablePanel defaultSize={70} minSize={30}>
-                  <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} />
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={30} minSize={20}>
-                  <Terminal onToggle={() => setShowTerminal(!showTerminal)} />
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            ) : (
-              <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} />
-            )}
+            <ResizablePanelGroup direction="vertical" className="h-full">
+              <ResizablePanel defaultSize={70} minSize={30}>
+                <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} />
+              </ResizablePanel>
+              <ResizableHandle withHandle />
+              <ResizablePanel defaultSize={30} minSize={20}>
+                <Terminal onToggle={() => {}} activeFile={activeFile} fileContent={activeTab?.content} />
+              </ResizablePanel>
+            </ResizablePanelGroup>
           </div>
         </div>
       </div>
 
       <StatusBar 
         activeFile={activeFile}
-        onTerminalToggle={() => setShowTerminal(!showTerminal)}
-        terminalVisible={showTerminal}
+        onTerminalToggle={() => {}}
+        terminalVisible={true}
       />
 
       {showCommandPalette && (
@@ -209,4 +202,33 @@ const skills = {
   );
 };
 
-export default Index;
+const Index = () => {
+  const [isBooting, setIsBooting] = useState(true);
+  const navigate = useNavigate();
+
+  const handleBootComplete = (mode: 'default' | 'simple' = 'default') => {
+    setIsBooting(false);
+    if (mode === 'simple') {
+      navigate('/simple');
+    }
+  };
+
+  if (isBooting) {
+    return <BootSequence onBootComplete={handleBootComplete} />;
+  }
+
+  return <PortfolioIDE />;
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/simple" element={<Simple />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
