@@ -65,9 +65,27 @@ const skills = {
           name: 'projects',
           type: 'folder',
           children: [
-            { name: 'ecommerce-app.js', type: 'file', extension: 'js', url: 'https://shopify.com' },
-            { name: 'weather-dashboard.tsx', type: 'file', extension: 'tsx', url: 'https://weather.com' },
-            { name: 'task-manager.py', type: 'file', extension: 'py' },
+            {
+              name: 'ecommerce-app',
+              type: 'folder',
+              children: [
+                { name: 'ecommerce-app.js', type: 'file', extension: 'js', url: 'https://shopify.com' }
+              ]
+            },
+            {
+              name: 'weather-dashboard',
+              type: 'folder',
+              children: [
+                { name: 'weather-dashboard.tsx', type: 'file', extension: 'tsx', url: 'https://weather.com' }
+              ]
+            },
+            {
+              name: 'task-manager',
+              type: 'folder',
+              children: [
+                { name: 'task-manager.py', type: 'file', extension: 'py' }
+              ]
+            }
           ]
         },
         {
