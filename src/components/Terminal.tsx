@@ -9,11 +9,13 @@ interface TerminalProps {
 }
 
 export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) => {
-  const [output, setOutput] = useState<string[]>([
+  const initialLines = [
     'Jane Doe Portfolio Terminal v1.0.0',
     'Type "help" for available commands',
     ''
-  ]);
+  ];
+  const [output, setOutput] = useState<string[]>([]);
+  const [displayedOutput, setDisplayedOutput] = useState<string[]>([]);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -65,6 +67,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
     ],
     clear: () => {
       setOutput([]);
+      setDisplayedOutput([]);
       return [];
     },
     whoami: () => ['jane-doe'],
@@ -132,11 +135,47 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
     }
   };
 
+  // Initial typing animation for terminal startup
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    let currentIndex = 0;
+
+    const typeNextLine = () => {
+      if (currentIndex < initialLines.length) {
+        setOutput(prev => [...prev, initialLines[currentIndex]]);
+        currentIndex++;
+        timeoutId = setTimeout(typeNextLine, 500);
+      }
+    };
+
+    typeNextLine();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // Animate output display
+  useEffect(() => {
+    if (output.length === 0) {
+      setDisplayedOutput([]);
+      return;
+    }
+
+    if (displayedOutput.length < output.length) {
+      const timeoutId = setTimeout(() => {
+        setDisplayedOutput(output.slice(0, displayedOutput.length + 1));
+      }, 50);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [output, displayedOutput.length]);
+
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
-  }, [output]);
+  }, [displayedOutput]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -177,7 +216,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
         ref={outputRef}
         className="flex-1 p-4 overflow-y-auto font-mono text-sm"
       >
-        {output.map((line, index) => (
+        {displayedOutput.map((line, index) => (
           <div key={index} className="whitespace-pre-wrap">
             {line}
           </div>
