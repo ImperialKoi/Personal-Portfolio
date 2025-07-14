@@ -56,13 +56,15 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
   const commands = {
     help: () => [
       'Available commands:',
-      '  help     - Show this help message',
-      '  clear    - Clear the terminal',
-      '  whoami   - Display current user',
-      '  date     - Show current date and time',
-      '  echo     - Echo text back',
-      '  ls       - List portfolio contents',
-      '  run      - Run the current Python file',
+      '  help        - Show this help message',
+      '  clear       - Clear the terminal',
+      '  date        - Show current date and time',
+      '  echo        - Echo text back',
+      '  ls          - List portfolio contents',
+      '  run         - Run the current Python file',
+      '  snake       - Play Snake game',
+      '  projects    - Show project overview',
+      '  resume      - Download resume',
       ''
     ],
     clear: () => {
@@ -70,7 +72,6 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       setDisplayedOutput([]);
       return [];
     },
-    whoami: () => ['jane-doe'],
     date: () => [new Date().toString()],
     echo: (args: string[]) => [args.join(' ')],
     ls: () => [
@@ -81,6 +82,103 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       'contact.json',
       ''
     ],
+    snake: () => {
+      return [
+        '🐍 SNAKE GAME',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        '┌────────────────────────────────────┐',
+        '│  ●●●○                              │',
+        '│                                    │',
+        '│                                    │',
+        '│              ◉                     │',
+        '│                                    │',
+        '│                                    │',
+        '│                                    │',
+        '└────────────────────────────────────┘',
+        '',
+        'Score: 3  |  High Score: 127',
+        'Use WASD or arrow keys to move',
+        'Press SPACE to pause, ESC to quit',
+        '',
+        'Game Over! Snake ate its tail.',
+        'Thanks for playing! 🎮',
+        ''
+      ];
+    },
+    projects: () => [
+      '📁 PROJECT PORTFOLIO',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '',
+      '🌐 E-Commerce Platform',
+      '   Tech: React, Node.js, MongoDB, Stripe',
+      '   Full-stack e-commerce with payment processing',
+      '',
+      '📊 Task Manager Pro',
+      '   Tech: Python, Django, PostgreSQL, Redis',
+      '   Advanced project management with real-time collaboration',
+      '',
+      '🌤️  Weather Dashboard',
+      '   Tech: React, TypeScript, OpenWeather API',
+      '   Interactive weather forecasting with data visualization',
+      '',
+      '🤖 AI Chat Assistant',
+      '   Tech: Python, FastAPI, OpenAI GPT, WebSockets',
+      '   Intelligent chatbot with context awareness',
+      '',
+      '📱 Mobile Fitness Tracker',
+      '   Tech: React Native, Firebase, Health APIs',
+      '   Cross-platform fitness tracking and goal setting',
+      '',
+      'Total Projects: 15+ | Years of Experience: 5+',
+      'GitHub: github.com/janedoe | Portfolio: janedoe.dev',
+      ''
+    ],
+    resume: () => {
+      // Create a fake resume blob and trigger download
+      const resumeContent = `
+JANE DOE
+Software Engineer & Full-Stack Developer
+Email: jane.doe@email.com | Phone: (555) 123-4567
+GitHub: github.com/janedoe | LinkedIn: linkedin.com/in/janedoe
+
+EXPERIENCE
+Senior Software Engineer | TechCorp Inc. | 2022-Present
+• Led development of microservices architecture serving 1M+ users
+• Implemented CI/CD pipelines reducing deployment time by 60%
+• Mentored team of 5 junior developers
+
+Full-Stack Developer | StartupXYZ | 2020-2022
+• Built scalable web applications using React, Node.js, and AWS
+• Optimized database queries improving response time by 40%
+• Collaborated with cross-functional teams on product roadmap
+
+EDUCATION
+Bachelor of Science in Computer Science | State University | 2020
+• Magna Cum Laude, GPA: 3.8/4.0
+• Relevant Coursework: Data Structures, Algorithms, Database Systems
+
+SKILLS
+Languages: JavaScript, Python, TypeScript, Java, SQL
+Frameworks: React, Node.js, Django, Express, Next.js
+Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
+      `;
+      
+      const blob = new Blob([resumeContent], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'jane_doe_resume.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      return [
+        '📄 Downloading resume...',
+        'jane_doe_resume.txt saved to Downloads folder',
+        ''
+      ];
+    },
     run: () => {
       if (activeFile?.endsWith('.py') && fileContent) {
         runPythonCode(fileContent);
