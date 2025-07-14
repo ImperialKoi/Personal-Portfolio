@@ -280,7 +280,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     }
   }, []);
 
-  // Update snake game display
+  // Update snake game display and auto-exit on game over
   useEffect(() => {
     if (isSnakeMode) {
       const gameLines = snakeGame.renderGame();
@@ -291,6 +291,13 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         }
         return [...prev, ...gameLines, ''];
       });
+      
+      // Auto-exit when game is over
+      if (snakeGame.gameState.gameOver) {
+        setTimeout(() => {
+          setIsSnakeMode(false);
+        }, 3000); // Wait 3 seconds before exiting
+      }
     }
   }, [isSnakeMode, snakeGame.gameState]);
 

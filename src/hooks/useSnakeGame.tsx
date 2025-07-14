@@ -12,9 +12,10 @@ interface GameState {
   gameOver: boolean;
   score: number;
   isPlaying: boolean;
+  highScore: number;
 }
 
-const BOARD_WIDTH = 20;
+const BOARD_WIDTH = 38;
 const BOARD_HEIGHT = 10;
 const INITIAL_SNAKE = [{ x: 10, y: 5 }];
 const INITIAL_FOOD = { x: 15, y: 5 };
@@ -27,6 +28,7 @@ export const useSnakeGame = () => {
     gameOver: false,
     score: 0,
     isPlaying: false,
+    highScore: 0,
   });
 
   const generateFood = useCallback((snake: Position[]): Position => {
@@ -64,12 +66,14 @@ export const useSnakeGame = () => {
 
       // Check wall collision
       if (newHead.x < 0 || newHead.x >= BOARD_WIDTH || newHead.y < 0 || newHead.y >= BOARD_HEIGHT) {
-        return { ...prev, gameOver: true, isPlaying: false };
+        const newHighScore = Math.max(prev.score, prev.highScore);
+        return { ...prev, gameOver: true, isPlaying: false, highScore: newHighScore };
       }
 
       // Check self collision
       if (prev.snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
-        return { ...prev, gameOver: true, isPlaying: false };
+        const newHighScore = Math.max(prev.score, prev.highScore);
+        return { ...prev, gameOver: true, isPlaying: false, highScore: newHighScore };
       }
 
       const newSnake = [newHead, ...prev.snake];
@@ -127,25 +131,27 @@ export const useSnakeGame = () => {
   }, []);
 
   const startGame = useCallback(() => {
-    setGameState({
+    setGameState(prev => ({
       snake: INITIAL_SNAKE,
       food: INITIAL_FOOD,
       direction: 'RIGHT',
       gameOver: false,
       score: 0,
       isPlaying: true,
-    });
+      highScore: prev.highScore,
+    }));
   }, []);
 
   const resetGame = useCallback(() => {
-    setGameState({
+    setGameState(prev => ({
       snake: INITIAL_SNAKE,
       food: INITIAL_FOOD,
       direction: 'RIGHT',
       gameOver: false,
       score: 0,
       isPlaying: false,
-    });
+      highScore: prev.highScore,
+    }));
   }, []);
 
   const renderGame = useCallback(() => {
@@ -170,14 +176,18 @@ export const useSnakeGame = () => {
       ...board.map(row => `│${row.join('')}│`),
       '└────────────────────────────────────────┘',
       '',
-      `Score: ${gameState.score}`,
+      `Score: ${gameState.score} | High Score: ${gameState.highScore}`,
       gameState.isPlaying ? 'Use WASD or arrow keys to move' : 'Press SPACE to start/pause',
       'Press ESC to quit',
       '',
     ];
 
     if (gameState.gameOver) {
-      lines.push('💀 Game Over! Press "snake" to play again.');
+      lines.push(`💀 Game Over! Final Score: ${gameState.score}`);
+      if (gameState.score === gameState.highScore && gameState.score > 0) {
+        lines.push('🏆 NEW HIGH SCORE! 🏆');
+      }
+      lines.push('Press "snake" to play again.');
     }
 
     return lines;
