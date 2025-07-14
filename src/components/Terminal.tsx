@@ -232,6 +232,24 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     }
   };
 
+  // Add global keyboard listener for snake game
+  useEffect(() => {
+    if (!isSnakeMode) return;
+
+    const handleGlobalKeyPress = (e: KeyboardEvent) => {
+      e.preventDefault();
+      snakeGame.handleKeyPress(e.key);
+      
+      if (e.key === 'Escape') {
+        setIsSnakeMode(false);
+        snakeGame.resetGame();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyPress);
+    return () => window.removeEventListener('keydown', handleGlobalKeyPress);
+  }, [isSnakeMode, snakeGame]);
+
   // Initial typing animation for terminal startup
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -252,8 +270,13 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     };
   }, []);
 
-  // Animate output display
+  // Animate output display (skip animation in snake mode for better performance)
   useEffect(() => {
+    if (isSnakeMode) {
+      setDisplayedOutput(output);
+      return;
+    }
+
     if (output.length === 0) {
       setDisplayedOutput([]);
       return;
@@ -266,7 +289,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
 
       return () => clearTimeout(timeoutId);
     }
-  }, [output, displayedOutput.length]);
+  }, [output, displayedOutput.length, isSnakeMode]);
 
   useEffect(() => {
     if (outputRef.current) {
@@ -287,9 +310,9 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       setOutput(prev => {
         const lastCommandIndex = prev.lastIndexOf('$ snake');
         if (lastCommandIndex !== -1) {
-          return [...prev.slice(0, lastCommandIndex + 1), '', ...gameLines, ''];
+          return [...prev.slice(0, lastCommandIndex + 1), '', ...gameLines];
         }
-        return [...prev, ...gameLines, ''];
+        return [...gameLines];
       });
       
       // Auto-exit when game is over
@@ -300,6 +323,26 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       }
     }
   }, [isSnakeMode, snakeGame.gameState]);
+
+  // Separate effect to handle real-time snake game updates
+  useEffect(() => {
+    if (!isSnakeMode) return;
+    
+    const interval = setInterval(() => {
+      if (snakeGame.gameState.isPlaying && !snakeGame.gameState.gameOver) {
+        const gameLines = snakeGame.renderGame();
+        setOutput(prev => {
+          const lastCommandIndex = prev.lastIndexOf('$ snake');
+          if (lastCommandIndex !== -1) {
+            return [...prev.slice(0, lastCommandIndex + 1), '', ...gameLines];
+          }
+          return [...gameLines];
+        });
+      }
+    }, 50); // Update display every 50ms for smooth animation
+    
+    return () => clearInterval(interval);
+  }, [isSnakeMode, snakeGame]);
 
   return (
     <div className={`bg-[#1e1e1e] text-[#d4d4d4] flex flex-col ${isMaximized ? 'fixed inset-0 z-50' : 'h-full'}`}>

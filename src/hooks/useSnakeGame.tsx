@@ -195,11 +195,11 @@ export const useSnakeGame = () => {
 
   // Game loop
   useEffect(() => {
-    if (!gameState.isPlaying) return;
+    if (!gameState.isPlaying || gameState.gameOver) return;
 
-    const interval = setInterval(moveSnake, 200);
+    const interval = setInterval(moveSnake, 150); // Faster game loop - 150ms instead of 200ms
     return () => clearInterval(interval);
-  }, [gameState.isPlaying, moveSnake]);
+  }, [gameState.isPlaying, gameState.gameOver, moveSnake]);
 
   return {
     gameState,
