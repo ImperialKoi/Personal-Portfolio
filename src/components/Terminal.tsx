@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Maximize2, Minimize2, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useSnakeGame } from '@/hooks/useSnakeGame';
 
 interface TerminalProps {
   onToggle: () => void;
@@ -21,8 +22,11 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isMaximized, setIsMaximized] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [isSnakeMode, setIsSnakeMode] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
+  
+  const snakeGame = useSnakeGame();
 
   const runPythonCode = async (code: string) => {
     setIsRunning(true);
@@ -83,27 +87,9 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       ''
     ],
     snake: () => {
-      return [
-        '🐍 SNAKE GAME',
-        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-        '┌────────────────────────────────────┐',
-        '│  ●●●○                              │',
-        '│                                    │',
-        '│                                    │',
-        '│              ◉                     │',
-        '│                                    │',
-        '│                                    │',
-        '│                                    │',
-        '└────────────────────────────────────┘',
-        '',
-        'Score: 3  |  High Score: 127',
-        'Use WASD or arrow keys to move',
-        'Press SPACE to pause, ESC to quit',
-        '',
-        'Game Over! Snake ate its tail.',
-        'Thanks for playing! 🎮',
-        ''
-      ];
+      setIsSnakeMode(true);
+      snakeGame.startGame();
+      return snakeGame.renderGame();
     },
     projects: () => [
       '📁 PROJECT PORTFOLIO',
@@ -211,6 +197,19 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Handle snake game controls
+    if (isSnakeMode) {
+      e.preventDefault();
+      snakeGame.handleKeyPress(e.key);
+      
+      if (e.key === 'Escape') {
+        setIsSnakeMode(false);
+        snakeGame.resetGame();
+      }
+      
+      return;
+    }
+
     if (e.key === 'Enter') {
       handleCommand(input);
     } else if (e.key === 'ArrowUp') {
@@ -281,6 +280,20 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     }
   }, []);
 
+  // Update snake game display
+  useEffect(() => {
+    if (isSnakeMode) {
+      const gameLines = snakeGame.renderGame();
+      setOutput(prev => {
+        const lastCommandIndex = prev.lastIndexOf('$ snake');
+        if (lastCommandIndex !== -1) {
+          return [...prev.slice(0, lastCommandIndex + 1), '', ...gameLines, ''];
+        }
+        return [...prev, ...gameLines, ''];
+      });
+    }
+  }, [isSnakeMode, snakeGame.gameState]);
+
   return (
     <div className={`bg-[#1e1e1e] text-[#d4d4d4] flex flex-col ${isMaximized ? 'fixed inset-0 z-50' : 'h-full'}`}>
       <div className="flex items-center justify-between bg-[#2d2d30] px-4 py-2 border-b border-[#3e3e42]">
@@ -320,20 +333,28 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
           </div>
         ))}
         
-        <div className="flex items-center">
-          <span className="text-[#4fc1ff] mr-2">$</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={isRunning}
-            className="bg-transparent border-none outline-none text-[#d4d4d4] flex-1 disabled:opacity-50"
-            placeholder={isRunning ? "Running..." : "Type a command..."}
-            autoFocus
-          />
-        </div>
+        {!isSnakeMode && (
+          <div className="flex items-center">
+            <span className="text-[#4fc1ff] mr-2">$</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isRunning}
+              className="bg-transparent border-none outline-none text-[#d4d4d4] flex-1 disabled:opacity-50"
+              placeholder={isRunning ? "Running..." : "Type a command..."}
+              autoFocus
+            />
+          </div>
+        )}
+        
+        {isSnakeMode && (
+          <div className="text-[#888] text-xs mt-2">
+            Snake Mode Active - Use WASD/Arrow keys to play, SPACE to pause, ESC to exit
+          </div>
+        )}
       </div>
     </div>
   );
