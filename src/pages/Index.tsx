@@ -32,7 +32,7 @@ const PortfolioIDE = () => {
   const [activeFile, setActiveFile] = useState<string>('about.md');
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [tabs, setTabs] = useState<TabType[]>([
-    { id: 'about.md', name: 'about.md', content: `# Hello! I'm Jane Doe 👋
+    { id: 'about.md', name: 'about.md', content: `# Hello! I'm Daniel Xu 👋
 
 Full-stack developer passionate about creating amazing web experiences.
 
@@ -145,7 +145,7 @@ const skills = {
           <div className="w-3 h-3 rounded-full bg-[#28ca42]"></div>
         </div>
         <div className="flex-1 text-center text-[#cccccc]">
-          Jane Doe - Portfolio IDE
+          Daniel Xu - Portfolio IDE
         </div>
       </div>
 

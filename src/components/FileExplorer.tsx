@@ -52,12 +52,12 @@ const FileItem = ({ file, onFileSelect, activeFile, level = 0 }: {
 
   const getFileContent = (fileName: string): string => {
     const contentMap: Record<string, string> = {
-      'resume.pdf': `# Jane Doe - Full Stack Developer
+      'resume.pdf': `# Daniel Xu - Full Stack Developer
 
 ## Contact Information
-📧 jane.doe@email.com
-🌐 linkedin.com/in/janedoe
-🐙 github.com/janedoe
+📧 daniel.xu@email.com
+🌐 linkedin.com/in/danielxu
+🐙 github.com/danielxu
 📱 +1 (555) 123-4567
 
 ## Experience
@@ -290,9 +290,9 @@ def send_status_notification(task_id, status):
 
       'contact.json': `{
   "contact": {
-    "name": "Jane Doe",
+    "name": "Daniel Xu",
     "title": "Full Stack Developer",
-    "email": "jane.doe@email.com",
+    "email": "daniel.xu@email.com",
     "phone": "+1 (555) 123-4567",
     "location": "San Francisco, CA",
     "timezone": "PST (UTC-8)",

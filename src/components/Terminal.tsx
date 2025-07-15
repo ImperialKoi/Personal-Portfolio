@@ -11,7 +11,7 @@ interface TerminalProps {
 
 export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) => {
   const initialLines = [
-    'Jane Doe Portfolio Terminal v1.0.0',
+    'Daniel Xu Portfolio Terminal v1.0.0',
     'Type "help" for available commands',
     ''
   ];
@@ -118,16 +118,16 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       '   Cross-platform fitness tracking and goal setting',
       '',
       'Total Projects: 15+ | Years of Experience: 5+',
-      'GitHub: github.com/janedoe | Portfolio: janedoe.dev',
+      'GitHub: github.com/danielxu | Portfolio: danielxu.dev',
       ''
     ],
     resume: () => {
       // Create a fake resume blob and trigger download
       const resumeContent = `
-JANE DOE
+DANIEL XU
 Software Engineer & Full-Stack Developer
-Email: jane.doe@email.com | Phone: (555) 123-4567
-GitHub: github.com/janedoe | LinkedIn: linkedin.com/in/janedoe
+Email: daniel.xu@email.com | Phone: (555) 123-4567
+GitHub: github.com/danielxu | LinkedIn: linkedin.com/in/danielxu
 
 EXPERIENCE
 Senior Software Engineer | TechCorp Inc. | 2022-Present
@@ -155,7 +155,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'jane_doe_resume.txt';
+      a.download = 'daniel_xu_resume.txt';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -163,7 +163,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       
       return [
         '📄 Downloading resume...',
-        'jane_doe_resume.txt saved to Downloads folder',
+        'daniel_xu_resume.txt saved to Downloads folder',
         ''
       ];
     },

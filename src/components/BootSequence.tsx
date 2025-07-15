@@ -5,7 +5,7 @@ interface BootSequenceProps {
 }
 
 const bootMessages = [
-  "Initializing Jane Doe Portfolio System...",
+  "Initializing Daniel Xu Portfolio System...",
   "Loading kernel modules...",
   "Starting system services...",
   "[OK] Mounted /dev/portfolio",
@@ -17,7 +17,7 @@ const bootMessages = [
   "Loading user preferences...",
   "Initializing development environment...",
   "[OK] All systems operational",
-  "Welcome to Jane Doe Portfolio IDE v2.1.0",
+  "Welcome to Daniel Xu Portfolio IDE v2.1.0",
   "",
   "System ready. Press any key to continue..."
 ];
