@@ -23,6 +23,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
   const [isMaximized, setIsMaximized] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isSnakeMode, setIsSnakeMode] = useState(false);
+  const [currentPath, setCurrentPath] = useState('daniel/portfolio');
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
   
@@ -62,6 +63,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       'Available commands:',
       '  help        - Show this help message',
       '  clear       - Clear the terminal',
+      '  cd          - Change directory',
       '  date        - Show current date and time',
       '  echo        - Echo text back',
       '  ls          - List portfolio contents',
@@ -164,6 +166,34 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         'jane_doe_resume.txt saved to Downloads folder',
         ''
       ];
+    },
+    cd: (args: string[]) => {
+      if (args.length === 0) {
+        setCurrentPath('daniel/portfolio');
+        return [`Changed directory to daniel/portfolio`];
+      }
+      
+      const target = args[0];
+      if (target === '..') {
+        const pathParts = currentPath.split('/');
+        if (pathParts.length > 1) {
+          pathParts.pop();
+          const newPath = pathParts.join('/');
+          setCurrentPath(newPath);
+          return [`Changed directory to ${newPath}`];
+        } else {
+          return ['Already at root directory'];
+        }
+      } else if (target.startsWith('/')) {
+        // Absolute path
+        setCurrentPath(target.substring(1));
+        return [`Changed directory to ${target.substring(1)}`];
+      } else {
+        // Relative path
+        const newPath = currentPath === '' ? target : `${currentPath}/${target}`;
+        setCurrentPath(newPath);
+        return [`Changed directory to ${newPath}`];
+      }
     },
     run: () => {
       if (activeFile?.endsWith('.py') && fileContent) {
@@ -385,7 +415,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         
         {!isSnakeMode && (
           <div className="flex items-center">
-            <span className="text-[#4fc1ff] mr-2">$</span>
+            <span className="text-[#4fc1ff] mr-2">{currentPath}$</span>
             <div className="relative flex-1">
               <input
                 ref={inputRef}
