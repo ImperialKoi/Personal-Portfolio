@@ -386,17 +386,26 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         {!isSnakeMode && (
           <div className="flex items-center">
             <span className="text-[#4fc1ff] mr-2">$</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={isRunning}
-              className="bg-transparent border-none outline-none text-[#d4d4d4] flex-1 disabled:opacity-50"
-              placeholder={isRunning ? "Running..." : "Type a command..."}
-              autoFocus
-            />
+            <div className="relative flex-1">
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={isRunning}
+                className="bg-transparent border-none outline-none text-[#d4d4d4] w-full disabled:opacity-50 caret-transparent"
+                placeholder={isRunning ? "Running..." : "Type a command..."}
+                autoFocus
+              />
+              <div 
+                className="absolute top-0 bg-[#d4d4d4] w-2 h-5 animate-pulse pointer-events-none"
+                style={{ 
+                  left: `${input.length * 0.6}em`,
+                  animation: 'blink 1s infinite'
+                }}
+              />
+            </div>
           </div>
         )}
         
