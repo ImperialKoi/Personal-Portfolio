@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, MapPin, Download, ExternalLink, Code, Database, Globe, Smartphone, Terminal } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Github, Linkedin, Mail, MapPin, Download, ExternalLink, Code, Database, Globe, Smartphone, Terminal, ChevronDown, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import developerIllustration from '@/assets/developer-illustration.png';
 
 export default function Simple() {
+  const [darkMode, setDarkMode] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const aboutRef = useRef<HTMLElement>(null);
   const skillsRef = useRef<HTMLElement>(null);
@@ -112,98 +114,183 @@ Tools: Git, Docker, AWS, Firebase
     window.URL.revokeObjectURL(url);
   };
 
+  const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Terminal Mode Button */}
-      <div className="fixed top-4 right-4 z-50">
-        <Button
-          variant="outline"
-          size="sm"
-          className="hover-scale group bg-background/80 backdrop-blur-sm"
-          onClick={() => window.location.href = '/'}
-        >
-          <Terminal className="mr-2 h-4 w-4 group-hover:animate-pulse" />
-          Terminal Mode
-        </Button>
-      </div>
-      
-      {/* Hero Section */}
-      <section ref={heroRef} className="min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10"></div>
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <div className="animate-scale-in">
-            <h1 className="text-6xl md:text-8xl font-bold text-foreground mb-6 hover-scale">
-              Daniel Xu
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Full-Stack Developer passionate about creating amazing web experiences
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="hover-scale group" onClick={downloadResume}>
-                <Download className="mr-2 h-5 w-5 group-hover:animate-bounce" />
-                Download Resume
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-xl font-bold">
+              Daniel<span className="text-primary">.dev</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8">
+              <button 
+                className="hover:text-primary transition-colors"
+                onClick={() => scrollToSection(aboutRef)}
+              >
+                Who am I?
+              </button>
+              <button 
+                className="hover:text-primary transition-colors"
+                onClick={() => scrollToSection(projectsRef)}
+              >
+                Projects
+              </button>
+              <button 
+                className="hover:text-primary transition-colors"
+                onClick={() => scrollToSection(contactRef)}
+              >
+                Contact
+              </button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="hover-scale group"
+                onClick={() => window.location.href = '/'}
+              >
+                <Terminal className="mr-2 h-4 w-4 group-hover:animate-pulse" />
+                Terminal
               </Button>
-              <div className="flex gap-4">
-                <Button variant="outline" size="icon" className="hover-scale">
-                  <Github className="h-5 w-5" />
-                </Button>
-                <Button variant="outline" size="icon" className="hover-scale">
-                  <Linkedin className="h-5 w-5" />
-                </Button>
-                <Button variant="outline" size="icon" className="hover-scale">
-                  <Mail className="h-5 w-5" />
-                </Button>
-              </div>
             </div>
           </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-foreground rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-foreground rounded-full mt-2 animate-pulse"></div>
+      </nav>
+
+      {/* Hero Section */}
+      <section ref={heroRef} className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        {/* Background decorative dots */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-1 h-1 bg-secondary rounded-full animate-pulse delay-1000"></div>
+          <div className="absolute bottom-40 left-20 w-1.5 h-1.5 bg-accent rounded-full animate-pulse delay-500"></div>
+          <div className="absolute bottom-20 right-10 w-2 h-2 bg-primary rounded-full animate-pulse delay-700"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          {/* Left side - Text content */}
+          <div className="space-y-6 animate-fade-in">
+            <div className="space-y-2">
+              <div className="text-sm text-muted-foreground uppercase tracking-wide">
+                Passionate Programmer • Freelancer • Full-Stack Developer
+              </div>
+              <p className="text-primary text-lg">Hi my name is</p>
+              <h1 className="text-5xl md:text-7xl font-bold text-foreground">
+                Daniel Xu
+              </h1>
+              <h2 className="text-2xl md:text-3xl text-primary font-semibold">
+                A Full-stack Developer
+              </h2>
+            </div>
+            
+            <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+              I am a Full-Stack Developer with a passion for delivering exceptional results.
+              With my expertise in React and Next.js on the frontend, and Node.js, Express, 
+              and PostgreSQL on the backend, I bring a unique combination of technical skills 
+              and creative problem-solving to every project I work on.
+            </p>
+            
+            <Button size="lg" className="hover-scale group">
+              <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+              Contact me!
+            </Button>
           </div>
+          
+          {/* Right side - Illustration */}
+          <div className="relative animate-scale-in">
+            <div className="relative z-10">
+              <img 
+                src={developerIllustration} 
+                alt="Developer illustration"
+                className="w-full max-w-md mx-auto hover-scale"
+              />
+            </div>
+            {/* Background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 rounded-full blur-3xl"></div>
+          </div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+          <span className="text-sm text-muted-foreground">Scroll</span>
+          <ChevronDown className="h-5 w-5 text-primary" />
         </div>
       </section>
 
       {/* About Section */}
-      <section ref={aboutRef} className="py-20 bg-card/50">
+      <section ref={aboutRef} className="py-20 bg-card/30">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12 text-foreground">About Me</h2>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Who am I?</h2>
+              <div className="w-16 h-1 bg-primary mx-auto"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-16 items-center">
               <div className="space-y-6">
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  Hi! I'm a passionate full-stack developer with 5+ years of experience building 
-                  scalable web applications. I love turning complex problems into simple, 
-                  beautiful solutions.
+                  With 5+ years of comprehensive experience in web application development, 
+                  I have polished my skills in both frontend and backend development. In addition 
+                  to my hands-on experience in web development, my education has also played a 
+                  critical role in providing a strong foundation for my career.
                 </p>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  When I'm not coding, you can find me exploring new technologies, contributing 
-                  to open source projects, or hiking in the great outdoors.
-                </p>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="h-5 w-5" />
-                  <span>San Francisco, CA</span>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">
+                      B.Sc (Hons) in Computer Science
+                    </h3>
+                    <p className="text-primary font-medium mb-2">University of California | 2018 ~ 2020</p>
+                    <ul className="text-muted-foreground space-y-1">
+                      <li>• Studied computer science, software development, DevOps</li>
+                      <li>• Graduated with First Class Honours</li>
+                      <li>• Got merit in 7 modules out of 9</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">
+                      Full-Stack Development Bootcamp
+                    </h3>
+                    <p className="text-primary font-medium mb-2">Tech Academy | 2017 - 2018</p>
+                    <ul className="text-muted-foreground space-y-1">
+                      <li>• Studied modules specializing in web development</li>
+                      <li>• Completed with overall Excellence</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
+              
               <div className="space-y-4">
-                <Card className="hover-scale group">
-                  <CardContent className="p-6">
-                    <div className="text-3xl font-bold text-primary">15+</div>
-                    <div className="text-muted-foreground">Projects Completed</div>
-                  </CardContent>
-                </Card>
-                <Card className="hover-scale group">
-                  <CardContent className="p-6">
-                    <div className="text-3xl font-bold text-primary">5+</div>
-                    <div className="text-muted-foreground">Years Experience</div>
-                  </CardContent>
-                </Card>
-                <Card className="hover-scale group">
-                  <CardContent className="p-6">
-                    <div className="text-3xl font-bold text-primary">1M+</div>
-                    <div className="text-muted-foreground">Users Served</div>
-                  </CardContent>
-                </Card>
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="hover-scale text-center">
+                    <CardContent className="p-6">
+                      <div className="text-3xl font-bold text-primary mb-2">15+</div>
+                      <div className="text-sm text-muted-foreground">Projects Completed</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="hover-scale text-center">
+                    <CardContent className="p-6">
+                      <div className="text-3xl font-bold text-primary mb-2">5+</div>
+                      <div className="text-sm text-muted-foreground">Years Experience</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="hover-scale text-center">
+                    <CardContent className="p-6">
+                      <div className="text-3xl font-bold text-primary mb-2">1M+</div>
+                      <div className="text-sm text-muted-foreground">Users Served</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="hover-scale text-center">
+                    <CardContent className="p-6">
+                      <div className="text-3xl font-bold text-primary mb-2">100%</div>
+                      <div className="text-sm text-muted-foreground">Client Satisfaction</div>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
             </div>
           </div>
@@ -213,24 +300,28 @@ Tools: Git, Docker, AWS, Firebase
       {/* Skills Section */}
       <section ref={skillsRef} className="py-20">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12 text-foreground">Skills</h2>
           <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">My Skills</h2>
+              <div className="w-16 h-1 bg-primary mx-auto"></div>
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-8">
               {skills.map((skill, index) => (
                 <Card key={skill.name} className="hover-scale group" style={{ animationDelay: `${index * 100}ms` }}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="p-2 bg-primary/10 rounded-lg">
+                      <div className="p-3 bg-primary/10 rounded-lg">
                         <skill.icon className="h-6 w-6 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-foreground">{skill.name}</h3>
-                        <div className="text-sm text-muted-foreground">{skill.level}%</div>
+                        <h3 className="font-semibold text-foreground text-lg">{skill.name}</h3>
+                        <div className="text-sm text-muted-foreground">{skill.level}% proficiency</div>
                       </div>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-3">
                       <div 
-                        className="bg-primary h-2 rounded-full transition-all duration-1000 ease-out"
+                        className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${skill.level}%` }}
                       ></div>
                     </div>
@@ -243,67 +334,98 @@ Tools: Git, Docker, AWS, Firebase
       </section>
 
       {/* Projects Section */}
-      <section ref={projectsRef} className="py-20 bg-card/50">
+      <section ref={projectsRef} className="py-20 bg-card/30">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12 text-foreground">Featured Projects</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {projects.map((project, index) => (
-              <Card key={project.title} className="hover-scale group overflow-hidden" style={{ animationDelay: `${index * 150}ms` }}>
-                <CardHeader>
-                  <CardTitle className="text-foreground group-hover:text-primary transition-colors">
-                    {project.title}
-                  </CardTitle>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="hover-scale">
-                      <Github className="mr-2 h-4 w-4" />
-                      Code
-                    </Button>
-                    <Button variant="outline" size="sm" className="hover-scale">
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Live
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Featured Projects</h2>
+              <div className="w-16 h-1 bg-primary mx-auto mb-6"></div>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Here are some of my recent projects that showcase my skills and passion for development.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <Card key={project.title} className="hover-scale group overflow-hidden" style={{ animationDelay: `${index * 150}ms` }}>
+                  <CardHeader>
+                    <CardTitle className="text-foreground group-hover:text-primary transition-colors">
+                      {project.title}
+                    </CardTitle>
+                    <CardDescription className="leading-relaxed">{project.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tech.map((tech) => (
+                        <Badge key={tech} variant="secondary" className="text-xs">
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" className="hover-scale flex-1">
+                        <Github className="mr-2 h-4 w-4" />
+                        Code
+                      </Button>
+                      <Button variant="outline" size="sm" className="hover-scale flex-1">
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Live
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
       <section ref={contactRef} className="py-20">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-8 text-foreground">Let's Work Together</h2>
-          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-            I'm always open to discussing new opportunities and interesting projects.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="hover-scale group">
-              <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
-              Get In Touch
-            </Button>
-            <Button variant="outline" size="lg" className="hover-scale" onClick={downloadResume}>
-              <Download className="mr-2 h-5 w-5" />
-              Download Resume
-            </Button>
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Let's Work Together</h2>
+              <div className="w-16 h-1 bg-primary mx-auto mb-6"></div>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                I'm always open to discussing new opportunities and interesting projects. 
+                Feel free to reach out if you'd like to collaborate!
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="hover-scale group">
+                <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+                Get In Touch
+              </Button>
+              <Button variant="outline" size="lg" className="hover-scale" onClick={downloadResume}>
+                <Download className="mr-2 h-5 w-5" />
+                Download Resume
+              </Button>
+            </div>
+            
+            {/* Social Links */}
+            <div className="flex gap-4 justify-center mt-8">
+              <Button variant="outline" size="icon" className="hover-scale">
+                <Github className="h-5 w-5" />
+              </Button>
+              <Button variant="outline" size="icon" className="hover-scale">
+                <Linkedin className="h-5 w-5" />
+              </Button>
+              <Button variant="outline" size="icon" className="hover-scale">
+                <Mail className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-border">
+      <footer className="py-8 border-t border-border bg-card/30">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-muted-foreground">© 2024 Daniel Xu. All rights reserved.</p>
+          <p className="text-muted-foreground">
+            © 2024 Daniel Xu. All rights reserved. Built with ❤️ using React & TypeScript.
+          </p>
         </div>
       </footer>
     </div>
