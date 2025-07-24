@@ -195,6 +195,14 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         return [`Changed directory to ${newPath}`];
       }
     },
+    simple: () => {
+      window.location.href = '/simple';
+      return [
+        '🎨 Launching simple portfolio view...',
+        'Redirecting to simplified interface...',
+        ''
+      ];
+    },
     run: () => {
       if (activeFile?.endsWith('.py') && fileContent) {
         runPythonCode(fileContent);

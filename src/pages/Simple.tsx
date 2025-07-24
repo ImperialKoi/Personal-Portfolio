@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, MapPin, Download, ExternalLink, Code, Database, Globe, Smartphone } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, Download, ExternalLink, Code, Database, Globe, Smartphone, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -114,6 +114,19 @@ Tools: Git, Docker, AWS, Firebase
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Terminal Mode Button */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          className="hover-scale group bg-background/80 backdrop-blur-sm"
+          onClick={() => window.location.href = '/'}
+        >
+          <Terminal className="mr-2 h-4 w-4 group-hover:animate-pulse" />
+          Terminal Mode
+        </Button>
+      </div>
+      
       {/* Hero Section */}
       <section ref={heroRef} className="min-h-screen flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10"></div>
