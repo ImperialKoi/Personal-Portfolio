@@ -30,20 +30,24 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
   useEffect(() => {
     let messageIndex = 0;
     let timeoutId: NodeJS.Timeout;
+    let isMounted = true;
 
     const addNextMessage = () => {
-      if (messageIndex < bootMessages.length) {
+      if (messageIndex < bootMessages.length && isMounted) {
         setMessages(prev => [...prev, bootMessages[messageIndex]]);
         messageIndex++;
         
         // Vary the timing for more realistic boot feel
         const delay = messageIndex === bootMessages.length ? 1500 : Math.random() * 200 + 100;
         timeoutId = setTimeout(addNextMessage, delay);
-      } else {
+      } else if (isMounted) {
         setIsComplete(true);
-        // Wait for user input instead of auto-continue
       }
     };
+
+    // Reset state when component mounts
+    setMessages([]);
+    setIsComplete(false);
 
     // Start the boot sequence
     const initialDelay = setTimeout(addNextMessage, 500);
@@ -80,34 +84,50 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
     window.addEventListener('click', handleClick);
 
     return () => {
+      isMounted = false;
       clearTimeout(initialDelay);
       clearTimeout(timeoutId);
       clearInterval(cursorInterval);
       window.removeEventListener('keydown', handleKeyPress);
       window.removeEventListener('click', handleClick);
     };
-  }, [onBootComplete, isComplete]);
+  }, [onBootComplete]);
 
   return (
-    <div className="h-screen bg-black text-green-400 font-mono overflow-hidden flex flex-col justify-center items-center">
-      <div className="flex flex-col space-y-2 text-lg max-w-4xl w-full px-8">
+    <div className="h-screen bg-black text-green-400 font-mono overflow-hidden">
+      <div className="flex flex-col space-y-2 text-sm p-8">
+        {!isComplete && messages.length === 0 && (
+          <div className="flex items-center space-x-2">
+            <div className="animate-spin">◐</div>
+            <span className="animate-pulse">Loading system...</span>
+          </div>
+        )}
+        
         {messages.map((message, index) => (
           <div 
             key={index} 
-            className="whitespace-pre-wrap animate-fade-in"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            className="whitespace-pre-wrap opacity-0 animate-fade-in"
+            style={{ 
+              animationDelay: `${index * 0.05}s`,
+              animationFillMode: 'forwards'
+            }}
           >
             {message}
           </div>
         ))}
-        {showCursor && (
-          <span className="inline-block w-3 h-6 bg-green-400 animate-pulse"></span>
+        
+        {showCursor && !isComplete && (
+          <span className="inline-block w-2 h-4 bg-green-400 animate-pulse"></span>
         )}
       </div>
       
       {isComplete && (
-        <div className="mt-8 text-center text-green-300 animate-pulse text-xl">
-          Press 'T' for Portfolio IDE or 'S' for Simple Mode...
+        <div className="fixed bottom-8 left-8 right-8 text-center text-green-300 animate-pulse text-lg">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="animate-spin">⟳</div>
+            <span>Press 'T' for Portfolio IDE or 'S' for Simple Mode...</span>
+            <div className="animate-spin">⟳</div>
+          </div>
         </div>
       )}
     </div>
