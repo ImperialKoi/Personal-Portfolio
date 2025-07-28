@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import developerIllustration from '@/assets/developer-illustration.png';
+import AnimatedUnderline from '@/components/AnimatedUnderline';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { Navbar } from '@/components/Navbar';
 
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false);
@@ -13,6 +17,14 @@ export default function Simple() {
   const skillsRef = useRef<HTMLElement>(null);
   const projectsRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
+
+  // Add state for underline animation
+  const [underlineInView, setUnderlineInView] = useState({
+    about: false,
+    skills: false,
+    projects: false,
+    contact: false,
+  });
 
   // Navigation sections
   const navigationSections = [
@@ -64,6 +76,35 @@ export default function Simple() {
         if (ref.current) {
           observer.unobserve(ref.current);
         }
+      });
+    };
+  }, []);
+
+  // Scroll animations for underline
+  useEffect(() => {
+    const sectionRefs = [
+      { id: 'about', ref: aboutRef },
+      { id: 'skills', ref: skillsRef },
+      { id: 'projects', ref: projectsRef },
+      { id: 'contact', ref: contactRef },
+    ];
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const sectionId = entry.target.getAttribute('data-section');
+          if (sectionId && entry.isIntersecting) {
+            setUnderlineInView((prev) => ({ ...prev, [sectionId]: true }));
+          }
+        });
+      },
+      { threshold: 0.3, rootMargin: '-100px 0px -100px 0px' }
+    );
+    sectionRefs.forEach(({ ref }) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+    return () => {
+      sectionRefs.forEach(({ ref }) => {
+        if (ref.current) observer.unobserve(ref.current);
       });
     };
   }, []);
@@ -180,58 +221,21 @@ Tools: Git, Docker, AWS, Firebase
         })}
       </div>
 
-      <div className="min-h-screen bg-background text-foreground">
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-          <div className="max-w-4xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-xl font-bold">
-                Daniel<span className="text-primary">.dev</span>
-              </div>
-              <div className="hidden md:flex items-center gap-8">
-                <button 
-                  className="hover:text-primary transition-colors"
-                  onClick={() => scrollToSection(aboutRef)}
-                >
-                  Who am I?
-                </button>
-                <button 
-                  className="hover:text-primary transition-colors"
-                  onClick={() => scrollToSection(projectsRef)}
-                >
-                  Projects
-                </button>
-                <button 
-                  className="hover:text-primary transition-colors"
-                  onClick={() => scrollToSection(contactRef)}
-                >
-                  Contact
-                </button>
-                
-                {/* Theme Toggle */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setDarkMode(!darkMode)}
-                  className="hover-scale"
-                >
-                  {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="hover-scale group"
-                  onClick={() => window.location.href = '/'}
-                >
-                  <Terminal className="mr-2 h-4 w-4 group-hover:animate-pulse" />
-                  Terminal
-                </Button>
-              </div>
-            </div>
-          </div>
-        </nav>
+      {/* New Navbar */}
+      <Navbar
+        activeSection={activeSection}
+        onSectionSelect={(sectionId) => {
+          const section = navigationSections.find(s => s.id === sectionId);
+          if (section && section.ref && section.ref.current) {
+            scrollToSection(section.ref);
+          }
+        }}
+        darkMode={darkMode}
+        onToggleTheme={() => setDarkMode(!darkMode)}
+        onTerminal={() => { window.location.href = '/'; }}
+      />
 
+      <div className="min-h-screen bg-background text-foreground">
         {/* Hero Section */}
         <section 
           ref={heroRef} 
@@ -305,9 +309,9 @@ Tools: Git, Docker, AWS, Firebase
           className="py-20 bg-card/30"
         >
           <div className="max-w-6xl mx-auto px-8">
-            <div className="text-center mb-16">
+            <div className="text-center mb-10">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Who am I?</h2>
-              <div className="w-16 h-1 bg-primary mx-auto"></div>
+              <AnimatedUnderline draw={underlineInView.about} className="max-w-xs mx-auto" />
             </div>
             
             <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -386,7 +390,7 @@ Tools: Git, Docker, AWS, Firebase
           <div className="max-w-6xl mx-auto px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">My Skills</h2>
-              <div className="w-16 h-1 bg-primary mx-auto"></div>
+              <AnimatedUnderline draw={underlineInView.skills} className="max-w-xs mx-auto" />
             </div>
             
             <div className="grid md:grid-cols-2 gap-8">
@@ -422,9 +426,9 @@ Tools: Git, Docker, AWS, Firebase
           className="py-20 bg-card/30"
         >
           <div className="max-w-6xl mx-auto px-8">
-            <div className="text-center mb-16">
+            <div className="text-center mb-10">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Featured Projects</h2>
-              <div className="w-16 h-1 bg-primary mx-auto mb-6"></div>
+              <AnimatedUnderline draw={underlineInView.projects} className="max-w-xs mx-auto mb-2" />
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Here are some of my recent projects that showcase my skills and passion for development.
               </p>
@@ -471,9 +475,9 @@ Tools: Git, Docker, AWS, Firebase
           className="py-20"
         >
           <div className="max-w-6xl mx-auto px-8 text-center">
-            <div className="mb-16">
+            <div className="mb-10 text-center">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Let's Work Together</h2>
-              <div className="w-16 h-1 bg-primary mx-auto mb-6"></div>
+              <AnimatedUnderline draw={underlineInView.contact} className="max-w-xs mx-auto mb-2" />
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 I'm always open to discussing new opportunities and interesting projects. 
                 Feel free to reach out if you'd like to collaborate!
