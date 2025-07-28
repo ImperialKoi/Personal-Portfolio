@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import developerIllustration from '@/assets/developer-illustration.png';
 import AnimatedUnderline from '@/components/AnimatedUnderline';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
+import Lenis from '@studio-freight/lenis';
 
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false);
@@ -17,6 +18,12 @@ export default function Simple() {
   const skillsRef = useRef<HTMLElement>(null);
   const projectsRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
+  
+  // Scroll tracking for animations
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 1000], [0, -200]);
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 300], [1, 0.8]);
 
   // Add state for underline animation
   const [underlineInView, setUnderlineInView] = useState({
@@ -34,6 +41,27 @@ export default function Simple() {
     { id: 'projects', icon: Briefcase, label: 'Projects', ref: projectsRef },
     { id: 'contact', icon: MessageSquare, label: 'Contact', ref: contactRef },
   ];
+
+  // Initialize smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
 
   // Theme toggle
   useEffect(() => {
@@ -252,48 +280,101 @@ Tools: Git, Docker, AWS, Firebase
             <div className="absolute bottom-60 right-1/3 w-1.5 h-1.5 bg-secondary rounded-full animate-pulse delay-800"></div>
           </div>
           
-          <div className="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center animate-fade-in">
+          <motion.div 
+            className="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center animate-fade-in"
+            style={{ opacity: heroOpacity, scale: heroScale }}
+          >
             {/* Left side - Text content */}
-            <div className="space-y-6">
+            <motion.div 
+              className="space-y-6"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               <div className="space-y-2">
-                <div className="text-sm text-muted-foreground uppercase tracking-wide">
+                <motion.div 
+                  className="text-sm text-muted-foreground uppercase tracking-wide"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
                   Passionate Programmer • Freelancer • Full-Stack Developer
-                </div>
-                <p className="text-primary text-lg">Hi my name is</p>
-                <h1 className="text-5xl md:text-7xl font-bold text-foreground">
+                </motion.div>
+                <motion.p 
+                  className="text-primary text-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  Hi my name is
+                </motion.p>
+                <motion.h1 
+                  className="text-5xl md:text-7xl font-bold text-foreground"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
                   Daniel Xu
-                </h1>
-                <h2 className="text-2xl md:text-3xl text-primary font-semibold">
+                </motion.h1>
+                <motion.h2 
+                  className="text-2xl md:text-3xl text-primary font-semibold"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.0 }}
+                >
                   A Full-stack Developer
-                </h2>
+                </motion.h2>
               </div>
               
-              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+              <motion.p 
+                className="text-lg text-muted-foreground max-w-lg leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
+              >
                 I am a Full-Stack Developer with a passion for delivering exceptional results.
                 With my expertise in React and Next.js on the frontend, and Node.js, Express, 
                 and PostgreSQL on the backend, I bring a unique combination of technical skills 
                 and creative problem-solving to every project I work on.
-              </p>
+              </motion.p>
               
-              <Button size="lg" className="hover-scale group">
-                <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
-                Contact me!
-              </Button>
-            </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.4 }}
+              >
+                <Button size="lg" className="hover-scale group">
+                  <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+                  Contact me!
+                </Button>
+              </motion.div>
+            </motion.div>
             
             {/* Right side - Illustration */}
-            <div className="relative animate-scale-in">
+            <motion.div 
+              className="relative animate-scale-in"
+              style={{ y: parallaxY }}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
               <div className="relative z-10">
-                <img 
+                <motion.img 
                   src={developerIllustration} 
                   alt="Developer illustration"
                   className="w-full max-w-md mx-auto hover-scale"
+                  whileHover={{ scale: 1.05, rotate: 2 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 />
               </div>
               {/* Background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 rounded-full blur-3xl"></div>
-            </div>
-          </div>
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 rounded-full blur-3xl"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
+          </motion.div>
           
           {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
@@ -315,7 +396,13 @@ Tools: Git, Docker, AWS, Firebase
             </div>
             
             <div className="grid md:grid-cols-2 gap-16 items-center">
-              <div className="space-y-6">
+              <motion.div 
+                className="space-y-6"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   With 5+ years of comprehensive experience in web application development, 
                   I have polished my skills in both frontend and backend development. In addition 
@@ -347,36 +434,47 @@ Tools: Git, Docker, AWS, Firebase
                     </ul>
                   </div>
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="space-y-4">
+              <motion.div 
+                className="space-y-4"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
                 <div className="grid grid-cols-2 gap-4">
-                  <Card className="hover-scale text-center">
-                    <CardContent className="p-6">
-                      <div className="text-3xl font-bold text-primary mb-2">15+</div>
-                      <div className="text-sm text-muted-foreground">Projects Completed</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="hover-scale text-center">
-                    <CardContent className="p-6">
-                      <div className="text-3xl font-bold text-primary mb-2">5+</div>
-                      <div className="text-sm text-muted-foreground">Years Experience</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="hover-scale text-center">
-                    <CardContent className="p-6">
-                      <div className="text-3xl font-bold text-primary mb-2">1M+</div>
-                      <div className="text-sm text-muted-foreground">Users Served</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="hover-scale text-center">
-                    <CardContent className="p-6">
-                      <div className="text-3xl font-bold text-primary mb-2">100%</div>
-                      <div className="text-sm text-muted-foreground">Client Satisfaction</div>
-                    </CardContent>
-                  </Card>
+                  {[
+                    { number: "15+", label: "Projects Completed" },
+                    { number: "5+", label: "Years Experience" },
+                    { number: "1M+", label: "Users Served" },
+                    { number: "100%", label: "Client Satisfaction" }
+                  ].map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="hover-scale text-center">
+                        <CardContent className="p-6">
+                          <motion.div 
+                            className="text-3xl font-bold text-primary mb-2"
+                            initial={{ scale: 0 }}
+                            whileInView={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 200, delay: 0.3 + index * 0.1 }}
+                            viewport={{ once: true }}
+                          >
+                            {stat.number}
+                          </motion.div>
+                          <div className="text-sm text-muted-foreground">{stat.label}</div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -395,25 +493,40 @@ Tools: Git, Docker, AWS, Firebase
             
             <div className="grid md:grid-cols-2 gap-8">
               {skills.map((skill, index) => (
-                <Card key={skill.name} className="hover-scale group" style={{ animationDelay: `${index * 100}ms` }}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
-                        <skill.icon className="h-6 w-6 text-primary" />
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="hover-scale group">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <motion.div 
+                          className="p-3 bg-primary/10 rounded-lg"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <skill.icon className="h-6 w-6 text-primary" />
+                        </motion.div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-foreground text-lg">{skill.name}</h3>
+                          <div className="text-sm text-muted-foreground">{skill.level}% proficiency</div>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-foreground text-lg">{skill.name}</h3>
-                        <div className="text-sm text-muted-foreground">{skill.level}% proficiency</div>
+                      <div className="w-full bg-muted rounded-full h-3">
+                        <motion.div 
+                          className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full"
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${skill.level}%` }}
+                          transition={{ duration: 1.5, delay: 0.5 + index * 0.1, ease: "easeOut" }}
+                          viewport={{ once: true }}
+                        />
                       </div>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-1000 ease-out"
-                        style={{ width: `${skill.level}%` }}
-                      ></div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -436,33 +549,50 @@ Tools: Git, Docker, AWS, Firebase
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
-                <Card key={project.title} className="hover-scale group overflow-hidden" style={{ animationDelay: `${index * 150}ms` }}>
-                  <CardHeader>
-                    <CardTitle className="text-foreground group-hover:text-primary transition-colors">
-                      {project.title}
-                    </CardTitle>
-                    <CardDescription className="leading-relaxed">{project.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((tech) => (
-                        <Badge key={tech} variant="secondary" className="text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="hover-scale flex-1">
-                        <Github className="mr-2 h-4 w-4" />
-                        Code
-                      </Button>
-                      <Button variant="outline" size="sm" className="hover-scale flex-1">
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        Live
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={project.title}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -5 }}
+                >
+                  <Card className="hover-scale group overflow-hidden h-full">
+                    <CardHeader>
+                      <CardTitle className="text-foreground group-hover:text-primary transition-colors">
+                        {project.title}
+                      </CardTitle>
+                      <CardDescription className="leading-relaxed">{project.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex flex-wrap gap-2">
+                        {project.tech.map((tech, techIndex) => (
+                          <motion.div
+                            key={tech}
+                            initial={{ opacity: 0, scale: 0 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: 0.5 + techIndex * 0.1 }}
+                            viewport={{ once: true }}
+                          >
+                            <Badge variant="secondary" className="text-xs">
+                              {tech}
+                            </Badge>
+                          </motion.div>
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="hover-scale flex-1">
+                          <Github className="mr-2 h-4 w-4" />
+                          Code
+                        </Button>
+                        <Button variant="outline" size="sm" className="hover-scale flex-1">
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          Live
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
