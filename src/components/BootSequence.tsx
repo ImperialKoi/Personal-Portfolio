@@ -41,10 +41,7 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
         timeoutId = setTimeout(addNextMessage, delay);
       } else {
         setIsComplete(true);
-        // Auto-continue after 2 seconds
-        setTimeout(() => {
-          onBootComplete();
-        }, 2000);
+        // Wait for user input instead of auto-continue
       }
     };
 
@@ -92,20 +89,24 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
   }, [onBootComplete, isComplete]);
 
   return (
-    <div className="h-screen bg-black text-green-400 font-mono text-sm p-8 overflow-hidden">
-      <div className="flex flex-col space-y-1">
+    <div className="h-screen bg-black text-green-400 font-mono overflow-hidden flex flex-col justify-center items-center">
+      <div className="flex flex-col space-y-2 text-lg max-w-4xl w-full px-8">
         {messages.map((message, index) => (
-          <div key={index} className="whitespace-pre-wrap">
+          <div 
+            key={index} 
+            className="whitespace-pre-wrap animate-fade-in"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
             {message}
           </div>
         ))}
         {showCursor && (
-          <span className="inline-block w-2 h-5 bg-green-400 animate-pulse"></span>
+          <span className="inline-block w-3 h-6 bg-green-400 animate-pulse"></span>
         )}
       </div>
       
       {isComplete && (
-        <div className="fixed bottom-8 left-8 right-8 text-center text-green-300 animate-pulse">
+        <div className="mt-8 text-center text-green-300 animate-pulse text-xl">
           Press 'T' for Portfolio IDE or 'S' for Simple Mode...
         </div>
       )}
