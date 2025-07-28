@@ -8,8 +8,7 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
 import { BootSequence } from '@/components/BootSequence';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Simple from '@/pages/Simple';
+import { useNavigate } from 'react-router-dom';
 
 export type FileType = {
   name: string;
@@ -222,15 +221,4 @@ const Index = () => {
   return <PortfolioIDE />;
 };
 
-const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/simple" element={<Simple />} />
-      </Routes>
-    </Router>
-  );
-};
-
-export default App;
+export default Index;
