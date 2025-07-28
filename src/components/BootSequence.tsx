@@ -106,10 +106,9 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
         {messages.map((message, index) => (
           <div 
             key={index} 
-            className="whitespace-pre-wrap opacity-0 animate-fade-in"
+            className="whitespace-pre-wrap animate-fade-in"
             style={{ 
-              animationDelay: `${index * 0.05}s`,
-              animationFillMode: 'forwards'
+              animationDelay: `${index * 0.05}s`
             }}
           >
             {message}
