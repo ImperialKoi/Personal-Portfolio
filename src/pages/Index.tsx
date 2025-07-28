@@ -210,6 +210,8 @@ const Index = () => {
     setIsBooting(false);
     if (mode === 'simple') {
       navigate('/simple');
+    } else {
+      navigate('/terminal');
     }
   };
 

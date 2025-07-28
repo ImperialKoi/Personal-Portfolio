@@ -95,7 +95,7 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
 
   return (
     <div className="h-screen bg-black text-green-400 font-mono overflow-hidden">
-      <div className="flex flex-col space-y-2 text-sm p-8">
+      <div className="flex flex-col space-y-2 text-base p-8">
         {!isComplete && messages.length === 0 && (
           <div className="flex items-center space-x-2">
             <div className="animate-spin">◐</div>
