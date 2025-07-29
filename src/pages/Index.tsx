@@ -8,7 +8,7 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
 import { BootSequence } from '@/components/BootSequence';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export type FileType = {
   name: string;
@@ -202,7 +202,8 @@ const skills = {
 };
 
 const Index = () => {
-  const [isBooting, setIsBooting] = useState(true);
+  const location = useLocation();
+  const [isBooting, setIsBooting] = useState(location.pathname !== '/terminal');
   const navigate = useNavigate();
 
   const handleBootComplete = (mode: 'default' | 'simple' = 'default') => {
