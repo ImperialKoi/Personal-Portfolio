@@ -4,28 +4,51 @@ import { FileType } from '@/pages/Index';
 import aboutContent from '@/content/about.md?raw';
 import resumeContent from '@/content/resume.md?raw';
 import contactContent from '@/content/contact.json?raw';
-import ecommerceContent from '@/content/projects/ecommerce-app.js?raw';
-import weatherContent from '@/content/projects/weather-dashboard.tsx?raw';
-import taskManagerContent from '@/content/projects/task-manager.py?raw';
-import reactPatternsContent from '@/content/blog/2024-01-react-patterns.md?raw';
-import typescriptTipsContent from '@/content/blog/2023-12-typescript-tips.md?raw';
+
+// Main projects
+import candidContent from '@/content/projects/candit.js?raw';
+import blocksnetContent from '@/content/projects/blocksnet.tsx?raw';
+import calicalenderContent from '@/content/projects/calicalender.tsx?raw';
+import hackathonIdeasContent from '@/content/projects/hackathon-ideas-generator.tsx?raw';
+import aiposterContent from '@/content/projects/aiposter.tsx?raw';
+import skinscopeContent from '@/content/projects/skinscope.tsx?raw';
+import logoscanContent from '@/content/projects/logoscan.tsx?raw';
+import recessHacksContent from '@/content/projects/recess-hacks.tsx?raw';
+
+// School projects
+import csExamReviewContent from '@/content/school-projects/cs-exam-review.tsx?raw';
+import historyTimelineContent from '@/content/school-projects/history-timeline.tsx?raw';
+import easaWebsiteContent from '@/content/school-projects/easa-website.tsx?raw';
+import amongusKeyboardContent from '@/content/school-projects/amongus-keyboard.py?raw';
+import classkickAutoContent from '@/content/school-projects/classkick-auto.py?raw';
 
 // Content mapping
 const contentMap: Record<string, string> = {
   'about.md': aboutContent,
   'resume.md': resumeContent,
   'contact.json': contactContent,
-  'ecommerce-app.js': ecommerceContent,
-  'weather-dashboard.tsx': weatherContent,
-  'task-manager.py': taskManagerContent,
-  '2024-01-react-patterns.md': reactPatternsContent,
-  '2023-12-typescript-tips.md': typescriptTipsContent,
+  
+  // Main projects
+  'candit.js': candidContent,
+  'blocksnet.tsx': blocksnetContent,
+  'calicalender.tsx': calicalenderContent,
+  'hackathon-ideas-generator.tsx': hackathonIdeasContent,
+  'aiposter.tsx': aiposterContent,
+  'skinscope.tsx': skinscopeContent,
+  'logoscan.tsx': logoscanContent,
+  'recess-hacks.tsx': recessHacksContent,
+  
+  // School projects
+  'cs-exam-review.tsx': csExamReviewContent,
+  'history-timeline.tsx': historyTimelineContent,
+  'easa-website.tsx': easaWebsiteContent,
+  'amongus-keyboard.py': amongusKeyboardContent,
+  'classkick-auto.py': classkickAutoContent,
 };
 
 // URL mapping for project files
 const urlMap: Record<string, string> = {
-  'ecommerce-app.js': 'https://shopify.com',
-  'weather-dashboard.tsx': 'https://weather.com',
+  // Main projects - no external URLs as these are portfolio showcases
 };
 
 export const getFileContent = (fileName: string): string => {
@@ -56,57 +79,77 @@ export const generateFileStructure = (): FileType[] => {
           name: 'projects',
           type: 'folder',
           children: [
-            {
-              name: 'ecommerce-app',
-              type: 'folder',
-              children: [
-                { 
-                  name: 'ecommerce-app.js', 
-                  type: 'file', 
-                  extension: 'js', 
-                  url: getFileUrl('ecommerce-app.js')
-                }
-              ]
+            { 
+              name: 'candit.js', 
+              type: 'file', 
+              extension: 'js'
             },
-            {
-              name: 'weather-dashboard',
-              type: 'folder',
-              children: [
-                { 
-                  name: 'weather-dashboard.tsx', 
-                  type: 'file', 
-                  extension: 'tsx', 
-                  url: getFileUrl('weather-dashboard.tsx')
-                }
-              ]
+            { 
+              name: 'blocksnet.tsx', 
+              type: 'file', 
+              extension: 'tsx'
             },
-            {
-              name: 'task-manager',
-              type: 'folder',
-              children: [
-                { 
-                  name: 'task-manager.py', 
-                  type: 'file', 
-                  extension: 'py'
-                }
-              ]
+            { 
+              name: 'calicalender.tsx', 
+              type: 'file', 
+              extension: 'tsx'
+            },
+            { 
+              name: 'hackathon-ideas-generator.tsx', 
+              type: 'file', 
+              extension: 'tsx'
+            },
+            { 
+              name: 'aiposter.tsx', 
+              type: 'file', 
+              extension: 'tsx'
+            },
+            { 
+              name: 'skinscope.tsx', 
+              type: 'file', 
+              extension: 'tsx'
+            },
+            { 
+              name: 'logoscan.tsx', 
+              type: 'file', 
+              extension: 'tsx'
+            },
+            { 
+              name: 'recess-hacks.tsx', 
+              type: 'file', 
+              extension: 'tsx'
             }
           ]
         },
         {
-          name: 'blog',
+          name: 'school-projects',
           type: 'folder',
           children: [
             { 
-              name: '2024-01-react-patterns.md', 
+              name: 'cs-exam-review.tsx', 
               type: 'file', 
-              extension: 'md'
+              extension: 'tsx'
             },
             { 
-              name: '2023-12-typescript-tips.md', 
+              name: 'history-timeline.tsx', 
               type: 'file', 
-              extension: 'md'
+              extension: 'tsx'
             },
+            { 
+              name: 'easa-website.tsx', 
+              type: 'file', 
+              extension: 'tsx'
+            },
+            { 
+              name: 'amongus-keyboard.py', 
+              type: 'file', 
+              extension: 'py'
+            },
+            { 
+              name: 'classkick-auto.py', 
+              type: 'file', 
+              extension: 'py'
+            }
           ]
         },
         { 
