@@ -260,7 +260,7 @@ Tools: Git, Docker, AWS, Firebase
         }}
         darkMode={darkMode}
         onToggleTheme={() => setDarkMode(!darkMode)}
-        onTerminal={() => { window.location.href = '/'; }}
+        onTerminal={() => { window.location.href = '/terminal'; }}
       />
 
       <div className="min-h-screen bg-background text-foreground">
