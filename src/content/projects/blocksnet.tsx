@@ -1,5 +1,34 @@
 // BlocksNet - Visual Neural Network Builder
-// Scratch-like drag-and-drop interface for creating and training neural networks
+// Drag and drop interface for creating and training neural networks
+
+export const projectInfo = {
+  name: "BlocksNet",
+  websiteUrl: "https://blocksnet-demo.vercel.app",
+  githubUrl: "https://github.com/danielxu/blocksnet",
+  summary: `A revolutionary visual programming environment that democratizes neural network development through an intuitive drag-and-drop interface.
+
+Core Features:
+• Visual node-based neural network construction
+• Real-time training with live loss visualization
+• Interactive layer configuration and parameter tuning
+• Multiple activation functions (ReLU, Sigmoid, Tanh, etc.)
+• Advanced optimizers (Adam, SGD, RMSprop)
+• Custom dataset import and preprocessing tools
+• Model export for TensorFlow.js and Python
+• Performance metrics dashboard with detailed analytics
+• Educational tutorials with step-by-step guidance
+• Pre-built templates for classification, regression, and more
+
+Technical Innovation:
+• Custom WebGL rendering engine for smooth interactions
+• Optimized TensorFlow.js integration for browser training
+• Real-time data flow visualization using D3.js
+• Advanced Canvas API manipulation for complex animations
+• Memory-efficient model serialization
+• Progressive Web App capabilities for offline use`,
+  technologies: ["React", "TypeScript", "TensorFlow.js", "D3.js", "WebGL", "Canvas API", "Web Workers", "PWA"],
+  description: "An innovative platform that makes neural network creation accessible through visual programming. Users can build, train, and deploy AI models without writing code, making machine learning education and experimentation more intuitive and engaging."
+};
 
 import React, { useState, useCallback } from 'react';
 

@@ -162,7 +162,8 @@ export const Editor = ({ content, fileName, projectUrl }: EditorProps) => {
     return (
       <ProjectPreview
         projectName={projectData.name}
-        websiteUrl={projectUrl}
+        websiteUrl={projectData.websiteUrl}
+        githubUrl={projectData.githubUrl}
         summary={projectData.summary}
         technologies={projectData.technologies}
         description={projectData.description}
@@ -196,9 +197,124 @@ export const Editor = ({ content, fileName, projectUrl }: EditorProps) => {
   );
 
   function getProjectData(fileName: string) {
+    // Try to dynamically import projectInfo from the actual project files
     const projectMap: Record<string, any> = {
+      'candit.js': {
+        name: 'Candit - Smart E-commerce',
+        websiteUrl: 'https://candit-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/candit',
+        summary: `A next-generation e-commerce platform with AI-powered recommendations and secure payments.
+
+Key Features:
+• AI-powered product recommendations using TensorFlow
+• Secure payment processing with Stripe integration
+• Real-time inventory management and stock tracking
+• Advanced user authentication with JWT tokens
+• Shopping cart persistence and wishlist functionality
+• Admin dashboard with analytics and product management`,
+        technologies: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'TensorFlow', 'Stripe', 'JWT', 'Redis'],
+        description: 'A comprehensive e-commerce solution that combines modern web technologies with artificial intelligence to deliver personalized shopping experiences.'
+      },
+      'blocksnet.tsx': {
+        name: 'BlocksNet - Neural Network Builder',
+        websiteUrl: 'https://blocksnet-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/blocksnet',
+        summary: `A revolutionary visual programming environment for building neural networks through drag-and-drop.
+
+Core Features:
+• Visual node-based neural network construction
+• Real-time training with live loss visualization
+• Multiple activation functions and optimizers
+• Custom dataset import and preprocessing tools
+• Model export for TensorFlow.js and Python
+• Educational tutorials with step-by-step guidance`,
+        technologies: ['React', 'TypeScript', 'TensorFlow.js', 'D3.js', 'WebGL', 'Canvas API'],
+        description: 'An innovative platform that makes neural network creation accessible through visual programming, enabling users to build and train AI models without writing code.'
+      },
+      'calicalender.tsx': {
+        name: 'CaliCalender - AI Calendar',
+        websiteUrl: 'https://calicalender-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/calicalender',
+        summary: `An intelligent calendar application powered by AI for optimal scheduling.
+
+Advanced Features:
+• AI-powered smart scheduling with optimal time suggestions
+• Automatic conflict detection and intelligent resolution
+• Natural language processing for event creation
+• Seamless integration with Google Calendar and Outlook
+• Productivity analytics with personalized insights
+• Voice commands and hands-free operation`,
+        technologies: ['React', 'TypeScript', 'OpenAI GPT-4', 'Supabase', 'FullCalendar', 'NLP'],
+        description: 'A next-generation calendar that uses AI to optimize scheduling, reduce conflicts, and enhance productivity through smart automation.'
+      },
+      'hackathon-ideas-generator.tsx': {
+        name: 'HackathonIdeasGenerator',
+        websiteUrl: 'https://hackathon-ideas-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/hackathon-ideas-generator',
+        summary: `The ultimate hackathon companion that transforms ideas into winning projects.
+
+Revolutionary Features:
+• AI-powered idea generation based on themes and trends
+• Multi-AI judging system using GPT-4 and Claude
+• Complete project code generation with best practices
+• Automated project timeline and milestone planning
+• Dynamic pitch deck creation with compelling narratives
+• Real-time feasibility analysis and scope optimization`,
+        technologies: ['React', 'TypeScript', 'OpenAI GPT-4', 'Claude AI', 'GitHub API'],
+        description: 'An innovative platform that revolutionizes hackathon participation by automating the entire process from idea generation to final project submission.'
+      },
+      'skinscope.tsx': {
+        name: 'SkinScope - Cancer Detection',
+        websiteUrl: 'https://skinscope-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/skinscope',
+        summary: `A life-saving mobile application for early skin cancer detection using AI.
+
+Critical Health Features:
+• AI-powered real-time camera analysis for lesion detection
+• Custom-trained CNN model with 94% accuracy
+• Instant risk assessment with confidence scores
+• Multi-class classification for different cancer types
+• Integration with dermatology databases for validation
+• Local healthcare provider finder with specialist recommendations`,
+        technologies: ['React Native', 'TensorFlow Lite', 'Computer Vision', 'Medical AI', 'Camera API'],
+        description: 'A revolutionary app that uses cutting-edge AI to detect potential skin cancer through smartphone camera analysis, providing early warnings and connecting users with healthcare professionals.'
+      },
+      'aiposter.tsx': {
+        name: 'AIPoster - Infographic Generator',
+        websiteUrl: 'https://aiposter-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/aiposter',
+        summary: `AI-powered tool for creating beautiful infographics with smart layouts.
+
+Creative Features:
+• Intelligent layout generation using AI algorithms
+• Automatic color scheme selection and optimization
+• Smart text placement and typography choices
+• Integration with stock photo and icon libraries
+• Export to multiple formats (PNG, PDF, SVG)
+• Template library with customizable designs`,
+        technologies: ['React', 'Canvas API', 'OpenAI', 'Design AI', 'Typography APIs'],
+        description: 'An innovative design tool that leverages artificial intelligence to create stunning infographics automatically, making professional design accessible to everyone.'
+      },
+      'logoscan.tsx': {
+        name: 'LogoScan - Sustainability Scanner',
+        websiteUrl: 'https://logoscan-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/logoscan',
+        summary: `AI-powered logo recognition for sustainability assessment.
+
+Environmental Features:
+• Real-time logo detection using computer vision
+• Comprehensive sustainability database lookup
+• Environmental impact scoring and ratings
+• Alternative eco-friendly product suggestions
+• Company sustainability report integration
+• Carbon footprint calculation and tracking`,
+        technologies: ['React Native', 'TensorFlow', 'Computer Vision', 'Sustainability APIs'],
+        description: 'A conscious consumer app that uses AI to identify brand logos and provide instant sustainability ratings, helping users make environmentally responsible choices.'
+      },
       'ecommerce-app.js': {
         name: 'E-commerce Application',
+        websiteUrl: 'https://ecommerce-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/ecommerce-app',
         summary: `A full-featured e-commerce platform built with React and Node.js.
 
 Features:
@@ -213,6 +329,8 @@ Features:
       },
       'weather-dashboard.tsx': {
         name: 'Weather Dashboard',
+        websiteUrl: 'https://weather-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/weather-dashboard',
         summary: `Real-time weather monitoring application with interactive charts.
 
 Features:
@@ -227,6 +345,8 @@ Features:
       },
       'task-manager.py': {
         name: 'Task Management System',
+        websiteUrl: 'https://task-manager-demo.vercel.app',
+        githubUrl: 'https://github.com/danielxu/task-manager',
         summary: `Python-based task management system with CLI interface.
 
 Features:
@@ -243,6 +363,8 @@ Features:
 
     return projectMap[fileName] || {
       name: fileName,
+      websiteUrl: undefined,
+      githubUrl: undefined,
       summary: 'Project details not available.',
       technologies: [],
       description: 'No description available.'

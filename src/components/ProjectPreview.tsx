@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Globe, FileText, ExternalLink } from 'lucide-react';
+import { Globe, FileText, ExternalLink, Github } from 'lucide-react';
 
 interface ProjectPreviewProps {
   projectName: string;
   websiteUrl?: string;
+  githubUrl?: string;
   summary: string;
   technologies: string[];
   description: string;
@@ -14,6 +15,7 @@ interface ProjectPreviewProps {
 export const ProjectPreview = ({ 
   projectName, 
   websiteUrl, 
+  githubUrl,
   summary, 
   technologies, 
   description 
@@ -52,8 +54,20 @@ export const ProjectPreview = ({
               size="sm"
               onClick={() => window.open(websiteUrl, '_blank')}
               className="text-xs"
+              title="Open live demo"
             >
               <ExternalLink className="w-4 h-4" />
+            </Button>
+          )}
+          {githubUrl && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => window.open(githubUrl, '_blank')}
+              className="text-xs"
+              title="View source code"
+            >
+              <Github className="w-4 h-4" />
             </Button>
           )}
         </div>
@@ -87,22 +101,41 @@ export const ProjectPreview = ({
               <p className="text-[#d4d4d4] leading-relaxed whitespace-pre-wrap">{summary}</p>
             </Card>
 
-            {websiteUrl && (
-              <Card className="p-4 bg-[#252526] border-[#2d2d30]">
-                <h3 className="text-lg font-semibold mb-3 text-[#4fc1ff]">Live Demo</h3>
-                <div className="flex items-center space-x-2">
-                  <Globe className="w-4 h-4 text-[#4fc1ff]" />
-                  <a 
-                    href={websiteUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-[#4fc1ff] hover:underline break-all"
-                  >
-                    {websiteUrl}
-                  </a>
-                </div>
-              </Card>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {websiteUrl && (
+                <Card className="p-4 bg-[#252526] border-[#2d2d30]">
+                  <h3 className="text-lg font-semibold mb-3 text-[#4fc1ff]">Live Demo</h3>
+                  <div className="flex items-center space-x-2">
+                    <Globe className="w-4 h-4 text-[#4fc1ff]" />
+                    <a 
+                      href={websiteUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[#4fc1ff] hover:underline break-all"
+                    >
+                      {websiteUrl}
+                    </a>
+                  </div>
+                </Card>
+              )}
+
+              {githubUrl && (
+                <Card className="p-4 bg-[#252526] border-[#2d2d30]">
+                  <h3 className="text-lg font-semibold mb-3 text-[#4fc1ff]">Source Code</h3>
+                  <div className="flex items-center space-x-2">
+                    <Github className="w-4 h-4 text-[#4fc1ff]" />
+                    <a 
+                      href={githubUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[#4fc1ff] hover:underline break-all"
+                    >
+                      View on GitHub
+                    </a>
+                  </div>
+                </Card>
+              )}
+            </div>
           </div>
         ) : (
           <div className="h-full p-4">

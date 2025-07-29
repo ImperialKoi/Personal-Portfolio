@@ -1,6 +1,36 @@
-// CaliCalender - AI-Powered Calendar Application
-// Smart scheduling with AI assistance for optimal time management
+// CaliCalender - AI-Powered Calendar
+// Smart scheduling with AI optimization and conflict resolution
 
+export const projectInfo = {
+  name: "CaliCalender",
+  websiteUrl: "https://calicalender-demo.vercel.app",
+  githubUrl: "https://github.com/danielxu/calicalender",
+  summary: `An intelligent calendar application that leverages cutting-edge AI to transform how we manage time and schedule events.
+
+Advanced Features:
+• AI-powered smart scheduling with optimal time suggestions
+• Automatic conflict detection and intelligent resolution
+• Natural language processing for event creation ("Meeting with John tomorrow at 3pm")
+• Intelligent time zone management for global teams
+• Seamless integration with Google Calendar, Outlook, and Apple Calendar
+• Meeting room optimization and automatic booking
+• Productivity analytics with personalized insights
+• Voice commands and hands-free operation
+• Smart reminder system with context-aware notifications
+• Travel time calculation with real-time traffic data
+
+AI Capabilities:
+• GPT-4 integration for natural language understanding
+• Machine learning for personal scheduling pattern analysis
+• Predictive scheduling based on historical data
+• Automatic categorization and tagging of events
+• Smart buffer time suggestions between meetings
+• Intelligent priority scoring for optimal time allocation`,
+  technologies: ["React", "TypeScript", "OpenAI GPT-4", "Supabase", "FullCalendar", "NLP", "Web Speech API", "Google Maps API"],
+  description: "A next-generation calendar application that uses artificial intelligence to optimize scheduling, reduce conflicts, and enhance productivity. The app learns from user behavior to provide increasingly personalized and efficient scheduling recommendations."
+};
+
+// Keep existing component for backward compatibility
 import React, { useState, useEffect } from 'react';
 
 interface CalendarEvent {
@@ -19,7 +49,7 @@ const CaliCalender = () => {
 
   const features = [
     "🤖 AI-powered scheduling suggestions",
-    "📅 Smart conflict resolution",
+    "📅 Smart conflict resolution", 
     "⏰ Optimal meeting time finder",
     "🎯 Priority-based event organization",
     "📱 Cross-platform synchronization",
