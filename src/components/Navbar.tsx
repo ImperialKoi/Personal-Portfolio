@@ -81,12 +81,12 @@ const Navbar = ({ activeSection, onSectionSelect, darkMode, onToggleTheme, onTer
             activeSection={activeSection}
             onItemClick={(id) => onSectionSelect(id)}
           />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative z-10">
             <Button
               variant="outline"
               size="sm"
               onClick={onToggleTheme}
-              className="hover-scale"
+              className="hover-scale relative z-10"
               aria-label="Toggle theme"
               type="button"
             >
@@ -95,7 +95,7 @@ const Navbar = ({ activeSection, onSectionSelect, darkMode, onToggleTheme, onTer
             <Button
               variant="outline"
               size="sm"
-              className="hover-scale group"
+              className="hover-scale group relative z-10"
               onClick={onTerminal}
               type="button"
             >
@@ -186,7 +186,7 @@ const NavBody = ({ children, className, visible }: NavBodyProps) => {
         damping: 50,
       }}
       style={{
-        minWidth: "800px",
+        minWidth: "fit-content",
       }}
       className={cn(
         "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex",
