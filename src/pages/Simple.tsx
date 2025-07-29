@@ -149,26 +149,53 @@ export default function Simple() {
 
   const projects = [
     {
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with React, Node.js, and PostgreSQL',
-      tech: ['React', 'Node.js', 'PostgreSQL', 'Stripe'],
-      github: 'https://github.com/danielxu/ecommerce',
-      live: 'https://ecommerce-demo.com',
+      title: 'Candit - Smart E-commerce',
+      description: 'Amazon-like shopping platform with AI recommendations and secure payments',
+      tech: ['React', 'Node.js', 'PostgreSQL', 'TensorFlow', 'Stripe'],
+      github: 'https://github.com/danielxu/candit',
+      live: 'https://candit-demo.com',
+      category: 'Full-Stack'
     },
     {
-      title: 'Task Management App',
-      description: 'Collaborative task management with real-time updates',
-      tech: ['React', 'Socket.io', 'Express', 'MongoDB'],
-      github: 'https://github.com/danielxu/taskmanager',
-      live: 'https://taskmanager-demo.com',
+      title: 'BlocksNet - Neural Network Builder',
+      description: 'Visual drag-and-drop interface for building and training neural networks',
+      tech: ['React', 'TypeScript', 'TensorFlow.js', 'D3.js', 'WebGL'],
+      github: 'https://github.com/danielxu/blocksnet',
+      live: 'https://blocksnet-demo.com',
+      category: 'AI/ML'
     },
     {
-      title: 'Weather Dashboard',
-      description: 'Beautiful weather app with location-based forecasts',
-      tech: ['React', 'TypeScript', 'Weather API', 'Charts.js'],
-      github: 'https://github.com/danielxu/weather',
-      live: 'https://weather-demo.com',
+      title: 'CaliCalender - AI Calendar',
+      description: 'Smart scheduling with AI-powered optimization and conflict resolution',
+      tech: ['React', 'OpenAI GPT-4', 'Supabase', 'FullCalendar'],
+      github: 'https://github.com/danielxu/calicalender',
+      live: 'https://calicalender-demo.com',
+      category: 'AI/Productivity'
     },
+    {
+      title: 'HackathonIdeasGenerator',
+      description: 'AI generates, judges, and codes the perfect hackathon project for you',
+      tech: ['React', 'OpenAI', 'Claude AI', 'TypeScript'],
+      github: 'https://github.com/danielxu/hackathon-ideas',
+      live: 'https://hackathon-ideas-demo.com',
+      category: 'AI Tools'
+    },
+    {
+      title: 'SkinScope - Cancer Detection',
+      description: 'AI-powered camera app for early skin cancer detection and diagnosis',
+      tech: ['React Native', 'TensorFlow', 'Computer Vision', 'Medical AI'],
+      github: 'https://github.com/danielxu/skinscope',
+      live: 'https://skinscope-demo.com',
+      category: 'Healthcare AI'
+    },
+    {
+      title: 'AIPoster - Infographic Generator',
+      description: 'AI-powered tool for creating beautiful infographics with smart layouts',
+      tech: ['React', 'Canvas API', 'OpenAI', 'Design AI'],
+      github: 'https://github.com/danielxu/aiposter',
+      live: 'https://aiposter-demo.com',
+      category: 'Design AI'
+    }
   ];
 
   const downloadResume = () => {
