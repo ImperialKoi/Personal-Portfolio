@@ -219,16 +219,9 @@ const NavItems = ({ items, activeSection, className, onItemClick }: { items: { i
             onClick={() => onItemClick(item.id)}
             className={cn(
               "relative px-4 py-2 flex items-center gap-2 rounded-full transition-colors duration-200",
-              hovered === idx ? "bg-muted text-muted-foreground" : 
-              isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:text-primary"
+              isActive ? "bg-primary text-primary-foreground" : "text-foreground"
             )}
           >
-            {hovered === idx && (
-              <motion.div
-                layoutId="hovered"
-                className="absolute inset-0 h-full w-full rounded-full bg-muted"
-              />
-            )}
             <Icon className="h-4 w-4 relative z-10" />
             <span className="relative z-20">{item.name}</span>
           </button>
