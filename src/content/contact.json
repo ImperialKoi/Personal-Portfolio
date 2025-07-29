@@ -1,0 +1,26 @@
+{
+  "contact": {
+    "name": "Daniel Xu",
+    "title": "Full Stack Developer",
+    "email": "daniel.xu@example.com",
+    "phone": "+1 (555) 123-4567",
+    "location": "San Francisco, CA",
+    "website": "https://danielxu.dev",
+    "social": {
+      "linkedin": "https://linkedin.com/in/daniel-xu",
+      "github": "https://github.com/daniel-xu",
+      "twitter": "https://twitter.com/daniel_xu_dev"
+    },
+    "availability": {
+      "status": "Open to opportunities",
+      "preferred_contact": "email",
+      "timezone": "PST (UTC-8)"
+    },
+    "interests": [
+      "Web Development",
+      "Machine Learning",
+      "Open Source",
+      "Tech Innovation"
+    ]
+  }
+}

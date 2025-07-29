@@ -9,6 +9,7 @@ import { TabBar } from '@/components/TabBar';
 import { BootSequence } from '@/components/BootSequence';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { generateFileStructure, getFileContent, getFileUrl } from '@/utils/fileDiscovery';
 
 export type FileType = {
   name: string;
@@ -31,74 +32,14 @@ const PortfolioIDE = () => {
   const [activeFile, setActiveFile] = useState<string>('about.md');
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [tabs, setTabs] = useState<TabType[]>([
-    { id: 'about.md', name: 'about.md', content: `# Hello! I'm Daniel Xu 👋
-
-Full-stack developer passionate about creating amazing web experiences.
-
-## Current Focus
-- 🚀 Building scalable React applications
-- 🎨 Crafting beautiful user interfaces
-- 🔧 DevOps and cloud architecture
-- 📱 Mobile-first responsive design
-
-## Skills
-\`\`\`javascript
-const skills = {
-  frontend: ['React', 'TypeScript', 'Tailwind'],
-  backend: ['Node.js', 'Python', 'PostgreSQL'],
-  tools: ['Docker', 'AWS', 'Git']
-};
-\`\`\`
-
-*Click around to explore my work!* ✨` },
+    { 
+      id: 'about.md', 
+      name: 'about.md', 
+      content: getFileContent('about.md')
+    },
   ]);
 
-  const fileStructure: FileType[] = [
-    {
-      name: 'portfolio',
-      type: 'folder',
-      children: [
-        { name: 'about.md', type: 'file', extension: 'md' },
-        { name: 'resume.pdf', type: 'file', extension: 'pdf' },
-        {
-          name: 'projects',
-          type: 'folder',
-          children: [
-            {
-              name: 'ecommerce-app',
-              type: 'folder',
-              children: [
-                { name: 'ecommerce-app.js', type: 'file', extension: 'js', url: 'https://shopify.com' }
-              ]
-            },
-            {
-              name: 'weather-dashboard',
-              type: 'folder',
-              children: [
-                { name: 'weather-dashboard.tsx', type: 'file', extension: 'tsx', url: 'https://weather.com' }
-              ]
-            },
-            {
-              name: 'task-manager',
-              type: 'folder',
-              children: [
-                { name: 'task-manager.py', type: 'file', extension: 'py' }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'blog',
-          type: 'folder',
-          children: [
-            { name: '2024-01-react-patterns.md', type: 'file', extension: 'md' },
-            { name: '2023-12-typescript-tips.md', type: 'file', extension: 'md' },
-          ]
-        },
-        { name: 'contact.json', type: 'file', extension: 'json' },
-      ]
-    }
-  ];
+  const fileStructure: FileType[] = generateFileStructure();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -119,7 +60,14 @@ const skills = {
   const openFile = (fileName: string, content: string, projectUrl?: string) => {
     setActiveFile(fileName);
     if (!tabs.find(t => t.id === fileName)) {
-      setTabs(prev => [...prev, { id: fileName, name: fileName, content, projectUrl }]);
+      const fileContent = getFileContent(fileName);
+      const fileUrl = getFileUrl(fileName) || projectUrl;
+      setTabs(prev => [...prev, { 
+        id: fileName, 
+        name: fileName, 
+        content: fileContent, 
+        projectUrl: fileUrl 
+      }]);
     }
   };
 
