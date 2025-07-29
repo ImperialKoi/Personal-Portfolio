@@ -8,6 +8,7 @@ import AnimatedUnderline from '@/components/AnimatedUnderline';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import Lenis from '@studio-freight/lenis';
 
 export default function Simple() {
@@ -491,42 +492,66 @@ Tools: Git, Docker, AWS, Firebase
               <AnimatedUnderline draw={underlineInView.skills} className="max-w-xs mx-auto" />
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {skills.map((skill, index) => (
-                <motion.div
-                  key={skill.name}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="hover-scale group">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <motion.div 
-                          className="p-3 bg-primary/10 rounded-lg"
-                          whileHover={{ rotate: 360 }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          <skill.icon className="h-6 w-6 text-primary" />
-                        </motion.div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-foreground text-lg">{skill.name}</h3>
-                          <div className="text-sm text-muted-foreground">{skill.level}% proficiency</div>
-                        </div>
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-3">
+                <CardContainer key={skill.name} className="inter-var py-8">
+                  <CardBody className="bg-card relative group/card dark:hover:shadow-2xl dark:hover:shadow-primary/[0.1] border-border w-auto sm:w-[20rem] h-auto rounded-xl p-6 border">
+                    <CardItem
+                      translateZ="50"
+                      className="text-xl font-bold text-foreground mb-2"
+                    >
+                      {skill.name}
+                    </CardItem>
+                    <CardItem
+                      as="p"
+                      translateZ="60"
+                      className="text-muted-foreground text-sm mb-4"
+                    >
+                      {skill.level}% proficiency
+                    </CardItem>
+                    
+                    <CardItem translateZ="100" className="w-full mb-4">
+                      <motion.div 
+                        className="p-3 bg-primary/10 rounded-lg inline-flex items-center justify-center"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <skill.icon className="h-8 w-8 text-primary" />
+                      </motion.div>
+                    </CardItem>
+
+                    <CardItem translateZ="80" className="w-full">
+                      <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                         <motion.div 
                           className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full"
                           initial={{ width: 0 }}
                           whileInView={{ width: `${skill.level}%` }}
-                          transition={{ duration: 1.5, delay: 0.5 + index * 0.1, ease: "easeOut" }}
+                          transition={{ 
+                            duration: 2, 
+                            delay: 0.5 + index * 0.2, 
+                            ease: "easeOut" 
+                          }}
                           viewport={{ once: true }}
                         />
                       </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                    </CardItem>
+
+                    <div className="flex justify-between items-center mt-6">
+                      <CardItem
+                        translateZ={20}
+                        className="px-4 py-2 rounded-xl text-xs font-normal text-muted-foreground"
+                      >
+                        Skill Level
+                      </CardItem>
+                      <CardItem
+                        translateZ={20}
+                        className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold"
+                      >
+                        {skill.level}%
+                      </CardItem>
+                    </div>
+                  </CardBody>
+                </CardContainer>
               ))}
             </div>
           </div>
