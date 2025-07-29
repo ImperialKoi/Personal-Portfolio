@@ -122,7 +122,7 @@ const Navbar = ({ activeSection, onSectionSelect, darkMode, onToggleTheme, onTer
                 <button
                   key={`mobile-${idx}`}
                   className={cn(
-                    "w-full flex items-center gap-2 text-slate-700 hover:text-orange-600 py-2 text-base font-medium border-b border-gray-100 last:border-none transition-colors duration-200",
+                    "w-full flex items-center gap-2 text-foreground hover:text-primary py-2 text-base font-medium border-b border-border last:border-none transition-colors duration-200",
                     isActive && "text-primary"
                   )}
                   onClick={() => {
@@ -190,7 +190,7 @@ const NavBody = ({ children, className, visible }: NavBodyProps) => {
       }}
       className={cn(
         "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex",
-        visible && "bg-white/50",
+        visible && "bg-background/80 backdrop-blur-md border border-border",
         className,
       )}
     >
@@ -219,13 +219,13 @@ const NavItems = ({ items, activeSection, className, onItemClick }: { items: { i
             onClick={() => onItemClick(item.id)}
             className={cn(
               "relative px-4 py-2 flex items-center gap-2 rounded-full transition-colors duration-200",
-              isActive ? "bg-orange-300 text-primary" : "text-slate-700 hover:text-orange-600"
+              isActive ? "bg-primary text-primary-foreground" : "text-foreground hover:text-primary"
             )}
           >
             {hovered === idx && (
               <motion.div
                 layoutId="hovered"
-                className="absolute inset-0 h-full w-full rounded-full bg-orange-300"
+                className="absolute inset-0 h-full w-full rounded-full bg-primary/20"
               />
             )}
             <Icon className="h-4 w-4 relative z-10" />
@@ -258,7 +258,7 @@ const MobileNav = ({ children, className, visible }: MobileNavProps) => {
       }}
       className={cn(
         "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
-        visible && "bg-white/90",
+        visible && "bg-background/80 backdrop-blur-md border border-border",
         className,
       )}
     >
@@ -298,7 +298,7 @@ const MobileNavMenu = ({
             ease: "easeInOut" 
           }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-[92%] mx-auto flex-col items-start justify-start gap-2 rounded-xl bg-white px-4 py-5 shadow-lg",
+            "absolute inset-x-0 top-16 z-50 flex w-[92%] mx-auto flex-col items-start justify-start gap-2 rounded-xl bg-popover border border-border px-4 py-5 shadow-lg",
             className,
           )}
         >
@@ -317,11 +317,11 @@ const MobileNavToggle = ({
   onClick: () => void;
 }) => {
   return (
-    <div className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" onClick={onClick}>
+    <div className="p-2 rounded-lg hover:bg-secondary transition-colors duration-200" onClick={onClick}>
       {isOpen ? (
-        <X className="text-slate-700 h-5 w-5" />
+        <X className="text-foreground h-5 w-5" />
       ) : (
-        <Menu className="text-slate-700 h-5 w-5" />
+        <Menu className="text-foreground h-5 w-5" />
       )}
     </div>
   );
