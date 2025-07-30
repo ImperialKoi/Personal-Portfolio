@@ -191,5 +191,3 @@ app.get('/profile', (req, res) => {
 These TypeScript patterns will help you write more maintainable, type-safe code. The key is to let TypeScript's type system guide your API design and catch errors at compile time rather than runtime.
 
 ---
-
-*Have a favorite TypeScript pattern? Share it in the comments below!*

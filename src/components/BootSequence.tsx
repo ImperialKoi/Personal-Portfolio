@@ -123,9 +123,7 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
       {isComplete && (
         <div className="fixed bottom-8 left-8 right-8 text-center text-green-300 animate-pulse text-lg">
           <div className="flex items-center justify-center space-x-4">
-            <div className="animate-spin">⟳</div>
             <span>Press 'T' for Portfolio IDE or 'S' for Simple Mode...</span>
-            <div className="animate-spin">⟳</div>
           </div>
         </div>
       )}

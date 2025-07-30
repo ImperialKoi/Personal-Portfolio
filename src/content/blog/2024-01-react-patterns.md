@@ -137,5 +137,3 @@ function DataFetcher<T>({ url, render }: DataFetcherProps<T>) {
 These patterns will help you write more maintainable React applications in 2024 and beyond.
 
 ---
-
-*What patterns are you excited to try? Let me know on [Twitter](https://twitter.com/daniel_xu_dev)!*

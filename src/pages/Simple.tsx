@@ -298,16 +298,6 @@ Tools: Git, Docker, AWS, Firebase
           data-section="hero"
           className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
         >
-          {/* Background decorative dots */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-20 left-10 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-            <div className="absolute top-40 right-20 w-1 h-1 bg-secondary rounded-full animate-pulse delay-1000"></div>
-            <div className="absolute bottom-40 left-20 w-1.5 h-1.5 bg-accent rounded-full animate-pulse delay-500"></div>
-            <div className="absolute bottom-20 right-10 w-2 h-2 bg-primary rounded-full animate-pulse delay-700"></div>
-            <div className="absolute top-60 left-1/3 w-1 h-1 bg-primary rounded-full animate-pulse delay-300"></div>
-            <div className="absolute bottom-60 right-1/3 w-1.5 h-1.5 bg-secondary rounded-full animate-pulse delay-800"></div>
-          </div>
-          
           <motion.div 
             className="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center animate-fade-in"
             style={{ opacity: heroOpacity, scale: heroScale }}
@@ -372,7 +362,7 @@ Tools: Git, Docker, AWS, Firebase
                 transition={{ duration: 0.6, delay: 1.4 }}
               >
                 <Button size="lg" className="hover-scale group">
-                  <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+                  <Mail className="mr-2 h-5 w-5" />
                   Contact me!
                 </Button>
               </motion.div>
@@ -647,7 +637,7 @@ Tools: Git, Docker, AWS, Firebase
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="hover-scale group">
-                <Mail className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+                <Mail className="mr-2 h-5 w-5" />
                 Get In Touch
               </Button>
               <Button variant="outline" size="lg" className="hover-scale" onClick={downloadResume}>
