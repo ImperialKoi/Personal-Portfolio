@@ -2,19 +2,19 @@
   "contact": {
     "name": "Daniel Xu",
     "title": "Full Stack Developer",
-    "email": "daniel.xu@example.com",
-    "phone": "+1 (555) 123-4567",
-    "location": "San Francisco, CA",
+    "email": "imperialkoi9@gmail.com",
+    "phone": "(647) 875 0619",
+    "location": "Ontario, Canada",
     "website": "https://danielxu.dev",
     "social": {
-      "linkedin": "https://linkedin.com/in/daniel-xu",
-      "github": "https://github.com/daniel-xu",
-      "twitter": "https://twitter.com/daniel_xu_dev"
+      "linkedin": "https://www.linkedin.com/in/daniel-xu-876272368/",
+      "github": "https://github.com/ImperialKoi",
+      "devpost": "https://devpost.com/ImperialKoi?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav"
     },
     "availability": {
       "status": "Open to opportunities",
       "preferred_contact": "email",
-      "timezone": "PST (UTC-8)"
+      "timezone": "EST (GMT-4)"
     },
     "interests": [
       "Web Development",

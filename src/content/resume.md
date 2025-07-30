@@ -1,57 +1,86 @@
-# Daniel Xu - Resume
+# Daniel Xu
 
-## Contact Information
-- **Email:** daniel.xu@example.com
-- **Phone:** (555) 123-4567
-- **LinkedIn:** linkedin.com/in/daniel-xu
-- **GitHub:** github.com/daniel-xu
+**ImperialKoi** • (647) 875‑0619 • imperialkoi9@gmail.com • [github.com/ImperialKoi](https://github.com/ImperialKoi)
+
+---
 
 ## Professional Summary
-Experienced full-stack developer with 5+ years of experience building scalable web applications. Passionate about creating exceptional user experiences and writing clean, maintainable code.
+Proactive and results-driven Full Stack Developer with hands‑on experience building dynamic, responsive web applications using React.js, Next.js, and Node.js. Passionate about creating intuitive user interfaces and leveraging back‑end technologies to deliver seamless digital experiences. Proven leader in team environments—attended eight hackathons and consistently delivered innovative projects under pressure.
+
+---
 
 ## Experience
 
-### Senior Frontend Developer | TechCorp Inc.
-*2022 - Present*
-- Led development of React-based dashboard used by 10,000+ users
-- Implemented responsive design patterns reducing mobile bounce rate by 30%
-- Mentored junior developers and established coding standards
+### Hackathon Web‑Dev Lead & Logistics Coordinator  
+**RecessHacks & IncubatorHacks** · April 2024 – Present  
+- Led the web‑development team: designed, built, and maintained the event website (registration portal, schedules, sponsor pages).  
+- Coordinated logistics: created project timeline, managed vendors, and ensured all deadlines were met.  
+- Secured sponsorships by researching partners, drafting proposals, and negotiating in‑kind and monetary support (software licenses, T‑shirts).  
+- Promoted events through social media, email campaigns, and campus posters.
 
-### Full Stack Developer | StartupXYZ
-*2020 - 2022*
-- Built microservices architecture handling 1M+ API requests daily
-- Developed real-time features using WebSocket connections
-- Reduced page load times by 40% through optimization techniques
+### Executive & Web Developer  
+**East Asian Student Association (EASA), Abbey Park High School** · Sep 2023 – Present  
+- Designed and launched the EASA website to centralize event info, membership sign‑ups, and photo galleries—boosting engagement.  
+- Secured sponsorship from Gotcha Bubble Tea for annual cultural festival (100+ attendees).  
+- Managed event budgets, volunteer roles, and vendor contracts.  
+- Organized Lunar New Year festival with 200+ participants and 4+ hours of performances.
 
-### Frontend Developer | WebAgency
-*2019 - 2020*
-- Created custom WordPress themes and plugins
-- Implemented SEO best practices increasing organic traffic by 60%
-- Collaborated with design team to deliver pixel-perfect implementations
+### Founder & President  
+**Data Science and AI Club, Abbey Park High School** · Feb 2024 – Present  
+- Established and lead a student‑run AI club teaching fundamentals and projects.  
+- Executed marketing (posters, social media, newsletters) to grow membership from 0 to 34 in one semester.
 
-## Education
+---
 
-### Bachelor of Science in Computer Science
-*University of Technology | 2015 - 2019*
-- Graduated Magna Cum Laude
-- Relevant Coursework: Data Structures, Algorithms, Database Systems
+## Projects
+
+- **AI Skin Cancer Detector (SkinScope AI)**  
+  *Best UI/UX Award, Hack The Ridge 2024*  
+  - Trained a CNN to classify skin lesion images by cancer type/stage with high accuracy.  
+  - Built a full‑stack app providing analysis, treatment info, and facility mapping via Google Maps API.  
+  - Designed empathetic, accessible UI under a 48‑hour deadline.  
+  - **Tech Stack:** Python, TensorFlow, Flask, React, FastAPI, Google Maps API
+
+- **AI Infographic Generator (Sudore AI)**  
+  *5th Place, RecessHacks 4.0*  
+  - Developed a full‑stack app using OpenAI API to generate data‑driven infographics.  
+  - Implemented a React drag‑and‑drop editor for quick visual creation.  
+  - Pitched live demo, finishing top 5 of 190+ teams.  
+  - **Tech Stack:** React, Node.js, Express, OpenAI API, Vercel
+
+- **Visual Neural Network Builder**  
+  *JamHacks*  
+  - Built a block‑based web platform for constructing and training neural networks.  
+  - JavaScript front end with Python/Flask backend for real‑time training and visualization.  
+  - **Tech Stack:** React, Next.js, Python, Flask, TensorFlow.js
+
+- **Discord Community & API Integrations**  
+  - Created Discord.js bots for role management, event notifications, and engagement.  
+  - Developed web apps integrating with Discord API for seamless cross‑platform interactions.  
+  - **Tech Stack:** Node.js, Discord.js, REST APIs
+
+---
 
 ## Skills
 
-### Programming Languages
-- JavaScript/TypeScript
-- Python
-- SQL
-- HTML/CSS
+- **Languages:** Python · Ruby · Java · C++ · JavaScript/TypeScript · SQL  
+- **Web:** React.js · Next.js · Vue.js · REST APIs · MERN Stack  
+- **Databases:** MySQL · MongoDB · Supabase  
+- **Cloud:** AWS  
+- **ML/AI:** PyTorch · TensorFlow  
+- **GenAI/LLMs:** GPT‑4 · BERT · Mistral · LLaMA · Gemini
 
-### Frameworks & Libraries
-- React/Next.js
-- Node.js/Express
-- Django/Flask
-- Tailwind CSS
+---
 
-### Tools & Technologies
-- Git/GitHub
-- Docker
-- AWS
-- PostgreSQL/MongoDB
+## Sports
+- **Badminton:** Provincial Competitor  
+- **Basketball & Volleyball:** Recreational  
+- **Running:** Exercise
+
+## Extracurriculars
+- **Link Crew:** Executive  
+- **East Asian Student Association:** Executive  
+- **Data Science & AI Club:** Co‑President & Founder  
+- **DECA:** Provincial Contestant  
+- **Math Society:** Honors Roll for Multiple Contests  
+- **TEDx:** Annual Event Organizer

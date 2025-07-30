@@ -110,7 +110,7 @@ export const generateFileStructure = (): FileType[] => {
               extension: 'tsx'
             },
             { 
-              name: 'logoscan.tsx', 
+              name: 'ecoscan.tsx', 
               type: 'file', 
               extension: 'tsx'
             },
