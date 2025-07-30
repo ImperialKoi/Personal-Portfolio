@@ -196,7 +196,9 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       }
     },
     simple: () => {
-      window.location.href = '/simple';
+      setTimeout(() => {
+        window.location.href = '/simple';
+      }, 600); 
       return [
         '🎨 Launching simple portfolio view...',
         'Redirecting to simplified interface...',
