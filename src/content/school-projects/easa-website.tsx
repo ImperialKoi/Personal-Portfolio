@@ -26,7 +26,7 @@ Features event management, member profiles, and community engagement.
     "• Leadership development",
     "• Cultural exchange programs"
   ],
-  const upcomingEvents: Event[] = [
+  upcomingEvents: [
     {
       id: '1',
       title: 'Lunar New Year Celebration',

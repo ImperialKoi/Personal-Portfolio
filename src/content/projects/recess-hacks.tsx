@@ -20,13 +20,13 @@ Comprehensive platform for hackathon registration, team formation, scheduling, a
     "🔐 Secure participant authentication",
     "📊 Event analytics & feedback collection"
   ],
-  const sponsors = [
+  sponsors: [
     { name: 'TechCorp', tier: 'Platinum', logo: '🏢' },
     { name: 'StartupLab', tier: 'Gold', logo: '🚀' },
     { name: 'DevTools Inc', tier: 'Silver', logo: '⚙️' },
     { name: 'CloudHost', tier: 'Bronze', logo: '☁️' }
-  ];
-  const day1Schedule: Schedule[] = [
+  ],
+  day1Schedule: [
     { time: '9:00 AM', event: 'Registration & Breakfast', location: 'Main Lobby', type: 'meal' },
     { time: '10:00 AM', event: 'Opening Ceremony', location: 'Auditorium', type: 'keynote' },
     { time: '11:00 AM', event: 'Team Formation', location: 'Main Hall', type: 'networking' },
@@ -35,17 +35,7 @@ Comprehensive platform for hackathon registration, team formation, scheduling, a
     { time: '3:00 PM', event: 'API Workshop', location: 'Room 101', type: 'workshop' },
     { time: '6:00 PM', event: 'Dinner', location: 'Cafeteria', type: 'meal' },
     { time: '8:00 PM', event: 'Networking Social', location: 'Lounge', type: 'networking' }
-  ];
-  const getEventIcon = (type: string) => {
-    switch (type) {
-      case 'keynote': return '🎤';
-      case 'workshop': return '🛠️';
-      case 'meal': return '🍽️';
-      case 'competition': return '🏆';
-      case 'networking': return '🤝';
-      default: return '📅';
-    }
-  }
+  ],
   techCategories: {
     frontend:     ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
     backend:      ["Supabase", "Real‑time Subscriptions", "Edge Functions"],
