@@ -19,14 +19,6 @@ Drag, drop, and challenge your knowledge across global history.
     "🎮 Gamified learning experience",
     "📱 Touch‑friendly mobile support"
   ],
-  const categories = [
-    { name: 'Wars & Conflicts', icon: '⚔️', color: 'bg-red-100 text-red-700' },
-    { name: 'Political Events', icon: '🏛️', color: 'bg-blue-100 text-blue-700' },
-    { name: 'Scientific Discoveries', icon: '🔬', color: 'bg-green-100 text-green-700' },
-    { name: 'Cultural Movements', icon: '🎨', color: 'bg-purple-100 text-purple-700' },
-    { name: 'Inventions', icon: '⚙️', color: 'bg-orange-100 text-orange-700' },
-    { name: 'Explorations', icon: '🧭', color: 'bg-teal-100 text-teal-700' }
-  ],
   technologies: [
     "React", "TypeScript", "Tailwind CSS",
     "Framer Motion", "HTML5 Drag & Drop",

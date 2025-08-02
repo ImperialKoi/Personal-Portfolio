@@ -20,26 +20,6 @@ across data structures, algorithms, OOP, and more—all in real time.
     "💡 In‑depth explanations for every question",
     "📚 Comprehensive CS topic coverage"
   ],
-  const [currentPlayer, setCurrentPlayer] = useState<Player>({
-    id: 'player1',
-    name: 'You',
-    score: 0,
-    streak: 0,
-    answeredQuestions: 0
-  });
-  const [leaderboard] = useState<Player[]>([
-    { id: '1', name: 'Alex Chen', score: 2450, streak: 12, answeredQuestions: 45 },
-    { id: '2', name: 'You', score: 2380, streak: 8, answeredQuestions: 42 },
-    { id: '3', name: 'Mike Johnson', score: 2290, streak: 15, answeredQuestions: 38 },
-  ]);
-  const categories = [
-    { name: 'Data Structures', questions: 45, icon: '🏗️' },
-    { name: 'Algorithms', questions: 52, icon: '⚡' },
-    { name: 'Object-Oriented Programming', questions: 38, icon: '🔧' },
-    { name: 'Database Systems', questions: 31, icon: '💾' },
-    { name: 'Computer Networks', questions: 29, icon: '🌐' },
-    { name: 'Operating Systems', questions: 35, icon: '💻' }
-  ];
   technologies: [
     "React", "TypeScript", "Tailwind CSS",
     "WebSockets", "Supabase", "PostgreSQL",
