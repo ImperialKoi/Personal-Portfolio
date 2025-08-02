@@ -23,7 +23,7 @@ import { EASA } from '@/content/school-projects/easa-website.tsx';
 import { HISTORYTIMELINE } from '@/content/school-projects/history-timeline.tsx';
 
 // Enhanced challenge types with different minigames
-const challenges = [
+const baseChallenges = [
   {
     id: 1,
     type: 'quiz',
@@ -33,18 +33,16 @@ const challenges = [
     options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
     correct: 1,
     hint: "Think about how the search space is divided...",
-    icon: Code,
-    unlocks: 2
+    icon: Code
   },
   {
     id: 2,
     type: 'memory',
     title: "Memory Challenge",
     description: "Remember the sequence of technologies",
-    sequence: ["React", "TypeScript", "Node.js", "PostgreSQL", "Docker"],
+    sequence: ["React", "TypeScript", "Node.js", "PostgreSQL"],
     hint: "Frontend to backend flow",
-    icon: Target,
-    unlocks: 3
+    icon: Target
   },
   {
     id: 3,
@@ -54,8 +52,7 @@ const challenges = [
     code: "const handleSubmit = (e) => { e.preventDefault(); }",
     timeLimit: 15,
     hint: "Focus on accuracy over speed",
-    icon: Timer,
-    unlocks: 2
+    icon: Timer
   },
   {
     id: 4,
@@ -66,8 +63,7 @@ const challenges = [
     options: ["=", "==", "===", "!="],
     correct: 2,
     hint: "We want to check equality, not assignment",
-    icon: Code,
-    unlocks: 2
+    icon: Code
   },
   {
     id: 5,
@@ -78,8 +74,67 @@ const challenges = [
     options: [11, 13, 15, 21],
     correct: 1,
     hint: "Each number is the sum of the two preceding ones",
-    icon: Shuffle,
-    unlocks: 2
+    icon: Shuffle
+  },
+  {
+    id: 6,
+    type: 'memory',
+    title: "Tech Stack Memory",
+    description: "Remember the order of these frameworks",
+    sequence: ["Express", "MongoDB", "Redis", "Docker"],
+    hint: "Backend tech stack order",
+    icon: Target
+  },
+  {
+    id: 7,
+    type: 'typing',
+    title: "Arrow Function Speed",
+    description: "Type this modern JS syntax quickly!",
+    code: "const users = data.filter(user => user.active).map(u => u.name)",
+    timeLimit: 18,
+    hint: "Modern JavaScript functional programming",
+    icon: Timer
+  },
+  {
+    id: 8,
+    type: 'quiz',
+    title: "CSS Flexbox",
+    description: "Flexbox alignment knowledge",
+    question: "Which property centers items both horizontally and vertically?",
+    options: ["align-items: center", "justify-content: center", "place-items: center", "Both A and B"],
+    correct: 3,
+    hint: "You need both axes covered",
+    icon: Code
+  },
+  {
+    id: 9,
+    type: 'pattern',
+    title: "Binary Pattern",
+    description: "Complete the binary sequence",
+    pattern: [2, 4, 8, 16, "?"],
+    options: [24, 32, 20, 18],
+    correct: 1,
+    hint: "Powers of 2",
+    icon: Shuffle
+  },
+  {
+    id: 10,
+    type: 'memory',
+    title: "Database Commands",
+    description: "Remember SQL command order",
+    sequence: ["SELECT", "FROM", "WHERE", "ORDER BY"],
+    hint: "SQL query structure",
+    icon: Target
+  },
+  {
+    id: 11,
+    type: 'typing',
+    title: "React Hook",
+    description: "Type this React hook correctly!",
+    code: "const [state, setState] = useState(initialValue)",
+    timeLimit: 12,
+    hint: "React's most basic hook",
+    icon: Timer
   }
 ];
 
@@ -291,37 +346,25 @@ const PatternGame = ({ challenge, onComplete }) => {
 
 // Main component
 export default function Projects() {
+  const [challenges, setChallenges] = useState([]);
   const [currentChallenge, setCurrentChallenge] = useState(0);
   const [unlockedProjects, setUnlockedProjects] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
-  const [score, setScore] = useState(0);
   const [allUnlocked, setAllUnlocked] = useState(false);
 
   const currentChallengeData = challenges[currentChallenge];
-  const progress = ((currentChallenge + 1) / challenges.length) * 100;
+  const progress = challenges.length > 0 ? ((currentChallenge + 1) / challenges.length) * 100 : 0;
 
-  const handleChallengeComplete = useCallback((isCorreect) => {
+  const handleChallengeComplete = useCallback((isCorrect) => {
     setShowResult(true);
     
-    if (isCorreect) {
-      setScore(score + 1);
+    // Always unlock exactly one project
+    const nextProjectIndex = unlockedProjects.length;
+    if (nextProjectIndex < allProjects.length) {
+      setUnlockedProjects([...unlockedProjects, nextProjectIndex]);
     }
-    
-    // Unlock projects based on challenge
-    const projectsToUnlock = Math.min(
-      currentChallengeData.unlocks, 
-      allProjects.length - unlockedProjects.length
-    );
-    const newUnlocked = [];
-    for (let i = 0; i < projectsToUnlock; i++) {
-      const nextProject = unlockedProjects.length + i;
-      if (nextProject < allProjects.length) {
-        newUnlocked.push(nextProject);
-      }
-    }
-    setUnlockedProjects([...unlockedProjects, ...newUnlocked]);
 
     setTimeout(() => {
       if (currentChallenge < challenges.length - 1) {
@@ -333,7 +376,7 @@ export default function Projects() {
         setUnlockedProjects(Array.from({ length: allProjects.length }, (_, i) => i));
       }
     }, 2000);
-  }, [currentChallenge, currentChallengeData, unlockedProjects, score, allProjects.length]);
+  }, [currentChallenge, unlockedProjects, challenges.length, allProjects.length]);
 
   const handleQuizAnswer = (answerIndex) => {
     setSelectedAnswer(answerIndex);
@@ -341,24 +384,27 @@ export default function Projects() {
   };
 
   const resetGame = () => {
+    // Shuffle challenges for new game
+    const shuffled = [...baseChallenges].sort(() => Math.random() - 0.5).slice(0, allProjects.length);
+    setChallenges(shuffled);
     setCurrentChallenge(0);
     setUnlockedProjects([]);
     setGameStarted(false);
     setSelectedAnswer(null);
     setShowResult(false);
-    setScore(0);
     setAllUnlocked(false);
   };
 
   const getProjectCardHeight = (project) => {
-    // Dynamic height based on content
-    const baseHeight = 280;
-    const summaryLength = project.summary?.length || 0;
-    const techCount = project.technologies?.length || 0;
-    
-    if (summaryLength > 200 || techCount > 6) return 'h-80';
-    if (summaryLength > 150 || techCount > 4) return 'h-72';
-    return 'h-64';
+    // Fixed height to prevent overflow
+    return 'h-72';
+  };
+
+  const startGame = () => {
+    // Shuffle challenges when starting
+    const shuffled = [...baseChallenges].sort(() => Math.random() - 0.5).slice(0, allProjects.length);
+    setChallenges(shuffled);
+    setGameStarted(true);
   };
 
   if (!gameStarted) {
@@ -413,22 +459,22 @@ export default function Projects() {
             <div className="mt-6 space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Trophy className="w-4 h-4 text-primary" />
-                <span>Complete challenges to unlock projects</span>
+                <span>Each challenge unlocks exactly one project</span>
               </div>
               <div className="flex items-center gap-3">
                 <BookOpen className="w-4 h-4 text-primary" />
                 <span>Includes both main projects and school work</span>
               </div>
               <div className="flex items-center gap-3">
-                <Zap className="w-4 h-4 text-primary" />
-                <span>Different challenge types unlock different amounts</span>
+                <Shuffle className="w-4 h-4 text-primary" />
+                <span>Challenges are randomized each game</span>
               </div>
             </div>
           </div>
 
           <Button 
             size="lg" 
-            onClick={() => setGameStarted(true)}
+            onClick={startGame}
             className="text-lg px-8"
           >
             Start Challenge
@@ -445,13 +491,13 @@ export default function Projects() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-4">🎮 Project Vault</h1>
           <div className="flex items-center justify-center gap-4 mb-4">
-            <Badge variant="outline">Score: {score}/{challenges.length}</Badge>
-            <Badge variant="outline">Unlocked: {unlockedProjects.length}/{allProjects.length}</Badge>
+            <Badge variant="outline">Progress: {unlockedProjects.length}/{allProjects.length}</Badge>
+            <Badge variant="outline">Challenge: {currentChallenge + 1}/{challenges.length}</Badge>
           </div>
           <Progress value={progress} className="w-full max-w-md mx-auto" />
         </div>
 
-        {!allUnlocked && (
+        {!allUnlocked && challenges.length > 0 && (
           <motion.div 
             key={currentChallenge}
             initial={{ opacity: 0, x: 50 }}
@@ -577,29 +623,31 @@ export default function Projects() {
                               {project.status}
                             </Badge>
                           </div>
-                          <CardDescription className="text-sm line-clamp-2">{project.description}</CardDescription>
+                          <CardDescription className="text-sm line-clamp-2">
+                            {project.description}
+                          </CardDescription>
                         </CardHeader>
                         
-                        <CardContent className="space-y-3 pt-0">
-                          <p className="text-sm line-clamp-3">{project.summary.substring(0, 120)}...</p>
+                        <CardContent className="space-y-3 pt-0 flex-1">
+                          <p className="text-sm line-clamp-2">{project.summary.substring(0, 100)}...</p>
                           
                           {isUnlocked && project.technologies && (
                             <div className="flex flex-wrap gap-1">
-                              {project.technologies.slice(0, 4).map((tech, techIndex) => (
+                              {project.technologies.slice(0, 3).map((tech, techIndex) => (
                                 <Badge key={techIndex} variant="outline" className="text-xs">
                                   {tech}
                                 </Badge>
                               ))}
-                              {project.technologies.length > 4 && (
+                              {project.technologies.length > 3 && (
                                 <Badge variant="outline" className="text-xs">
-                                  +{project.technologies.length - 4}
+                                  +{project.technologies.length - 3}
                                 </Badge>
                               )}
                             </div>
                           )}
                           
                           {isUnlocked && (
-                            <div className="flex gap-2 pt-2">
+                            <div className="flex gap-2 pt-1 mt-auto">
                               <Button size="sm" asChild className="text-xs">
                                 <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
                                   <ExternalLink className="w-3 h-3 mr-1" />
@@ -667,29 +715,31 @@ export default function Projects() {
                               School
                             </Badge>
                           </div>
-                          <CardDescription className="text-sm line-clamp-2">{project.description || project.summary}</CardDescription>
+                          <CardDescription className="text-sm line-clamp-2">
+                            {project.description || project.summary.substring(0, 80) + "..."}
+                          </CardDescription>
                         </CardHeader>
                         
-                        <CardContent className="space-y-3 pt-0">
-                          <p className="text-sm line-clamp-3">{project.summary.substring(0, 120)}...</p>
+                        <CardContent className="space-y-3 pt-0 flex-1">
+                          <p className="text-sm line-clamp-2">{project.summary.substring(0, 100)}...</p>
                           
                           {isUnlocked && project.technologies && (
                             <div className="flex flex-wrap gap-1">
-                              {project.technologies.slice(0, 4).map((tech, techIndex) => (
+                              {project.technologies.slice(0, 3).map((tech, techIndex) => (
                                 <Badge key={techIndex} variant="outline" className="text-xs">
                                   {tech}
                                 </Badge>
                               ))}
-                              {project.technologies.length > 4 && (
+                              {project.technologies.length > 3 && (
                                 <Badge variant="outline" className="text-xs">
-                                  +{project.technologies.length - 4}
+                                  +{project.technologies.length - 3}
                                 </Badge>
                               )}
                             </div>
                           )}
                           
                           {isUnlocked && (
-                            <div className="flex gap-2 pt-2">
+                            <div className="flex gap-2 pt-1 mt-auto">
                               <Button size="sm" asChild className="text-xs">
                                 <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
                                   <ExternalLink className="w-3 h-3 mr-1" />
