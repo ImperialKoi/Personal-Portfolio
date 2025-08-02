@@ -26,6 +26,26 @@ Features event management, member profiles, and community engagement.
     "• Leadership development",
     "• Cultural exchange programs"
   ],
+  const upcomingEvents: Event[] = [
+    {
+      id: '1',
+      title: 'Lunar New Year Celebration',
+      date: '2024-02-10',
+      time: '6:00 PM - 9:00 PM',
+      location: 'Student Union Ballroom',
+      description: 'Join us for traditional performances, authentic cuisine, and cultural activities celebrating the Year of the Dragon.',
+      category: 'cultural'
+    },
+    {
+      id: '2',
+      title: 'Community Service Day',
+      date: '2024-02-25',
+      time: '9:00 AM - 3:00 PM',
+      location: 'Local Community Center',
+      description: 'Volunteer opportunity to give back to the local community through various service projects.',
+      category: 'volunteer'
+    }
+  ],
   technologies: [
     "React", "TypeScript", "Tailwind CSS",
     "Framer Motion", "Static CMS", "Netlify (or your host)"
