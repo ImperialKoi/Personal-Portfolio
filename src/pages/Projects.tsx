@@ -28,10 +28,10 @@ const baseChallenges = [
     id: 1,
     type: 'target-click',
     title: "Bug Hunt",
-    description: "Click all the bugs before time runs out!",
-    targetCount: 8,
-    timeLimit: 10,
-    hint: "Quick reflexes needed!",
+    description: "Click all the bugs scattered across the page!",
+    targetCount: 12,
+    timeLimit: 15,
+    hint: "They're hiding everywhere!",
     icon: Target
   },
   {
@@ -57,7 +57,7 @@ const baseChallenges = [
     title: "Component Layout",
     description: "Remember the component positions!",
     gridSize: 4,
-    showTime: 2000,
+    showTime: 2500,
     hint: "Focus on the pattern",
     icon: Target
   },
@@ -89,9 +89,9 @@ const baseChallenges = [
     id: 7,
     type: 'target-click',
     title: "Memory Leak Hunt",
-    description: "Find and click all memory leaks!",
-    targetCount: 6,
-    timeLimit: 8,
+    description: "Find and click all memory leaks across the screen!",
+    targetCount: 8,
+    timeLimit: 10,
     hint: "They're hiding in the code",
     icon: Target
   },
@@ -106,11 +106,13 @@ const baseChallenges = [
   },
   {
     id: 9,
-    type: 'reaction',
-    title: "Build Complete",
-    description: "Click when the build status shows success!",
-    hint: "Watch for the green light",
-    icon: Zap
+    type: 'whack-a-mole',
+    title: "Exception Whacker",
+    description: "Whack the exceptions as they pop up!",
+    targetCount: 10,
+    timeLimit: 12,
+    hint: "Quick reflexes needed!",
+    icon: Target
   },
   {
     id: 10,
@@ -123,12 +125,11 @@ const baseChallenges = [
   },
   {
     id: 11,
-    type: 'memory-grid',
-    title: "Database Schema",
-    description: "Remember the table relationships!",
-    gridSize: 3,
-    showTime: 3000,
-    hint: "Foreign key connections",
+    type: 'simon-says',
+    title: "Debug Commands",
+    description: "Repeat the debugging sequence!",
+    sequence: ["console.log", "debugger", "breakpoint", "inspect"],
+    hint: "Follow the exact order",
     icon: Target
   },
   {
@@ -140,6 +141,40 @@ const baseChallenges = [
     timeLimit: 12,
     hint: "Basic React JSX syntax",
     icon: Timer
+  },
+  {
+    id: 13,
+    type: 'drag-drop',
+    title: "Code Organizer",
+    description: "Drag code blocks to their correct positions!",
+    items: ["import", "useState", "useEffect", "return"],
+    correctOrder: [0, 1, 2, 3],
+    hint: "Standard React component structure",
+    icon: Code
+  },
+  {
+    id: 14,
+    type: 'math-rush',
+    title: "Algorithm Complexity",
+    description: "Solve time complexity equations quickly!",
+    equations: [
+      { question: "O(2^n) vs O(n!)", answer: "O(n!) is worse", options: ["O(2^n) is worse", "O(n!) is worse", "Equal", "Depends"] },
+      { question: "O(log n) + O(n)", answer: "O(n)", options: ["O(log n)", "O(n)", "O(n log n)", "O(n²)"] }
+    ],
+    timeLimit: 20,
+    hint: "Choose the dominant term",
+    icon: Zap
+  },
+  {
+    id: 15,
+    type: 'pixel-perfect',
+    title: "CSS Precision",
+    description: "Click exactly on the center of the target!",
+    tolerance: 15, // pixels
+    targetCount: 5,
+    timeLimit: 15,
+    hint: "Precision is key!",
+    icon: Target
   }
 ];
 
@@ -162,7 +197,7 @@ const schoolProjects = [
 
 const allProjects = [...mainProjects, ...schoolProjects];
 
-// Target clicking game - click moving targets
+// Target clicking game - targets spread across entire viewport
 const TargetClickGame = ({ challenge, onComplete }) => {
   const [targets, setTargets] = useState([]);
   const [clickedTargets, setClickedTargets] = useState([]);
@@ -192,8 +227,8 @@ const TargetClickGame = ({ challenge, onComplete }) => {
   const generateTargets = () => {
     const newTargets = Array.from({ length: challenge.targetCount }, (_, i) => ({
       id: i,
-      x: Math.random() * 80 + 5, // 5-85% to keep within bounds
-      y: Math.random() * 70 + 10, // 10-80% to keep within bounds
+      x: Math.random() * 90 + 5, // 5-95% across viewport width
+      y: Math.random() * 80 + 10, // 10-90% across viewport height (avoid header)
       clicked: false
     }));
     setTargets(newTargets);
@@ -213,7 +248,7 @@ const TargetClickGame = ({ challenge, onComplete }) => {
       <div className="text-center space-y-4">
         <p className="text-lg">Get ready to hunt some bugs! 🐛</p>
         <p className="text-sm text-muted-foreground">
-          Click {challenge.targetCount} targets in {challenge.timeLimit} seconds
+          Click {challenge.targetCount} targets scattered across the entire page in {challenge.timeLimit} seconds
         </p>
         <Button onClick={startGame} size="lg">Start Bug Hunt</Button>
       </div>
@@ -221,38 +256,54 @@ const TargetClickGame = ({ challenge, onComplete }) => {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <Badge variant="outline">Time: {timeLeft}s</Badge>
-        <Badge variant="outline">Bugs: {clickedTargets.length}/{challenge.targetCount}</Badge>
+    <>
+      {/* Game UI */}
+      <div className="space-y-4 relative z-20">
+        <div className="flex justify-between items-center">
+          <Badge variant="outline">Time: {timeLeft}s</Badge>
+          <Badge variant="outline">Bugs: {clickedTargets.length}/{challenge.targetCount}</Badge>
+        </div>
+        
+        <div className="bg-primary/5 rounded-lg border p-4 text-center">
+          <p className="text-sm text-muted-foreground">
+            Look around the entire page! Targets are scattered everywhere.
+          </p>
+        </div>
       </div>
       
-      <div className="relative bg-primary/5 rounded-lg border h-64 overflow-hidden">
+      {/* Full-page overlay for targets */}
+      <div className="fixed inset-0 pointer-events-none z-10">
         {targets.map((target) => (
           <motion.button
             key={target.id}
-            className={`absolute w-8 h-8 rounded-full border-2 text-lg ${
+            className={`absolute w-10 h-10 rounded-full border-2 text-lg pointer-events-auto ${
               target.clicked 
                 ? 'bg-green-500 border-green-600 text-white' 
-                : 'bg-red-500 border-red-600 text-white hover:scale-110'
-            } transition-transform`}
-            style={{ left: `${target.x}%`, top: `${target.y}%` }}
+                : 'bg-red-500 border-red-600 text-white hover:scale-110 shadow-lg'
+            } transition-transform z-50`}
+            style={{ 
+              left: `${target.x}%`, 
+              top: `${target.y}%`,
+              transform: 'translate(-50%, -50%)'
+            }}
             onClick={() => handleTargetClick(target.id)}
             disabled={target.clicked}
             animate={{
-              scale: target.clicked ? 0.8 : [1, 1.1, 1],
+              scale: target.clicked ? 0.8 : [1, 1.2, 1],
               rotate: target.clicked ? 360 : 0,
+              y: target.clicked ? 0 : [0, -5, 0],
             }}
             transition={{
-              scale: { repeat: target.clicked ? 0 : Infinity, duration: 1 },
-              rotate: { duration: 0.5 }
+              scale: { repeat: target.clicked ? 0 : Infinity, duration: 1.5 },
+              rotate: { duration: 0.5 },
+              y: { repeat: target.clicked ? 0 : Infinity, duration: 2 }
             }}
           >
             {target.clicked ? '✓' : '🐛'}
           </motion.button>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -700,6 +751,425 @@ const PatternTapGame = ({ challenge, onComplete }) => {
   );
 };
 
+// Additional game components for the new game types
+const WhackAMoleGame = ({ challenge, onComplete }) => {
+  const [targets, setTargets] = useState([]);
+  const [clickedTargets, setClickedTargets] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [activeTarget, setActiveTarget] = useState(null);
+
+  useEffect(() => {
+    if (gameStarted && timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      onComplete(clickedTargets.length >= challenge.targetCount);
+    }
+  }, [timeLeft, gameStarted, clickedTargets.length, challenge.targetCount, onComplete]);
+
+  useEffect(() => {
+    if (clickedTargets.length >= challenge.targetCount) {
+      onComplete(true);
+    }
+  }, [clickedTargets.length, challenge.targetCount, onComplete]);
+
+  useEffect(() => {
+    if (gameStarted) {
+      const showTarget = () => {
+        const newTarget = {
+          id: Date.now(),
+          x: Math.random() * 80 + 10,
+          y: Math.random() * 60 + 20,
+        };
+        setActiveTarget(newTarget);
+        
+        // Hide target after 1.5 seconds if not clicked
+        setTimeout(() => {
+          setActiveTarget(null);
+          if (gameStarted) {
+            setTimeout(showTarget, Math.random() * 1000 + 500);
+          }
+        }, 1500);
+      };
+      
+      const initialDelay = setTimeout(showTarget, 500);
+      return () => clearTimeout(initialDelay);
+    }
+  }, [gameStarted]);
+
+  const handleTargetClick = () => {
+    if (activeTarget) {
+      setClickedTargets([...clickedTargets, activeTarget.id]);
+      setActiveTarget(null);
+      
+      // Show next target sooner after a successful hit
+      setTimeout(() => {
+        if (gameStarted) {
+          const newTarget = {
+            id: Date.now(),
+            x: Math.random() * 80 + 10,
+            y: Math.random() * 60 + 20,
+          };
+          setActiveTarget(newTarget);
+          setTimeout(() => setActiveTarget(null), 1500);
+        }
+      }, Math.random() * 500 + 200);
+    }
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+    setClickedTargets([]);
+    setActiveTarget(null);
+  };
+
+  if (!gameStarted) {
+    return (
+      <div className="text-center space-y-4">
+        <p className="text-lg">Whack the exceptions! ⚡</p>
+        <p className="text-sm text-muted-foreground">
+          Click {challenge.targetCount} exceptions as they appear in {challenge.timeLimit} seconds
+        </p>
+        <Button onClick={startGame} size="lg">Start Exception Hunt</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Badge variant="outline">Time: {timeLeft}s</Badge>
+        <Badge variant="outline">Caught: {clickedTargets.length}/{challenge.targetCount}</Badge>
+      </div>
+      
+      <div className="relative bg-primary/5 rounded-lg border h-64 overflow-hidden">
+        {activeTarget && (
+          <motion.button
+            key={activeTarget.id}
+            className="absolute w-12 h-12 rounded-full bg-red-500 border-2 border-red-600 text-white text-lg hover:scale-110 transition-transform shadow-lg"
+            style={{ 
+              left: `${activeTarget.x}%`, 
+              top: `${activeTarget.y}%`,
+              transform: 'translate(-50%, -50%)'
+            }}
+            onClick={handleTargetClick}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            💥
+          </motion.button>
+        )}
+        
+        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+          {!activeTarget && <p className="text-sm">Watch for exceptions...</p>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SimonSaysGame = ({ challenge, onComplete }) => {
+  const [gamePhase, setGamePhase] = useState('showing');
+  const [currentSequence, setCurrentSequence] = useState([]);
+  const [userInput, setUserInput] = useState([]);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+
+  useEffect(() => {
+    if (gamePhase === 'showing') {
+      let index = 0;
+      const showSequence = () => {
+        if (index < challenge.sequence.length) {
+          setHighlightIndex(index);
+          setTimeout(() => {
+            setHighlightIndex(-1);
+            index++;
+            setTimeout(showSequence, 300);
+          }, 600);
+        } else {
+          setGamePhase('input');
+        }
+      };
+      setTimeout(showSequence, 500);
+    }
+  }, [gamePhase, challenge.sequence]);
+
+  const handleButtonClick = (item) => {
+    if (gamePhase !== 'input') return;
+    
+    const newInput = [...userInput, item];
+    setUserInput(newInput);
+    
+    if (newInput.length === challenge.sequence.length) {
+      const isCorrect = newInput.every((item, index) => item === challenge.sequence[index]);
+      onComplete(isCorrect);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground mb-4">
+          {gamePhase === 'showing' ? 'Watch the sequence...' : 'Repeat the sequence'}
+        </p>
+        
+        <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+          {challenge.sequence.map((item, index) => (
+            <Button
+              key={index}
+              variant={highlightIndex === index ? "default" : "outline"}
+              onClick={() => handleButtonClick(item)}
+              disabled={gamePhase === 'showing'}
+              className={`h-16 transition-all ${
+                highlightIndex === index ? 'animate-pulse scale-110' : ''
+              }`}
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
+        
+        {gamePhase === 'input' && (
+          <div className="mt-4">
+            <p className="text-xs text-muted-foreground">Your sequence:</p>
+            <div className="flex flex-wrap gap-1 justify-center mt-2">
+              {userInput.map((item, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {item}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const DragDropGame = ({ challenge, onComplete }) => {
+  const [items, setItems] = useState(challenge.items.map((item, index) => ({ id: index, text: item, position: index })));
+  const [draggedItem, setDraggedItem] = useState(null);
+
+  const handleDragStart = (e, item) => {
+    setDraggedItem(item);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetPosition) => {
+    e.preventDefault();
+    if (!draggedItem) return;
+
+    const newItems = [...items];
+    const draggedIndex = newItems.findIndex(item => item.id === draggedItem.id);
+    const targetIndex = newItems.findIndex(item => item.position === targetPosition);
+
+    // Swap positions
+    [newItems[draggedIndex].position, newItems[targetIndex].position] = 
+    [newItems[targetIndex].position, newItems[draggedIndex].position];
+
+    setItems(newItems);
+    setDraggedItem(null);
+
+    // Check if correct order
+    const sortedItems = newItems.sort((a, b) => a.position - b.position);
+    const isCorrect = sortedItems.every((item, index) => 
+      challenge.correctOrder[index] === challenge.items.indexOf(item.text)
+    );
+    
+    if (isCorrect) {
+      setTimeout(() => onComplete(true), 500);
+    }
+  };
+
+  const sortedItems = items.sort((a, b) => a.position - b.position);
+
+  return (
+    <div className="space-y-4">
+      <div className="text-center">
+        <p className="text-lg mb-4">Drag code blocks to correct order:</p>
+        <div className="space-y-2 max-w-md mx-auto">
+          {sortedItems.map((item, index) => (
+            <div
+              key={item.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, item)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, index)}
+              className="p-3 bg-background border rounded-lg cursor-move hover:bg-primary/5 transition-colors font-mono text-sm"
+            >
+              {item.text}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MathRushGame = ({ challenge, onComplete }) => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      onComplete(score >= challenge.equations.length / 2); // Pass if got half right
+    }
+  }, [timeLeft, score, challenge.equations.length, onComplete]);
+
+  const handleAnswerSelect = (answer) => {
+    setSelectedAnswer(answer);
+    const isCorrect = answer === challenge.equations[currentQuestion].answer;
+    if (isCorrect) setScore(score + 1);
+
+    setTimeout(() => {
+      if (currentQuestion < challenge.equations.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null);
+      } else {
+        onComplete(score + (isCorrect ? 1 : 0) >= challenge.equations.length / 2);
+      }
+    }, 1000);
+  };
+
+  const question = challenge.equations[currentQuestion];
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Badge variant="outline">Time: {timeLeft}s</Badge>
+        <Badge variant="outline">Score: {score}/{challenge.equations.length}</Badge>
+      </div>
+      
+      <div className="text-center">
+        <h3 className="text-xl font-medium mb-4">{question.question}</h3>
+        <div className="grid grid-cols-1 gap-2 max-w-sm mx-auto">
+          {question.options.map((option, index) => (
+            <Button
+              key={index}
+              variant={selectedAnswer === option ? (option === question.answer ? "default" : "destructive") : "outline"}
+              onClick={() => !selectedAnswer && handleAnswerSelect(option)}
+              disabled={selectedAnswer !== null}
+            >
+              {option}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PixelPerfectGame = ({ challenge, onComplete }) => {
+  const [targets, setTargets] = useState([]);
+  const [clickedTargets, setClickedTargets] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  useEffect(() => {
+    if (gameStarted && timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      onComplete(clickedTargets.length >= challenge.targetCount);
+    }
+  }, [timeLeft, gameStarted, clickedTargets.length, challenge.targetCount, onComplete]);
+
+  useEffect(() => {
+    if (clickedTargets.length >= challenge.targetCount) {
+      onComplete(true);
+    }
+  }, [clickedTargets.length, challenge.targetCount, onComplete]);
+
+  const startGame = () => {
+    setGameStarted(true);
+    generateTargets();
+  };
+
+  const generateTargets = () => {
+    const newTargets = Array.from({ length: challenge.targetCount }, (_, i) => ({
+      id: i,
+      x: Math.random() * 60 + 20, // Center area
+      y: Math.random() * 40 + 30,
+      clicked: false
+    }));
+    setTargets(newTargets);
+  };
+
+  const handleTargetClick = (e, targetId) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    
+    const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
+    
+    if (distance <= challenge.tolerance && !clickedTargets.includes(targetId)) {
+      setClickedTargets([...clickedTargets, targetId]);
+      setTargets(targets.map(target => 
+        target.id === targetId ? { ...target, clicked: true } : target
+      ));
+    }
+  };
+
+  if (!gameStarted) {
+    return (
+      <div className="text-center space-y-4">
+        <p className="text-lg">Pixel Perfect Challenge! 🎯</p>
+        <p className="text-sm text-muted-foreground">
+          Click exactly in the center of {challenge.targetCount} targets
+        </p>
+        <Button onClick={startGame} size="lg">Start Precision Test</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Badge variant="outline">Time: {timeLeft}s</Badge>
+        <Badge variant="outline">Hits: {clickedTargets.length}/{challenge.targetCount}</Badge>
+      </div>
+      
+      <div className="relative bg-primary/5 rounded-lg border h-64 overflow-hidden">
+        {targets.map((target) => (
+          <div
+            key={target.id}
+            className={`absolute w-16 h-16 rounded-full border-4 cursor-crosshair ${
+              target.clicked 
+                ? 'bg-green-500 border-green-600' 
+                : 'bg-blue-500 border-blue-600 hover:scale-105'
+            } transition-transform flex items-center justify-center`}
+            style={{ 
+              left: `${target.x}%`, 
+              top: `${target.y}%`,
+              transform: 'translate(-50%, -50%)'
+            }}
+            onClick={(e) => !target.clicked && handleTargetClick(e, target.id)}
+          >
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+            {target.clicked && <span className="absolute text-white text-xs">✓</span>}
+          </div>
+        ))}
+      </div>
+      
+      <p className="text-xs text-center text-muted-foreground">
+        Click within {challenge.tolerance}px of the center dot
+      </p>
+    </div>
+  );
+};
+
 // Main component
 export default function Projects() {
   const [challenges, setChallenges] = useState([]);
@@ -914,6 +1384,26 @@ export default function Projects() {
                 
                 {currentChallengeData.type === 'pattern-tap' && (
                   <PatternTapGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'whack-a-mole' && (
+                  <WhackAMoleGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'simon-says' && (
+                  <SimonSaysGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'drag-drop' && (
+                  <DragDropGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'math-rush' && (
+                  <MathRushGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'pixel-perfect' && (
+                  <PixelPerfectGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
                 )}
 
                 {showResult && currentChallengeData.type === 'quiz' && (

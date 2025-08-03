@@ -554,9 +554,19 @@ Tools: Git, Docker, AWS, Firebase
             <div className="text-center mb-10">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Featured Projects</h2>
               <AnimatedUnderline draw={underlineInView.projects} className="max-w-xs mx-auto mb-2" />
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
                 Here are some of my recent projects that showcase my skills and passion for development.
               </p>
+              <div className="flex justify-center">
+                <Button 
+                  size="lg" 
+                  className="hover-scale group"
+                  onClick={() => window.location.href = '/projects'}
+                >
+                  <Trophy className="mr-2 h-5 w-5" />
+                  🎮 Play Project Vault Game
+                </Button>
+              </div>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
