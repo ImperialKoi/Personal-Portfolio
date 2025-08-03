@@ -22,118 +22,123 @@ import { CSEXAMREVIEW } from '@/content/school-projects/cs-exam-review.tsx';
 import { EASA } from '@/content/school-projects/easa-website.tsx';
 import { HISTORYTIMELINE } from '@/content/school-projects/history-timeline.tsx';
 
-// Enhanced challenge types with different minigames
+// Enhanced challenge types with fun interactive minigames
 const baseChallenges = [
   {
     id: 1,
-    type: 'quiz',
-    title: "Code the Algorithm",
-    description: "What's the time complexity of binary search?",
-    question: "Binary search has time complexity:",
-    options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
-    correct: 1,
-    hint: "Think about how the search space is divided...",
-    icon: Code
+    type: 'target-click',
+    title: "Bug Hunt",
+    description: "Click all the bugs before time runs out!",
+    targetCount: 8,
+    timeLimit: 10,
+    hint: "Quick reflexes needed!",
+    icon: Target
   },
   {
     id: 2,
-    type: 'memory',
-    title: "Memory Challenge",
-    description: "Remember the sequence of technologies",
-    sequence: ["React", "TypeScript", "Node.js", "PostgreSQL"],
-    hint: "Frontend to backend flow",
-    icon: Target
+    type: 'reaction',
+    title: "Code Compile",
+    description: "Click when the status turns green!",
+    hint: "Wait for the right moment...",
+    icon: Zap
   },
   {
     id: 3,
-    type: 'typing',
-    title: "Speed Coding",
-    description: "Type this code snippet as fast as you can!",
-    code: "const handleSubmit = (e) => { e.preventDefault(); }",
-    timeLimit: 15,
-    hint: "Focus on accuracy over speed",
-    icon: Timer
+    type: 'sequence',
+    title: "API Call Chain",
+    description: "Click the buttons in the correct API sequence",
+    sequence: ["GET", "POST", "PUT", "DELETE"],
+    hint: "CRUD operations order",
+    icon: Code
   },
   {
     id: 4,
-    type: 'quiz',
-    title: "Debug the Logic",
-    description: "Find the missing operator",
-    question: "Complete: if (x ___ 0 && y > 5)",
-    options: ["=", "==", "===", "!="],
-    correct: 2,
-    hint: "We want to check equality, not assignment",
-    icon: Code
+    type: 'memory-grid',
+    title: "Component Layout",
+    description: "Remember the component positions!",
+    gridSize: 4,
+    showTime: 2000,
+    hint: "Focus on the pattern",
+    icon: Target
   },
   {
     id: 5,
-    type: 'pattern',
-    title: "Pattern Recognition",
-    description: "Complete the sequence",
-    pattern: [1, 1, 2, 3, 5, 8, "?"],
-    options: [11, 13, 15, 21],
-    correct: 1,
-    hint: "Each number is the sum of the two preceding ones",
-    icon: Shuffle
-  },
-  {
-    id: 6,
-    type: 'memory',
-    title: "Tech Stack Memory",
-    description: "Remember the order of these frameworks",
-    sequence: ["Express", "MongoDB", "Redis", "Docker"],
-    hint: "Backend tech stack order",
-    icon: Target
-  },
-  {
-    id: 7,
-    type: 'typing',
-    title: "Arrow Function Speed",
-    description: "Type this modern JS syntax quickly!",
-    code: "const users = data.filter(user => user.active).map(u => u.name)",
-    timeLimit: 18,
-    hint: "Modern JavaScript functional programming",
+    type: 'typing-race',
+    title: "Speed Coding",
+    description: "Type the function as fast as possible!",
+    code: "const fetchData = async () => await api.get('/users')",
+    timeLimit: 15,
+    hint: "Modern async/await pattern",
     icon: Timer
   },
   {
-    id: 8,
-    type: 'quiz',
-    title: "CSS Flexbox",
-    description: "Flexbox alignment knowledge",
-    question: "Which property centers items both horizontally and vertically?",
-    options: ["align-items: center", "justify-content: center", "place-items: center", "Both A and B"],
-    correct: 3,
-    hint: "You need both axes covered",
-    icon: Code
-  },
-  {
-    id: 9,
-    type: 'pattern',
-    title: "Binary Pattern",
-    description: "Complete the binary sequence",
-    pattern: [2, 4, 8, 16, "?"],
-    options: [24, 32, 20, 18],
-    correct: 1,
-    hint: "Powers of 2",
+    id: 6,
+    type: 'color-match',
+    title: "CSS Color Game",
+    description: "Match the color with its hex code!",
+    colors: [
+      { hex: "#3B82F6", name: "blue-500" },
+      { hex: "#EF4444", name: "red-500" },
+      { hex: "#10B981", name: "green-500" },
+      { hex: "#F59E0B", name: "amber-500" }
+    ],
+    hint: "Common Tailwind colors",
     icon: Shuffle
   },
   {
-    id: 10,
-    type: 'memory',
-    title: "Database Commands",
-    description: "Remember SQL command order",
-    sequence: ["SELECT", "FROM", "WHERE", "ORDER BY"],
-    hint: "SQL query structure",
+    id: 7,
+    type: 'target-click',
+    title: "Memory Leak Hunt",
+    description: "Find and click all memory leaks!",
+    targetCount: 6,
+    timeLimit: 8,
+    hint: "They're hiding in the code",
     icon: Target
   },
   {
+    id: 8,
+    type: 'pattern-tap',
+    title: "Algorithm Pattern",
+    description: "Tap the pattern to complete the sorting algorithm",
+    pattern: [1, 3, 2, 4, 5],
+    hint: "Bubble sort visualization",
+    icon: Shuffle
+  },
+  {
+    id: 9,
+    type: 'reaction',
+    title: "Build Complete",
+    description: "Click when the build status shows success!",
+    hint: "Watch for the green light",
+    icon: Zap
+  },
+  {
+    id: 10,
+    type: 'sequence',
+    title: "Git Workflow",
+    description: "Click commands in proper Git workflow order",
+    sequence: ["git add", "git commit", "git push", "git merge"],
+    hint: "Standard development flow",
+    icon: Code
+  },
+  {
     id: 11,
-    type: 'typing',
-    title: "React Hook",
-    description: "Type this React hook correctly!",
-    code: "const [state, setState] = useState(initialValue)",
+    type: 'memory-grid',
+    title: "Database Schema",
+    description: "Remember the table relationships!",
+    gridSize: 3,
+    showTime: 3000,
+    hint: "Foreign key connections",
+    icon: Target
+  },
+  {
+    id: 12,
+    type: 'typing-race',
+    title: "React Component",
+    description: "Type this JSX component quickly!",
+    code: "<Button onClick={handleClick} className='btn-primary'>Submit</Button>",
     timeLimit: 12,
-    hint: "React's most basic hook",
+    hint: "Basic React JSX syntax",
     icon: Timer
   }
 ];
@@ -157,24 +162,201 @@ const schoolProjects = [
 
 const allProjects = [...mainProjects, ...schoolProjects];
 
-// Memory game component
-const MemoryGame = ({ challenge, onComplete }) => {
+// Target clicking game - click moving targets
+const TargetClickGame = ({ challenge, onComplete }) => {
+  const [targets, setTargets] = useState([]);
+  const [clickedTargets, setClickedTargets] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  useEffect(() => {
+    if (gameStarted && timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      onComplete(clickedTargets.length >= challenge.targetCount);
+    }
+  }, [timeLeft, gameStarted, clickedTargets.length, challenge.targetCount, onComplete]);
+
+  useEffect(() => {
+    if (clickedTargets.length >= challenge.targetCount) {
+      onComplete(true);
+    }
+  }, [clickedTargets.length, challenge.targetCount, onComplete]);
+
+  const startGame = () => {
+    setGameStarted(true);
+    generateTargets();
+  };
+
+  const generateTargets = () => {
+    const newTargets = Array.from({ length: challenge.targetCount }, (_, i) => ({
+      id: i,
+      x: Math.random() * 80 + 5, // 5-85% to keep within bounds
+      y: Math.random() * 70 + 10, // 10-80% to keep within bounds
+      clicked: false
+    }));
+    setTargets(newTargets);
+  };
+
+  const handleTargetClick = (targetId) => {
+    if (!clickedTargets.includes(targetId)) {
+      setClickedTargets([...clickedTargets, targetId]);
+      setTargets(targets.map(target => 
+        target.id === targetId ? { ...target, clicked: true } : target
+      ));
+    }
+  };
+
+  if (!gameStarted) {
+    return (
+      <div className="text-center space-y-4">
+        <p className="text-lg">Get ready to hunt some bugs! 🐛</p>
+        <p className="text-sm text-muted-foreground">
+          Click {challenge.targetCount} targets in {challenge.timeLimit} seconds
+        </p>
+        <Button onClick={startGame} size="lg">Start Bug Hunt</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Badge variant="outline">Time: {timeLeft}s</Badge>
+        <Badge variant="outline">Bugs: {clickedTargets.length}/{challenge.targetCount}</Badge>
+      </div>
+      
+      <div className="relative bg-primary/5 rounded-lg border h-64 overflow-hidden">
+        {targets.map((target) => (
+          <motion.button
+            key={target.id}
+            className={`absolute w-8 h-8 rounded-full border-2 text-lg ${
+              target.clicked 
+                ? 'bg-green-500 border-green-600 text-white' 
+                : 'bg-red-500 border-red-600 text-white hover:scale-110'
+            } transition-transform`}
+            style={{ left: `${target.x}%`, top: `${target.y}%` }}
+            onClick={() => handleTargetClick(target.id)}
+            disabled={target.clicked}
+            animate={{
+              scale: target.clicked ? 0.8 : [1, 1.1, 1],
+              rotate: target.clicked ? 360 : 0,
+            }}
+            transition={{
+              scale: { repeat: target.clicked ? 0 : Infinity, duration: 1 },
+              rotate: { duration: 0.5 }
+            }}
+          >
+            {target.clicked ? '✓' : '🐛'}
+          </motion.button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Reaction time game - click when color changes
+const ReactionGame = ({ challenge, onComplete }) => {
+  const [gamePhase, setGamePhase] = useState('initial'); // initial, waiting, go, finished, failed
+  const [startTime, setStartTime] = useState(null);
+  const [reactionTime, setReactionTime] = useState(null);
+
+  useEffect(() => {
+    if (gamePhase === 'waiting') {
+      const delay = Math.random() * 3000 + 2000; // 2-5 seconds
+      const timer = setTimeout(() => {
+        setGamePhase('go');
+        setStartTime(Date.now());
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [gamePhase]);
+
+  const handleClick = () => {
+    if (gamePhase === 'go') {
+      const reaction = Date.now() - startTime;
+      setReactionTime(reaction);
+      setGamePhase('finished');
+      setTimeout(() => {
+        onComplete(reaction < 1000); // Success if under 1 second
+      }, 1500);
+    } else if (gamePhase === 'waiting') {
+      setGamePhase('failed');
+      setTimeout(() => onComplete(false), 1500);
+    }
+  };
+
+  const startGame = () => {
+    setGamePhase('waiting');
+    setReactionTime(null);
+  };
+
+  if (gamePhase === 'initial') {
+    return (
+      <div className="text-center space-y-4">
+        <p className="text-lg">Test your reaction time! ⚡</p>
+        <p className="text-sm text-muted-foreground">
+          Click when the status turns GREEN. Don't click too early!
+        </p>
+        <Button onClick={startGame} size="lg">Start Reaction Test</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-center space-y-6">
+      <motion.div
+        className={`w-32 h-32 mx-auto rounded-full flex items-center justify-center text-white text-lg font-bold cursor-pointer ${
+          gamePhase === 'waiting' ? 'bg-red-500' :
+          gamePhase === 'go' ? 'bg-green-500' :
+          gamePhase === 'finished' ? 'bg-blue-500' :
+          'bg-red-600'
+        }`}
+        onClick={handleClick}
+        animate={{
+          scale: gamePhase === 'go' ? [1, 1.1, 1] : 1,
+        }}
+        transition={{
+          scale: { repeat: Infinity, duration: 0.5 }
+        }}
+      >
+        {gamePhase === 'waiting' && 'WAIT...'}
+        {gamePhase === 'go' && 'CLICK!'}
+        {gamePhase === 'finished' && `${reactionTime}ms`}
+        {gamePhase === 'failed' && 'TOO EARLY!'}
+      </motion.div>
+      
+      <div className="space-y-2">
+        {gamePhase === 'waiting' && <p className="text-muted-foreground">Wait for green...</p>}
+        {gamePhase === 'go' && <p className="text-green-600 font-bold">CLICK NOW!</p>}
+        {gamePhase === 'finished' && (
+          <p className={`font-medium ${reactionTime < 500 ? 'text-green-600' : reactionTime < 1000 ? 'text-yellow-600' : 'text-red-600'}`}>
+            {reactionTime < 500 ? 'Lightning fast! ⚡' : reactionTime < 1000 ? 'Good reflexes! 👍' : 'Too slow... 😅'}
+          </p>
+        )}
+        {gamePhase === 'failed' && <p className="text-red-600">Patience is key! Try again.</p>}
+      </div>
+    </div>
+  );
+};
+
+// Sequence memory game - click in order
+const SequenceGame = ({ challenge, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [userSequence, setUserSequence] = useState([]);
-  const [showSequence, setShowSequence] = useState(true);
   const [gamePhase, setGamePhase] = useState('showing'); // showing, input, complete
+  const [userSequence, setUserSequence] = useState([]);
 
   useEffect(() => {
     if (gamePhase === 'showing') {
       const timer = setTimeout(() => {
         setGamePhase('input');
-        setShowSequence(false);
       }, 3000);
       return () => clearTimeout(timer);
     }
   }, [gamePhase]);
 
-  const handleItemClick = (item) => {
+  const handleButtonClick = (item) => {
     if (gamePhase !== 'input') return;
     
     const newSequence = [...userSequence, item];
@@ -192,15 +374,22 @@ const MemoryGame = ({ challenge, onComplete }) => {
     <div className="space-y-4">
       <div className="text-center">
         <p className="text-sm text-muted-foreground mb-4">
-          {gamePhase === 'showing' ? 'Memorize this sequence...' : 'Click items in the correct order'}
+          {gamePhase === 'showing' ? 'Memorize this sequence...' : 'Click in the correct order'}
         </p>
         
         {gamePhase === 'showing' && (
           <div className="flex flex-wrap gap-2 justify-center mb-4 p-4 bg-primary/5 rounded-lg">
             {challenge.sequence.map((item, index) => (
-              <Badge key={index} variant="secondary" className="text-sm animate-pulse">
-                {item}
-              </Badge>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.2 }}
+              >
+                <Badge variant="secondary" className="text-sm">
+                  {item}
+                </Badge>
+              </motion.div>
             ))}
           </div>
         )}
@@ -221,8 +410,9 @@ const MemoryGame = ({ challenge, onComplete }) => {
                 <Button
                   key={index}
                   variant="outline"
-                  onClick={() => handleItemClick(item)}
+                  onClick={() => handleButtonClick(item)}
                   disabled={userSequence.includes(item)}
+                  className="h-12"
                 >
                   {item}
                 </Button>
@@ -235,11 +425,132 @@ const MemoryGame = ({ challenge, onComplete }) => {
   );
 };
 
-// Typing game component
-const TypingGame = ({ challenge, onComplete }) => {
+// Memory grid game - remember positions
+const MemoryGridGame = ({ challenge, onComplete }) => {
+  const [gamePhase, setGamePhase] = useState('showing');
+  const [activePositions, setActivePositions] = useState([]);
+  const [userGuesses, setUserGuesses] = useState([]);
+
+  useEffect(() => {
+    // Generate random positions
+    const positions = [];
+    while (positions.length < Math.floor(challenge.gridSize * challenge.gridSize / 3)) {
+      const pos = Math.floor(Math.random() * challenge.gridSize * challenge.gridSize);
+      if (!positions.includes(pos)) positions.push(pos);
+    }
+    setActivePositions(positions);
+
+    const timer = setTimeout(() => {
+      setGamePhase('input');
+    }, challenge.showTime);
+    return () => clearTimeout(timer);
+  }, [challenge.gridSize, challenge.showTime]);
+
+  const handleCellClick = (position) => {
+    if (gamePhase !== 'input') return;
+    
+    const newGuesses = userGuesses.includes(position) 
+      ? userGuesses.filter(p => p !== position)
+      : [...userGuesses, position];
+    
+    setUserGuesses(newGuesses);
+    
+    if (newGuesses.length === activePositions.length) {
+      const isCorrect = activePositions.every(pos => newGuesses.includes(pos));
+      setTimeout(() => onComplete(isCorrect), 500);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground mb-4">
+          {gamePhase === 'showing' ? 'Remember the highlighted positions...' : 'Click the positions you remember'}
+        </p>
+        
+        <div className={`grid gap-2 mx-auto`} style={{ gridTemplateColumns: `repeat(${challenge.gridSize}, 1fr)`, maxWidth: '240px' }}>
+          {Array.from({ length: challenge.gridSize * challenge.gridSize }, (_, index) => (
+            <motion.button
+              key={index}
+              className={`w-12 h-12 rounded border-2 ${
+                gamePhase === 'showing' && activePositions.includes(index) 
+                  ? 'bg-primary border-primary' 
+                  : userGuesses.includes(index)
+                  ? 'bg-secondary border-secondary'
+                  : 'bg-background border-muted hover:border-primary'
+              }`}
+              onClick={() => handleCellClick(index)}
+              whileHover={{ scale: gamePhase === 'input' ? 1.05 : 1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {gamePhase === 'showing' && activePositions.includes(index) && '✨'}
+              {gamePhase === 'input' && userGuesses.includes(index) && '📍'}
+            </motion.button>
+          ))}
+        </div>
+        
+        {gamePhase === 'input' && (
+          <p className="text-xs text-muted-foreground mt-2">
+            Selected: {userGuesses.length}/{activePositions.length}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Color matching game
+const ColorMatchGame = ({ challenge, onComplete }) => {
+  const [currentColor, setCurrentColor] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  useEffect(() => {
+    const randomColor = challenge.colors[Math.floor(Math.random() * challenge.colors.length)];
+    setCurrentColor(randomColor);
+  }, [challenge.colors]);
+
+  const handleAnswerSelect = (color) => {
+    setSelectedAnswer(color);
+    setTimeout(() => {
+      onComplete(color.hex === currentColor.hex);
+    }, 1000);
+  };
+
+  if (!currentColor) return null;
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <p className="text-lg mb-4">What's this color?</p>
+        <div 
+          className="w-24 h-24 mx-auto rounded-lg border-4 border-white shadow-lg"
+          style={{ backgroundColor: currentColor.hex }}
+        />
+      </div>
+      
+      <div className="grid grid-cols-2 gap-3">
+        {challenge.colors.map((color, index) => (
+          <Button
+            key={index}
+            variant={selectedAnswer === color ? (color.hex === currentColor.hex ? "default" : "destructive") : "outline"}
+            onClick={() => !selectedAnswer && handleAnswerSelect(color)}
+            disabled={selectedAnswer !== null}
+            className="h-12"
+          >
+            {color.name}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Typing race game - enhanced version
+const TypingRaceGame = ({ challenge, onComplete }) => {
   const [userInput, setUserInput] = useState('');
   const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
   const [isActive, setIsActive] = useState(true);
+  const [wpm, setWpm] = useState(0);
 
   useEffect(() => {
     if (timeLeft > 0 && isActive) {
@@ -255,7 +566,14 @@ const TypingGame = ({ challenge, onComplete }) => {
       setIsActive(false);
       onComplete(true);
     }
-  }, [userInput, challenge.code, onComplete]);
+    
+    // Calculate WPM
+    const wordsTyped = userInput.length / 5; // Standard: 5 characters = 1 word
+    const timeElapsed = (challenge.timeLimit - timeLeft) / 60; // Convert to minutes
+    if (timeElapsed > 0) {
+      setWpm(Math.round(wordsTyped / timeElapsed));
+    }
+  }, [userInput, challenge.code, challenge.timeLimit, timeLeft, onComplete]);
 
   const accuracy = userInput.length > 0 ? 
     (userInput.split('').filter((char, i) => char === challenge.code[i]).length / userInput.length * 100) : 100;
@@ -264,11 +582,12 @@ const TypingGame = ({ challenge, onComplete }) => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <Badge variant="outline">Time: {timeLeft}s</Badge>
+        <Badge variant="outline">WPM: {wpm}</Badge>
         <Badge variant="outline">Accuracy: {Math.round(accuracy)}%</Badge>
       </div>
       
       <div className="bg-muted p-4 rounded-lg font-mono text-sm">
-        <div className="mb-2 text-muted-foreground">Type this:</div>
+        <div className="mb-2 text-muted-foreground">Type this code:</div>
         <div className="bg-background p-2 rounded border">
           {challenge.code.split('').map((char, index) => (
             <span
@@ -278,6 +597,8 @@ const TypingGame = ({ challenge, onComplete }) => {
                   ? userInput[index] === char
                     ? 'bg-green-200 text-green-800'
                     : 'bg-red-200 text-red-800'
+                  : index === userInput.length
+                  ? 'bg-blue-200 animate-pulse'
                   : 'bg-gray-100'
               }`}
             >
@@ -294,51 +615,86 @@ const TypingGame = ({ challenge, onComplete }) => {
         className="font-mono"
         disabled={!isActive}
       />
+      
+      <Progress value={(userInput.length / challenge.code.length) * 100} className="w-full" />
     </div>
   );
 };
 
-// Pattern game component
-const PatternGame = ({ challenge, onComplete }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+// Pattern tap game
+const PatternTapGame = ({ challenge, onComplete }) => {
+  const [userPattern, setUserPattern] = useState([]);
+  const [gamePhase, setGamePhase] = useState('showing');
 
-  const handleAnswerSelect = (answerIndex) => {
-    setSelectedAnswer(answerIndex);
-    setTimeout(() => {
-      onComplete(answerIndex === challenge.correct);
-    }, 1000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setGamePhase('input');
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleNumberClick = (number) => {
+    if (gamePhase !== 'input') return;
+    
+    const newPattern = [...userPattern, number];
+    setUserPattern(newPattern);
+    
+    if (newPattern.length === challenge.pattern.length) {
+      const sortedPattern = [...challenge.pattern].sort((a, b) => a - b);
+      const isCorrect = newPattern.every((num, index) => num === sortedPattern[index]);
+      onComplete(isCorrect);
+    }
   };
 
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <p className="text-lg mb-4">Complete the pattern:</p>
-        <div className="flex flex-wrap gap-2 justify-center mb-6 p-4 bg-primary/5 rounded-lg">
-          {challenge.pattern.map((item, index) => (
-            <div
-              key={index}
-              className={`w-12 h-12 flex items-center justify-center rounded-lg border-2 font-bold text-lg ${
-                item === "?" ? 'border-dashed border-primary bg-primary/10' : 'border-solid border-muted bg-background'
-              }`}
-            >
-              {item}
-            </div>
-          ))}
-        </div>
+        <p className="text-sm text-muted-foreground mb-4">
+          {gamePhase === 'showing' ? 'Remember this pattern...' : 'Tap numbers in ascending order'}
+        </p>
         
-        <div className="grid grid-cols-2 gap-3">
-          {challenge.options.map((option, index) => (
-            <Button
-              key={index}
-              variant={selectedAnswer === index ? (index === challenge.correct ? "default" : "destructive") : "outline"}
-              onClick={() => handleAnswerSelect(index)}
-              disabled={selectedAnswer !== null}
-              className="h-12 text-lg"
-            >
-              {option}
-            </Button>
-          ))}
-        </div>
+        {gamePhase === 'showing' && (
+          <div className="flex flex-wrap gap-2 justify-center mb-4 p-4 bg-primary/5 rounded-lg">
+            {challenge.pattern.map((num, index) => (
+              <motion.div
+                key={index}
+                className="w-12 h-12 bg-primary text-primary-foreground rounded-lg flex items-center justify-center font-bold"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.2 }}
+              >
+                {num}
+              </motion.div>
+            ))}
+          </div>
+        )}
+        
+        {gamePhase === 'input' && (
+          <>
+            <div className="flex flex-wrap gap-2 justify-center mb-4">
+              <p className="text-sm w-full mb-2">Your order:</p>
+              {userPattern.map((num, index) => (
+                <Badge key={index} variant="default" className="text-sm">
+                  {num}
+                </Badge>
+              ))}
+            </div>
+            
+            <div className="grid grid-cols-3 gap-3 max-w-48 mx-auto">
+              {challenge.pattern.map((num, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  onClick={() => handleNumberClick(num)}
+                  disabled={userPattern.includes(num)}
+                  className="h-12 w-12 text-lg font-bold"
+                >
+                  {num}
+                </Button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -532,16 +888,32 @@ export default function Projects() {
                   </>
                 )}
                 
-                {currentChallengeData.type === 'memory' && (
-                  <MemoryGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                {currentChallengeData.type === 'target-click' && (
+                  <TargetClickGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
                 )}
                 
-                {currentChallengeData.type === 'typing' && (
-                  <TypingGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                {currentChallengeData.type === 'reaction' && (
+                  <ReactionGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
                 )}
                 
-                {currentChallengeData.type === 'pattern' && (
-                  <PatternGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                {currentChallengeData.type === 'sequence' && (
+                  <SequenceGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'memory-grid' && (
+                  <MemoryGridGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'typing-race' && (
+                  <TypingRaceGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'color-match' && (
+                  <ColorMatchGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
+                )}
+                
+                {currentChallengeData.type === 'pattern-tap' && (
+                  <PatternTapGame challenge={currentChallengeData} onComplete={handleChallengeComplete} />
                 )}
 
                 {showResult && currentChallengeData.type === 'quiz' && (
