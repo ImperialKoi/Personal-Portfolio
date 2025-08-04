@@ -753,11 +753,10 @@ const PatternTapGame = ({ challenge, onComplete }) => {
 
 // Additional game components for the new game types
 const WhackAMoleGame = ({ challenge, onComplete }) => {
-  const [targets, setTargets] = useState([]);
   const [clickedTargets, setClickedTargets] = useState([]);
   const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
   const [gameStarted, setGameStarted] = useState(false);
-  const [activeTarget, setActiveTarget] = useState(null);
+  const [activeTargets, setActiveTargets] = useState([]);
 
   useEffect(() => {
     if (gameStarted && timeLeft > 0) {
@@ -779,49 +778,54 @@ const WhackAMoleGame = ({ challenge, onComplete }) => {
       const showTarget = () => {
         const newTarget = {
           id: Date.now(),
-          x: Math.random() * 80 + 10,
-          y: Math.random() * 60 + 20,
+          x: Math.random() * 70 + 15, // Better positioning within container
+          y: Math.random() * 50 + 25,
+          clickable: true
         };
-        setActiveTarget(newTarget);
+        setActiveTargets(prev => [...prev, newTarget]);
         
-        // Hide target after 1.5 seconds if not clicked
+        // Remove target after 1.2 seconds if not clicked
         setTimeout(() => {
-          setActiveTarget(null);
-          if (gameStarted) {
-            setTimeout(showTarget, Math.random() * 1000 + 500);
+          setActiveTargets(prev => prev.filter(t => t.id !== newTarget.id));
+          if (gameStarted && clickedTargets.length < challenge.targetCount) {
+            setTimeout(showTarget, Math.random() * 800 + 300);
           }
-        }, 1500);
+        }, 1200);
       };
       
       const initialDelay = setTimeout(showTarget, 500);
       return () => clearTimeout(initialDelay);
     }
-  }, [gameStarted]);
+  }, [gameStarted, clickedTargets.length, challenge.targetCount]);
 
-  const handleTargetClick = () => {
-    if (activeTarget) {
-      setClickedTargets([...clickedTargets, activeTarget.id]);
-      setActiveTarget(null);
+  const handleTargetClick = (targetId) => {
+    const target = activeTargets.find(t => t.id === targetId);
+    if (target && target.clickable) {
+      setClickedTargets(prev => [...prev, targetId]);
+      setActiveTargets(prev => prev.filter(t => t.id !== targetId));
       
-      // Show next target sooner after a successful hit
-      setTimeout(() => {
-        if (gameStarted) {
+      // Show next target quickly after successful hit
+      if (clickedTargets.length + 1 < challenge.targetCount && gameStarted) {
+        setTimeout(() => {
           const newTarget = {
             id: Date.now(),
-            x: Math.random() * 80 + 10,
-            y: Math.random() * 60 + 20,
+            x: Math.random() * 70 + 15,
+            y: Math.random() * 50 + 25,
+            clickable: true
           };
-          setActiveTarget(newTarget);
-          setTimeout(() => setActiveTarget(null), 1500);
-        }
-      }, Math.random() * 500 + 200);
+          setActiveTargets(prev => [...prev, newTarget]);
+          setTimeout(() => {
+            setActiveTargets(prev => prev.filter(t => t.id !== newTarget.id));
+          }, 1200);
+        }, Math.random() * 400 + 200);
+      }
     }
   };
 
   const startGame = () => {
     setGameStarted(true);
     setClickedTargets([]);
-    setActiveTarget(null);
+    setActiveTargets([]);
   };
 
   if (!gameStarted) {
@@ -844,27 +848,36 @@ const WhackAMoleGame = ({ challenge, onComplete }) => {
       </div>
       
       <div className="relative bg-primary/5 rounded-lg border h-64 overflow-hidden">
-        {activeTarget && (
-          <motion.button
-            key={activeTarget.id}
-            className="absolute w-12 h-12 rounded-full bg-red-500 border-2 border-red-600 text-white text-lg hover:scale-110 transition-transform shadow-lg"
-            style={{ 
-              left: `${activeTarget.x}%`, 
-              top: `${activeTarget.y}%`,
-              transform: 'translate(-50%, -50%)'
-            }}
-            onClick={handleTargetClick}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            💥
-          </motion.button>
-        )}
+        <AnimatePresence>
+          {activeTargets.map((target) => (
+            <motion.button
+              key={target.id}
+              className="absolute w-14 h-14 rounded-full bg-red-500 border-2 border-red-600 text-white text-xl hover:scale-125 transition-transform shadow-lg z-10"
+              style={{ 
+                left: `${target.x}%`, 
+                top: `${target.y}%`,
+                transform: 'translate(-50%, -50%)'
+              }}
+              onClick={() => handleTargetClick(target.id)}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ 
+                scale: [1, 1.1, 1], 
+                opacity: 1,
+                rotate: [0, 10, -10, 0]
+              }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ 
+                duration: 0.3,
+                scale: { repeat: Infinity, duration: 0.6 }
+              }}
+            >
+              💥
+            </motion.button>
+          ))}
+        </AnimatePresence>
         
-        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-          {!activeTarget && <p className="text-sm">Watch for exceptions...</p>}
+        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground pointer-events-none">
+          {activeTargets.length === 0 && <p className="text-sm">Watch for exceptions...</p>}
         </div>
       </div>
     </div>
@@ -949,36 +962,66 @@ const SimonSaysGame = ({ challenge, onComplete }) => {
 };
 
 const DragDropGame = ({ challenge, onComplete }) => {
-  const [items, setItems] = useState(challenge.items.map((item, index) => ({ id: index, text: item, position: index })));
+  const [items, setItems] = useState(
+    challenge.items.map((item, index) => ({ 
+      id: index, 
+      text: item, 
+      originalIndex: index,
+      currentIndex: index 
+    })).sort(() => Math.random() - 0.5) // Start shuffled
+  );
   const [draggedItem, setDraggedItem] = useState(null);
+  const [dragOver, setDragOver] = useState(null);
 
   const handleDragStart = (e, item) => {
     setDraggedItem(item);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+    setDragOver(null);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = (e, targetPosition) => {
+  const handleDragEnter = (e, targetIndex) => {
+    e.preventDefault();
+    setDragOver(targetIndex);
+  };
+
+  const handleDragLeave = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setDragOver(null);
+    }
+  };
+
+  const handleDrop = (e, targetIndex) => {
     e.preventDefault();
     if (!draggedItem) return;
 
     const newItems = [...items];
     const draggedIndex = newItems.findIndex(item => item.id === draggedItem.id);
-    const targetIndex = newItems.findIndex(item => item.position === targetPosition);
-
-    // Swap positions
-    [newItems[draggedIndex].position, newItems[targetIndex].position] = 
-    [newItems[targetIndex].position, newItems[draggedIndex].position];
+    
+    // Remove the dragged item and insert it at the target position
+    const [removed] = newItems.splice(draggedIndex, 1);
+    newItems.splice(targetIndex, 0, removed);
+    
+    // Update current indices
+    newItems.forEach((item, index) => {
+      item.currentIndex = index;
+    });
 
     setItems(newItems);
     setDraggedItem(null);
+    setDragOver(null);
 
-    // Check if correct order
-    const sortedItems = newItems.sort((a, b) => a.position - b.position);
-    const isCorrect = sortedItems.every((item, index) => 
-      challenge.correctOrder[index] === challenge.items.indexOf(item.text)
+    // Check if in correct order
+    const isCorrect = newItems.every((item, index) => 
+      item.originalIndex === challenge.correctOrder[index]
     );
     
     if (isCorrect) {
@@ -986,25 +1029,44 @@ const DragDropGame = ({ challenge, onComplete }) => {
     }
   };
 
-  const sortedItems = items.sort((a, b) => a.position - b.position);
-
   return (
     <div className="space-y-4">
       <div className="text-center">
-        <p className="text-lg mb-4">Drag code blocks to correct order:</p>
-        <div className="space-y-2 max-w-md mx-auto">
-          {sortedItems.map((item, index) => (
+        <p className="text-lg mb-2">Drag to arrange in correct order:</p>
+        <p className="text-sm text-muted-foreground mb-4">
+          Expected: {challenge.correctOrder.map(i => challenge.items[i]).join(' → ')}
+        </p>
+        <div className="space-y-3 max-w-md mx-auto">
+          {items.map((item, index) => (
             <div
               key={item.id}
               draggable
               onDragStart={(e) => handleDragStart(e, item)}
+              onDragEnd={handleDragEnd}
               onDragOver={handleDragOver}
+              onDragEnter={(e) => handleDragEnter(e, index)}
+              onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, index)}
-              className="p-3 bg-background border rounded-lg cursor-move hover:bg-primary/5 transition-colors font-mono text-sm"
+              className={`p-4 border-2 rounded-lg font-mono text-sm transition-all duration-200 select-none ${
+                draggedItem?.id === item.id 
+                  ? 'opacity-50 scale-95 bg-primary/10 border-primary' 
+                  : dragOver === index 
+                    ? 'border-primary bg-primary/5 scale-105' 
+                    : 'border-border bg-background hover:bg-primary/5 hover:border-primary/50'
+              } cursor-grab active:cursor-grabbing`}
             >
-              {item.text}
+              <div className="flex items-center justify-between">
+                <span>{item.text}</span>
+                <span className="text-xs text-muted-foreground">⋮⋮</span>
+              </div>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-4 p-3 bg-primary/5 rounded-lg">
+          <p className="text-xs text-muted-foreground">
+            💡 Drag the code blocks to match the correct React component structure
+          </p>
         </div>
       </div>
     </div>
