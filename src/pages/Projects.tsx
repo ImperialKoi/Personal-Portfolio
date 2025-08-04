@@ -7,6 +7,9 @@ import { Progress } from '@/components/ui/progress';
 import { ExternalLink, Github, Lock, Unlock, Trophy, Code, Terminal, Zap, Shuffle, Target, Gamepad2, Timer, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Import game components
+import { TargetClickGame, ReactionGame, WhackAMoleGame, DragDropGame } from '@/components/games';
+
 // Import project data
 import { CANDIT } from '@/content/projects/candit.js';
 import { BLOCKSNET } from '@/content/projects/blocksnet.tsx';
