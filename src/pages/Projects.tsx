@@ -8,7 +8,20 @@ import { ExternalLink, Github, Lock, Unlock, Trophy, Code, Terminal, Zap, Shuffl
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Import game components
-import { TargetClickGame, ReactionGame, WhackAMoleGame, DragDropGame } from '@/components/games';
+import { 
+  TargetClickGame, 
+  ReactionGame, 
+  WhackAMoleGame, 
+  DragDropGame,
+  SequenceGame,
+  MemoryGridGame,
+  ColorMatchGame,
+  TypingRaceGame,
+  PatternTapGame,
+  SimonSaysGame,
+  MathRushGame,
+  PixelPerfectGame
+} from '@/components/games';
 
 // Import project data
 import { CANDIT } from '@/content/projects/candit.js';
@@ -200,600 +213,6 @@ const schoolProjects = [
 
 const allProjects = [...mainProjects, ...schoolProjects];
 
-// Sequence memory game - click in order
-const SequenceGame = ({ challenge, onComplete }) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [gamePhase, setGamePhase] = useState('showing'); // showing, input, complete
-  const [userSequence, setUserSequence] = useState([]);
-
-  useEffect(() => {
-    if (gamePhase === 'showing') {
-      const timer = setTimeout(() => {
-        setGamePhase('input');
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [gamePhase]);
-
-  const handleButtonClick = (item) => {
-    if (gamePhase !== 'input') return;
-    
-    const newSequence = [...userSequence, item];
-    setUserSequence(newSequence);
-    
-    if (newSequence.length === challenge.sequence.length) {
-      const isCorrect = newSequence.every((item, index) => item === challenge.sequence[index]);
-      onComplete(isCorrect);
-    }
-  };
-
-  const shuffledOptions = [...challenge.sequence].sort(() => Math.random() - 0.5);
-
-  return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground mb-4">
-          {gamePhase === 'showing' ? 'Memorize this sequence...' : 'Click in the correct order'}
-        </p>
-        
-        {gamePhase === 'showing' && (
-          <div className="flex flex-wrap gap-2 justify-center mb-4 p-4 bg-primary/5 rounded-lg">
-            {challenge.sequence.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.2 }}
-              >
-                <Badge variant="secondary" className="text-sm">
-                  {item}
-                </Badge>
-              </motion.div>
-            ))}
-          </div>
-        )}
-        
-        {gamePhase === 'input' && (
-          <>
-            <div className="flex flex-wrap gap-2 justify-center mb-4">
-              <p className="text-sm w-full mb-2">Your sequence:</p>
-              {userSequence.map((item, index) => (
-                <Badge key={index} variant="default" className="text-sm">
-                  {item}
-                </Badge>
-              ))}
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
-              {shuffledOptions.map((item, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  onClick={() => handleButtonClick(item)}
-                  disabled={userSequence.includes(item)}
-                  className="h-12"
-                >
-                  {item}
-                </Button>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Memory grid game - remember positions
-const MemoryGridGame = ({ challenge, onComplete }) => {
-  const [gamePhase, setGamePhase] = useState('showing');
-  const [activePositions, setActivePositions] = useState([]);
-  const [userGuesses, setUserGuesses] = useState([]);
-
-  useEffect(() => {
-    // Generate random positions
-    const positions = [];
-    while (positions.length < Math.floor(challenge.gridSize * challenge.gridSize / 3)) {
-      const pos = Math.floor(Math.random() * challenge.gridSize * challenge.gridSize);
-      if (!positions.includes(pos)) positions.push(pos);
-    }
-    setActivePositions(positions);
-
-    const timer = setTimeout(() => {
-      setGamePhase('input');
-    }, challenge.showTime);
-    return () => clearTimeout(timer);
-  }, [challenge.gridSize, challenge.showTime]);
-
-  const handleCellClick = (position) => {
-    if (gamePhase !== 'input') return;
-    
-    const newGuesses = userGuesses.includes(position) 
-      ? userGuesses.filter(p => p !== position)
-      : [...userGuesses, position];
-    
-    setUserGuesses(newGuesses);
-    
-    if (newGuesses.length === activePositions.length) {
-      const isCorrect = activePositions.every(pos => newGuesses.includes(pos));
-      setTimeout(() => onComplete(isCorrect), 500);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground mb-4">
-          {gamePhase === 'showing' ? 'Remember the highlighted positions...' : 'Click the positions you remember'}
-        </p>
-        
-        <div className={`grid gap-2 mx-auto`} style={{ gridTemplateColumns: `repeat(${challenge.gridSize}, 1fr)`, maxWidth: '240px' }}>
-          {Array.from({ length: challenge.gridSize * challenge.gridSize }, (_, index) => (
-            <motion.button
-              key={index}
-              className={`w-12 h-12 rounded border-2 ${
-                gamePhase === 'showing' && activePositions.includes(index) 
-                  ? 'bg-primary border-primary' 
-                  : userGuesses.includes(index)
-                  ? 'bg-secondary border-secondary'
-                  : 'bg-background border-muted hover:border-primary'
-              }`}
-              onClick={() => handleCellClick(index)}
-              whileHover={{ scale: gamePhase === 'input' ? 1.05 : 1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {gamePhase === 'showing' && activePositions.includes(index) && '✨'}
-              {gamePhase === 'input' && userGuesses.includes(index) && '📍'}
-            </motion.button>
-          ))}
-        </div>
-        
-        {gamePhase === 'input' && (
-          <p className="text-xs text-muted-foreground mt-2">
-            Selected: {userGuesses.length}/{activePositions.length}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Color matching game
-const ColorMatchGame = ({ challenge, onComplete }) => {
-  const [currentColor, setCurrentColor] = useState(null);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-  useEffect(() => {
-    const randomColor = challenge.colors[Math.floor(Math.random() * challenge.colors.length)];
-    setCurrentColor(randomColor);
-  }, [challenge.colors]);
-
-  const handleAnswerSelect = (color) => {
-    setSelectedAnswer(color);
-    setTimeout(() => {
-      onComplete(color.hex === currentColor.hex);
-    }, 1000);
-  };
-
-  if (!currentColor) return null;
-
-  return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <p className="text-lg mb-4">What's this color?</p>
-        <div 
-          className="w-24 h-24 mx-auto rounded-lg border-4 border-white shadow-lg"
-          style={{ backgroundColor: currentColor.hex }}
-        />
-      </div>
-      
-      <div className="grid grid-cols-2 gap-3">
-        {challenge.colors.map((color, index) => (
-          <Button
-            key={index}
-            variant={selectedAnswer === color ? (color.hex === currentColor.hex ? "default" : "destructive") : "outline"}
-            onClick={() => !selectedAnswer && handleAnswerSelect(color)}
-            disabled={selectedAnswer !== null}
-            className="h-12"
-          >
-            {color.name}
-          </Button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Typing race game - enhanced version
-const TypingRaceGame = ({ challenge, onComplete }) => {
-  const [userInput, setUserInput] = useState('');
-  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
-  const [isActive, setIsActive] = useState(true);
-  const [wpm, setWpm] = useState(0);
-
-  useEffect(() => {
-    if (timeLeft > 0 && isActive) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      onComplete(userInput === challenge.code);
-    }
-  }, [timeLeft, isActive, userInput, challenge.code, onComplete]);
-
-  useEffect(() => {
-    if (userInput === challenge.code) {
-      setIsActive(false);
-      onComplete(true);
-    }
-    
-    // Calculate WPM
-    const wordsTyped = userInput.length / 5; // Standard: 5 characters = 1 word
-    const timeElapsed = (challenge.timeLimit - timeLeft) / 60; // Convert to minutes
-    if (timeElapsed > 0) {
-      setWpm(Math.round(wordsTyped / timeElapsed));
-    }
-  }, [userInput, challenge.code, challenge.timeLimit, timeLeft, onComplete]);
-
-  const accuracy = userInput.length > 0 ? 
-    (userInput.split('').filter((char, i) => char === challenge.code[i]).length / userInput.length * 100) : 100;
-
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <Badge variant="outline">Time: {timeLeft}s</Badge>
-        <Badge variant="outline">WPM: {wpm}</Badge>
-        <Badge variant="outline">Accuracy: {Math.round(accuracy)}%</Badge>
-      </div>
-      
-      <div className="bg-muted p-4 rounded-lg font-mono text-sm">
-        <div className="mb-2 text-muted-foreground">Type this code:</div>
-        <div className="bg-background p-2 rounded border">
-          {challenge.code.split('').map((char, index) => (
-            <span
-              key={index}
-              className={`${
-                index < userInput.length
-                  ? userInput[index] === char
-                    ? 'bg-green-200 text-green-800'
-                    : 'bg-red-200 text-red-800'
-                  : index === userInput.length
-                  ? 'bg-blue-200 animate-pulse'
-                  : 'bg-gray-100'
-              }`}
-            >
-              {char}
-            </span>
-          ))}
-        </div>
-      </div>
-      
-      <Input
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        placeholder="Start typing..."
-        className="font-mono"
-        disabled={!isActive}
-      />
-      
-      <Progress value={(userInput.length / challenge.code.length) * 100} className="w-full" />
-    </div>
-  );
-};
-
-// Pattern tap game
-const PatternTapGame = ({ challenge, onComplete }) => {
-  const [userPattern, setUserPattern] = useState([]);
-  const [gamePhase, setGamePhase] = useState('showing');
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setGamePhase('input');
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleNumberClick = (number) => {
-    if (gamePhase !== 'input') return;
-    
-    const newPattern = [...userPattern, number];
-    setUserPattern(newPattern);
-    
-    if (newPattern.length === challenge.pattern.length) {
-      const sortedPattern = [...challenge.pattern].sort((a, b) => a - b);
-      const isCorrect = newPattern.every((num, index) => num === sortedPattern[index]);
-      onComplete(isCorrect);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground mb-4">
-          {gamePhase === 'showing' ? 'Remember this pattern...' : 'Tap numbers in ascending order'}
-        </p>
-        
-        {gamePhase === 'showing' && (
-          <div className="flex flex-wrap gap-2 justify-center mb-4 p-4 bg-primary/5 rounded-lg">
-            {challenge.pattern.map((num, index) => (
-              <motion.div
-                key={index}
-                className="w-12 h-12 bg-primary text-primary-foreground rounded-lg flex items-center justify-center font-bold"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.2 }}
-              >
-                {num}
-              </motion.div>
-            ))}
-          </div>
-        )}
-        
-        {gamePhase === 'input' && (
-          <>
-            <div className="flex flex-wrap gap-2 justify-center mb-4">
-              <p className="text-sm w-full mb-2">Your order:</p>
-              {userPattern.map((num, index) => (
-                <Badge key={index} variant="default" className="text-sm">
-                  {num}
-                </Badge>
-              ))}
-            </div>
-            
-            <div className="grid grid-cols-3 gap-3 max-w-48 mx-auto">
-              {challenge.pattern.map((num, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  onClick={() => handleNumberClick(num)}
-                  disabled={userPattern.includes(num)}
-                  className="h-12 w-12 text-lg font-bold"
-                >
-                  {num}
-                </Button>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const SimonSaysGame = ({ challenge, onComplete }) => {
-  const [gamePhase, setGamePhase] = useState('showing');
-  const [currentSequence, setCurrentSequence] = useState([]);
-  const [userInput, setUserInput] = useState([]);
-  const [highlightIndex, setHighlightIndex] = useState(-1);
-
-  useEffect(() => {
-    if (gamePhase === 'showing') {
-      let index = 0;
-      const showSequence = () => {
-        if (index < challenge.sequence.length) {
-          setHighlightIndex(index);
-          setTimeout(() => {
-            setHighlightIndex(-1);
-            index++;
-            setTimeout(showSequence, 300);
-          }, 600);
-        } else {
-          setGamePhase('input');
-        }
-      };
-      setTimeout(showSequence, 500);
-    }
-  }, [gamePhase, challenge.sequence]);
-
-  const handleButtonClick = (item) => {
-    if (gamePhase !== 'input') return;
-    
-    const newInput = [...userInput, item];
-    setUserInput(newInput);
-    
-    if (newInput.length === challenge.sequence.length) {
-      const isCorrect = newInput.every((item, index) => item === challenge.sequence[index]);
-      onComplete(isCorrect);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground mb-4">
-          {gamePhase === 'showing' ? 'Watch the sequence...' : 'Repeat the sequence'}
-        </p>
-        
-        <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
-          {challenge.sequence.map((item, index) => (
-            <Button
-              key={index}
-              variant={highlightIndex === index ? "default" : "outline"}
-              onClick={() => handleButtonClick(item)}
-              disabled={gamePhase === 'showing'}
-              className={`h-16 transition-all ${
-                highlightIndex === index ? 'animate-pulse scale-110' : ''
-              }`}
-            >
-              {item}
-            </Button>
-          ))}
-        </div>
-        
-        {gamePhase === 'input' && (
-          <div className="mt-4">
-            <p className="text-xs text-muted-foreground">Your sequence:</p>
-            <div className="flex flex-wrap gap-1 justify-center mt-2">
-              {userInput.map((item, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {item}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const MathRushGame = ({ challenge, onComplete }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
-  const [score, setScore] = useState(0);
-
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      onComplete(score >= challenge.equations.length / 2); // Pass if got half right
-    }
-  }, [timeLeft, score, challenge.equations.length, onComplete]);
-
-  const handleAnswerSelect = (answer) => {
-    setSelectedAnswer(answer);
-    const isCorrect = answer === challenge.equations[currentQuestion].answer;
-    if (isCorrect) setScore(score + 1);
-
-    setTimeout(() => {
-      if (currentQuestion < challenge.equations.length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
-        setSelectedAnswer(null);
-      } else {
-        onComplete(score + (isCorrect ? 1 : 0) >= challenge.equations.length / 2);
-      }
-    }, 1000);
-  };
-
-  const question = challenge.equations[currentQuestion];
-
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <Badge variant="outline">Time: {timeLeft}s</Badge>
-        <Badge variant="outline">Score: {score}/{challenge.equations.length}</Badge>
-      </div>
-      
-      <div className="text-center">
-        <h3 className="text-xl font-medium mb-4">{question.question}</h3>
-        <div className="grid grid-cols-1 gap-2 max-w-sm mx-auto">
-          {question.options.map((option, index) => (
-            <Button
-              key={index}
-              variant={selectedAnswer === option ? (option === question.answer ? "default" : "destructive") : "outline"}
-              onClick={() => !selectedAnswer && handleAnswerSelect(option)}
-              disabled={selectedAnswer !== null}
-            >
-              {option}
-            </Button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PixelPerfectGame = ({ challenge, onComplete }) => {
-  const [targets, setTargets] = useState([]);
-  const [clickedTargets, setClickedTargets] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(challenge.timeLimit);
-  const [gameStarted, setGameStarted] = useState(false);
-
-  useEffect(() => {
-    if (gameStarted && timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      onComplete(clickedTargets.length >= challenge.targetCount);
-    }
-  }, [timeLeft, gameStarted, clickedTargets.length, challenge.targetCount, onComplete]);
-
-  useEffect(() => {
-    if (clickedTargets.length >= challenge.targetCount) {
-      onComplete(true);
-    }
-  }, [clickedTargets.length, challenge.targetCount, onComplete]);
-
-  const startGame = () => {
-    setGameStarted(true);
-    generateTargets();
-  };
-
-  const generateTargets = () => {
-    const newTargets = Array.from({ length: challenge.targetCount }, (_, i) => ({
-      id: i,
-      x: Math.random() * 60 + 20, // Center area
-      y: Math.random() * 40 + 30,
-      clicked: false
-    }));
-    setTargets(newTargets);
-  };
-
-  const handleTargetClick = (e, targetId) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    
-    const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
-    
-    if (distance <= challenge.tolerance && !clickedTargets.includes(targetId)) {
-      setClickedTargets([...clickedTargets, targetId]);
-      setTargets(targets.map(target => 
-        target.id === targetId ? { ...target, clicked: true } : target
-      ));
-    }
-  };
-
-  if (!gameStarted) {
-    return (
-      <div className="text-center space-y-4">
-        <p className="text-lg">Pixel Perfect Challenge! 🎯</p>
-        <p className="text-sm text-muted-foreground">
-          Click exactly in the center of {challenge.targetCount} targets
-        </p>
-        <Button onClick={startGame} size="lg">Start Precision Test</Button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <Badge variant="outline">Time: {timeLeft}s</Badge>
-        <Badge variant="outline">Hits: {clickedTargets.length}/{challenge.targetCount}</Badge>
-      </div>
-      
-      <div className="relative bg-primary/5 rounded-lg border h-64 overflow-hidden">
-        {targets.map((target) => (
-          <div
-            key={target.id}
-            className={`absolute w-16 h-16 rounded-full border-4 cursor-crosshair ${
-              target.clicked 
-                ? 'bg-green-500 border-green-600' 
-                : 'bg-blue-500 border-blue-600 hover:scale-105'
-            } transition-transform flex items-center justify-center`}
-            style={{ 
-              left: `${target.x}%`, 
-              top: `${target.y}%`,
-              transform: 'translate(-50%, -50%)'
-            }}
-            onClick={(e) => !target.clicked && handleTargetClick(e, target.id)}
-          >
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            {target.clicked && <span className="absolute text-white text-xs">✓</span>}
-          </div>
-        ))}
-      </div>
-      
-      <p className="text-xs text-center text-muted-foreground">
-        Click within {challenge.tolerance}px of the center dot
-      </p>
-    </div>
-  );
-};
 
 // Main component
 export default function Projects() {
@@ -808,13 +227,15 @@ export default function Projects() {
   const currentChallengeData = challenges[currentChallenge];
   const progress = challenges.length > 0 ? ((currentChallenge + 1) / challenges.length) * 100 : 0;
 
-  const handleChallengeComplete = useCallback((isCorrect) => {
+  const handleChallengeComplete = useCallback((isCorrect: boolean) => {
     setShowResult(true);
     
-    // Always unlock exactly one project
-    const nextProjectIndex = unlockedProjects.length;
-    if (nextProjectIndex < allProjects.length) {
-      setUnlockedProjects([...unlockedProjects, nextProjectIndex]);
+    // Only unlock project if challenge was completed successfully
+    if (isCorrect) {
+      const nextProjectIndex = unlockedProjects.length;
+      if (nextProjectIndex < allProjects.length) {
+        setUnlockedProjects([...unlockedProjects, nextProjectIndex]);
+      }
     }
 
     setTimeout(() => {
@@ -824,7 +245,10 @@ export default function Projects() {
         setShowResult(false);
       } else {
         setAllUnlocked(true);
-        setUnlockedProjects(Array.from({ length: allProjects.length }, (_, i) => i));
+        // Only show projects that were actually unlocked
+        if (unlockedProjects.length === allProjects.length) {
+          setUnlockedProjects(Array.from({ length: allProjects.length }, (_, i) => i));
+        }
       }
     }, 2000);
   }, [currentChallenge, unlockedProjects, challenges.length, allProjects.length]);
@@ -1085,19 +509,57 @@ export default function Projects() {
                       animate={{ 
                         opacity: isUnlocked ? 1 : 0.3,
                         y: 0,
+                        scale: isUnlocked ? [0.9, 1.05, 1] : 1,
                         filter: isUnlocked ? 'none' : 'blur(4px)'
                       }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ 
+                        delay: index * 0.1,
+                        scale: { duration: 0.6 }
+                      }}
                       className={getProjectCardHeight(project)}
                     >
                       <Card className={`h-full ${!isUnlocked ? 'relative' : ''}`}>
                         {!isUnlocked && (
-                          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
+                          <motion.div 
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg"
+                            initial={{ opacity: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.3 }}
+                          >
                             <div className="text-center">
-                              <Lock className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                              <motion.div
+                                animate={{ rotate: [0, 360] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                              >
+                                <Lock className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                              </motion.div>
                               <p className="text-sm text-muted-foreground">Locked</p>
                             </div>
-                          </div>
+                          </motion.div>
+                        )}
+                        
+                        {isUnlocked && (
+                          <motion.div
+                            className="absolute top-2 right-2 z-20"
+                            initial={{ scale: 0, rotate: -180 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                          >
+                            <motion.div
+                              animate={{ 
+                                scale: [1, 1.2, 1],
+                                rotate: [0, 10, -10, 0]
+                              }}
+                              transition={{ 
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                              className="bg-green-500 rounded-full p-1"
+                            >
+                              <Unlock className="w-4 h-4 text-white" />
+                            </motion.div>
+                          </motion.div>
                         )}
                         
                         <CardHeader className="pb-3">
@@ -1177,19 +639,57 @@ export default function Projects() {
                       animate={{ 
                         opacity: isUnlocked ? 1 : 0.3,
                         y: 0,
+                        scale: isUnlocked ? [0.9, 1.05, 1] : 1,
                         filter: isUnlocked ? 'none' : 'blur(4px)'
                       }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ 
+                        delay: index * 0.1,
+                        scale: { duration: 0.6 }
+                      }}
                       className={getProjectCardHeight(project)}
                     >
                       <Card className={`h-full ${!isUnlocked ? 'relative' : ''}`}>
                         {!isUnlocked && (
-                          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
+                          <motion.div 
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg"
+                            initial={{ opacity: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.3 }}
+                          >
                             <div className="text-center">
-                              <Lock className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                              <motion.div
+                                animate={{ rotate: [0, 360] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                              >
+                                <Lock className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                              </motion.div>
                               <p className="text-sm text-muted-foreground">Locked</p>
                             </div>
-                          </div>
+                          </motion.div>
+                        )}
+                        
+                        {isUnlocked && (
+                          <motion.div
+                            className="absolute top-2 right-2 z-20"
+                            initial={{ scale: 0, rotate: -180 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                          >
+                            <motion.div
+                              animate={{ 
+                                scale: [1, 1.2, 1],
+                                rotate: [0, 10, -10, 0]
+                              }}
+                              transition={{ 
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                              className="bg-green-500 rounded-full p-1"
+                            >
+                              <Unlock className="w-4 h-4 text-white" />
+                            </motion.div>
+                          </motion.div>
                         )}
                         
                         <CardHeader className="pb-3">
