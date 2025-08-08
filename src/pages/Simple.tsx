@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 import Lenis from '@studio-freight/lenis';
 
 export default function Simple() {
@@ -382,7 +383,16 @@ Tools: Git, Docker, AWS, Firebase
                   alt="Developer illustration"
                   className="w-full max-w-md mx-auto hover-scale"
                   whileHover={{ scale: 1.05, rotate: 2 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  animate={{ 
+                    y: [0, -20, 0],
+                    rotate: [0, 2, -2, 0],
+                    scale: [1, 1.02, 1]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
                 />
               </div>
               {/* Background gradient */}
@@ -475,7 +485,8 @@ Tools: Git, Docker, AWS, Firebase
                       transition={{ duration: 0.4, delay: index * 0.1 }}
                       viewport={{ once: true }}
                     >
-                      <Card className="hover-scale text-center">
+                      <Card className="hover-scale text-center relative">
+                        <GlowingEffect disabled={false} proximity={150} />
                         <CardContent className="p-6">
                           <motion.div 
                             className="text-3xl font-bold text-primary mb-2"
@@ -573,6 +584,7 @@ Tools: Git, Docker, AWS, Firebase
               {projects.map((project, index) => (
                 <CardContainer key={project.title} className="inter-var">
                   <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-primary/[0.1] dark:bg-card dark:border-white/[0.2] border-black/[0.1] w-auto h-auto rounded-xl p-6 border">
+                    <GlowingEffect disabled={false} proximity={200} />
                     <CardItem
                       translateZ="50"
                       className="text-xl font-bold text-neutral-600 dark:text-white"
