@@ -174,6 +174,20 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       }
       
       const target = args[0];
+      
+      // Special case for project-vault
+      if (target === 'project-vault') {
+        setTimeout(() => {
+          window.location.href = '/projects';
+        }, 500);
+        return [
+          '🎮 Entering Project Vault...',
+          'Initializing minigames...',
+          'Redirecting in 0.5 seconds...',
+          ''
+        ];
+      }
+      
       if (target === '..') {
         const pathParts = currentPath.split('/');
         if (pathParts.length > 1) {
