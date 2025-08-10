@@ -10,8 +10,6 @@ import { BootSequence } from '@/components/BootSequence';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { generateFileStructure, getFileContent, getFileUrl } from '@/utils/fileDiscovery';
-import { useScavengerHunt } from '@/hooks/useScavengerHunt';
-import { ScavengerHuntProgress } from '@/components/ScavengerHuntProgress';
 
 export type FileType = {
   name: string;
@@ -41,8 +39,6 @@ const PortfolioIDE = () => {
     },
   ]);
   
-  // Scavenger hunt
-  const scavengerHunt = useScavengerHunt();
 
   const fileStructure: FileType[] = generateFileStructure();
 
@@ -151,15 +147,6 @@ const PortfolioIDE = () => {
         />
       )}
       
-      {/* Scavenger Hunt Progress */}
-      {scavengerHunt.isActive && (
-        <ScavengerHuntProgress
-          progress={scavengerHunt.progress}
-          clues={scavengerHunt.clues}
-          onReset={scavengerHunt.resetHunt}
-          nextClue={scavengerHunt.getNextClue()}
-        />
-      )}
     </div>
   );
 };
