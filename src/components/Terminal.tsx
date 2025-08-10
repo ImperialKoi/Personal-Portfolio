@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Maximize2, Minimize2, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSnakeGame } from '@/hooks/useSnakeGame';
+import { useScavengerHunt } from '@/hooks/useScavengerHunt';
+import { toast } from '@/hooks/use-toast';
 
 interface TerminalProps {
   onToggle: () => void;
@@ -28,6 +30,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
   const outputRef = useRef<HTMLDivElement>(null);
   
   const snakeGame = useSnakeGame();
+  const scavengerHunt = useScavengerHunt();
 
   const runPythonCode = async (code: string) => {
     setIsRunning(true);
@@ -71,6 +74,11 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       '  snake       - Play Snake game',
       '  projects    - Show project overview',
       '  resume      - Download resume',
+      '  hunt        - Check scavenger hunt progress',
+      '  konami      - ↑↑↓↓←→←→BA (hidden)',
+      '  matrix      - Enter the matrix',
+      '  hidden      - Show hidden files',
+      '  easteregg   - Find the easter egg',
       ''
     ],
     clear: () => {
@@ -226,6 +234,181 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       } else {
         return ['Error: No Python file is currently open or file is empty'];
       }
+    },
+    hunt: () => {
+      const { progress, clues } = scavengerHunt;
+      const nextClue = scavengerHunt.getNextClue();
+      
+      if (progress.completed) {
+        return [
+          '🎉 SCAVENGER HUNT COMPLETED! 🎉',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          'You have found all the hidden secrets!',
+          'Welcome to the developer vault! 🔓',
+          ''
+        ];
+      }
+      
+      return [
+        '🔍 SCAVENGER HUNT PROGRESS',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        `Found: ${progress.cluesFound.length}/${clues.length} clues`,
+        `Stage: ${progress.currentStage}`,
+        '',
+        nextClue ? `Next hint: ${nextClue.hint}` : 'No more clues available',
+        nextClue ? `Location: ${nextClue.location}` : '',
+        '',
+        'Use secret commands to find hidden clues!',
+        ''
+      ];
+    },
+    konami: () => {
+      const clue = scavengerHunt.checkSecretCode('konami');
+      if (clue) {
+        toast({
+          title: "🎮 Konami Code Activated!",
+          description: clue.reward || "First clue found!",
+          duration: 4000,
+        });
+        return [
+          '🎮 KONAMI CODE ACTIVATED!',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          '↑ ↑ ↓ ↓ ← → ← → B A',
+          '',
+          'You unlocked the first secret!',
+          'The hunt has begun...',
+          ''
+        ];
+      }
+      return [
+        '🎮 Konami Code',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'Already found or invalid sequence',
+        ''
+      ];
+    },
+    matrix: () => {
+      const clue = scavengerHunt.checkSecretCode('matrix');
+      if (clue) {
+        toast({
+          title: "🔴 Welcome to the Matrix",
+          description: clue.reward || "Another clue discovered!",
+          duration: 4000,
+        });
+        return [
+          '🔴 THE MATRIX HAS YOU...',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          'Wake up, Neo...',
+          'The Matrix has you...',
+          'Follow the white rabbit.',
+          '',
+          'Clue discovered! 🐰',
+          ''
+        ];
+      }
+      return [
+        '🔴 Matrix Access',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'Already accessed or invalid code',
+        ''
+      ];
+    },
+    hidden: () => {
+      const clue = scavengerHunt.checkSecretCode('hidden');
+      if (clue) {
+        toast({
+          title: "📁 Hidden Files Revealed",
+          description: clue.reward || "Secret files found!",
+          duration: 4000,
+        });
+        return [
+          '📁 HIDDEN FILES REVEALED',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          '.secret/',
+          '.vault/',
+          '.hidden_projects/',
+          '.easter_egg.js',
+          '.developer_notes.md',
+          '',
+          'Hidden files discovered! 🕵️',
+          ''
+        ];
+      }
+      return [
+        '📁 Hidden Files',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'No hidden files found or already discovered',
+        ''
+      ];
+    },
+    easteregg: () => {
+      const clue = scavengerHunt.checkSecretCode('easteregg');
+      if (clue) {
+        toast({
+          title: "🥚 Easter Egg Found!",
+          description: clue.reward || "You found the easter egg!",
+          duration: 4000,
+        });
+        return [
+          '🥚 EASTER EGG DISCOVERED!',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          '    /\\_/\\  ',
+          '   ( o.o ) ',
+          '    > ^ <  ',
+          '',
+          'You found the hidden easter egg!',
+          'The developer approves! 👨‍💻',
+          ''
+        ];
+      }
+      return [
+        '🥚 Easter Egg',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'Already found or keep looking!',
+        ''
+      ];
+    },
+    'unlock-vault': () => {
+      // Check if user has found all previous clues
+      const requiredCodes = ['konami', 'matrix', 'easteregg', 'hidden'];
+      const foundCodes = scavengerHunt.progress.cluesFound;
+      const hasAllPrevious = requiredCodes.every(code => 
+        foundCodes.some(foundId => scavengerHunt.clues.find(c => c.id === foundId)?.secretCode === code)
+      );
+      
+      if (hasAllPrevious) {
+        const clue = scavengerHunt.checkSecretCode('unlock-vault');
+        if (clue) {
+          toast({
+            title: "🔓 Secret Vault Unlocked!",
+            description: "Welcome to the developer's secret vault!",
+            duration: 6000,
+          });
+          return [
+            '🔓 SECRET VAULT UNLOCKED!',
+            '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+            '🎉 CONGRATULATIONS! 🎉',
+            '',
+            'You have successfully completed the scavenger hunt!',
+            'Welcome to my secret developer vault!',
+            '',
+            '🏆 Achievement Unlocked: Master Detective',
+            '📱 Special access granted to hidden projects',
+            '🔐 Developer secrets revealed',
+            '',
+            'Thank you for exploring my portfolio!',
+            '- Daniel Xu',
+            ''
+          ];
+        }
+      }
+      return [
+        '🔐 Vault Access Denied',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'You need to find all previous clues first!',
+        'Hint: konami, matrix, easteregg, hidden',
+        ''
+      ];
     }
   };
 

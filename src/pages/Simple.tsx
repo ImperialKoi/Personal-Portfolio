@@ -11,6 +11,10 @@ import { Navbar } from '@/components/Navbar';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import Lenis from '@studio-freight/lenis';
+import { useScavengerHunt } from '@/hooks/useScavengerHunt';
+import { HiddenElement } from '@/components/HiddenElement';
+import { ScavengerHuntProgress } from '@/components/ScavengerHuntProgress';
+import { toast } from '@/hooks/use-toast';
 
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false);
@@ -20,6 +24,9 @@ export default function Simple() {
   const skillsRef = useRef<HTMLElement>(null);
   const projectsRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
+  
+  // Scavenger hunt
+  const scavengerHunt = useScavengerHunt();
   
   // Scroll tracking for animations
   const { scrollY } = useScroll();
@@ -394,6 +401,23 @@ Tools: Git, Docker, AWS, Firebase
                     ease: "easeInOut" 
                   }}
                 />
+                
+                {/* Hidden Matrix Element */}
+                <HiddenElement
+                  id="matrix-element"
+                  onFound={(id) => {
+                    const clue = scavengerHunt.findClue('hidden-element');
+                    if (clue) {
+                      toast({
+                        title: "🔴 Matrix Element Found!",
+                        description: clue.reward,
+                        duration: 4000,
+                      });
+                    }
+                  }}
+                  hint="The Matrix has you..."
+                  className="absolute top-1/4 right-1/4 w-8 h-8"
+                />
               </div>
               {/* Background gradient */}
               <motion.div 
@@ -692,6 +716,16 @@ Tools: Git, Docker, AWS, Firebase
           </div>
         </footer>
       </div>
+      
+      {/* Scavenger Hunt Progress */}
+      {scavengerHunt.isActive && (
+        <ScavengerHuntProgress
+          progress={scavengerHunt.progress}
+          clues={scavengerHunt.clues}
+          onReset={scavengerHunt.resetHunt}
+          nextClue={scavengerHunt.getNextClue()}
+        />
+      )}
     </div>
   );
 }

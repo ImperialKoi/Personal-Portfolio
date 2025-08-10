@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { ExternalLink, Github, Lock, Unlock, Trophy, Code, Terminal, Zap, Shuffle, Target, Gamepad2, Timer, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useScavengerHunt } from '@/hooks/useScavengerHunt';
+import { HiddenElement } from '@/components/HiddenElement';
+import { ScavengerHuntProgress } from '@/components/ScavengerHuntProgress';
+import { toast } from '@/hooks/use-toast';
 
 // Import game components
 import { 
@@ -223,6 +227,9 @@ export default function Projects() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [allUnlocked, setAllUnlocked] = useState(false);
+  
+  // Scavenger hunt
+  const scavengerHunt = useScavengerHunt();
 
   const currentChallengeData = challenges[currentChallenge];
   const progress = challenges.length > 0 ? ((currentChallenge + 1) / challenges.length) * 100 : 0;
