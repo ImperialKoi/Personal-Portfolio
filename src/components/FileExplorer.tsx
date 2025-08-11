@@ -63,15 +63,15 @@ const FileItem = ({ file, onFileSelect, activeFile, level = 0 }: {
         style={{ paddingLeft: `${paddingLeft}px` }}
         onClick={handleClick}
       >
-        {file.type === 'folder' && (
-          <span className="mr-1">
-            {isOpen ? (
+        <span className="mr-1 w-3 flex justify-center">
+          {file.type === 'folder' && (
+            isOpen ? (
               <ChevronDown className="w-3 h-3" />
             ) : (
               <ChevronRight className="w-3 h-3" />
-            )}
-          </span>
-        )}
+            )
+          )}
+        </span>
         
         <span className="mr-2">
           {file.type === 'folder' ? (
