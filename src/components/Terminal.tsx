@@ -599,7 +599,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
 
       return () => clearTimeout(timeoutId);
     }
-  }, [output, displayedOutput.length, isSnakeMode]);
+  }, [output, displayedOutput.length, isSnakeMode, isHorrorMode]);
 
   useEffect(() => {
     if (outputRef.current) {
@@ -725,18 +725,18 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
 
       <div 
         ref={outputRef}
-        className="flex-1 p-4 overflow-y-auto overflow-x-hidden font-mono text-sm"
+        className="flex-1 min-w-0 w-full p-4 overflow-y-auto overflow-x-hidden font-mono text-sm"
       >
         {displayedOutput.map((line, index) => (
-          <div key={index} className="whitespace-pre-wrap break-words">
+          <div key={index} className="whitespace-pre-wrap break-words break-all max-w-full">
             {line}
           </div>
         ))}
         
         {!isSnakeMode && (
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <span className="text-[#4fc1ff] mr-2">{currentPath}$</span>
-            <div className="relative flex-1">
+            <div className="relative flex-1 min-w-0 overflow-hidden">
               <input
                 ref={inputRef}
                 type="text"
