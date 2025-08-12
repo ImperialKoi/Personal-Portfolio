@@ -725,10 +725,10 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
 
       <div 
         ref={outputRef}
-        className="flex-1 p-4 overflow-y-auto font-mono text-sm"
+        className="flex-1 p-4 overflow-y-auto overflow-x-hidden font-mono text-sm"
       >
         {displayedOutput.map((line, index) => (
-          <div key={index} className="whitespace-pre-wrap">
+          <div key={index} className="whitespace-pre-wrap break-words">
             {line}
           </div>
         ))}
