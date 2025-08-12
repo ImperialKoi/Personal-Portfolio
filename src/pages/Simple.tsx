@@ -362,6 +362,7 @@ Tools: Git, Docker, AWS, Firebase
                 With my expertise in React and Next.js on the frontend, and Node.js, Express, 
                 and PostgreSQL on the backend, I bring a unique combination of technical skills 
                 and creative problem-solving to every project I work on.
+                <span className="block mt-2 text-xs tracking-widest text-muted-foreground select-text">-- --- .-. ... .</span>
               </motion.p>
               
               <motion.div

@@ -49,11 +49,44 @@ const HUNT_CLUES: HuntClue[] = [
     secretCode: 'hidden',
     reward: 'Hidden files revealed! 📁'
   },
+  // New harder clues
+  {
+    id: 'morse-clue',
+    found: false,
+    location: 'simple',
+    hint: 'The dots and dashes whisper a word...',
+    secretCode: 'morse',
+    reward: 'You decoded the beeps! • — •'
+  },
+  {
+    id: 'caesar-clue',
+    found: false,
+    location: 'projects',
+    hint: 'Rotate the alphabet and reveal the truth',
+    secretCode: 'caesar',
+    reward: 'You cracked the cipher! 🔐'
+  },
+  {
+    id: 'snake-master',
+    found: false,
+    location: 'terminal',
+    hint: 'Prove your skill: score 50 in Snake',
+    secretCode: 'snake50',
+    reward: '🐍 Snake Master achieved!'
+  },
+  {
+    id: 'escape-artist',
+    found: false,
+    location: 'terminal',
+    hint: 'Escape the Horror Room to earn this',
+    secretCode: 'escape',
+    reward: '🗝️ You escaped the room!'
+  },
   {
     id: 'final-challenge',
     found: false,
     location: 'terminal',
-    hint: 'Use all previous codes in a special command',
+    hint: 'Use all previous codes and complete all trials',
     secretCode: 'unlock-vault',
     reward: 'Welcome to the secret vault! 🔓'
   }

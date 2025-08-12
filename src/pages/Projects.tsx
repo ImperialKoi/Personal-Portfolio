@@ -371,8 +371,9 @@ export default function Projects() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">🎮 Project Vault</h1>
-          <div className="flex items-center justify-center gap-4 mb-4">
+          <h1 className="text-3xl font-bold mb-1">🎮 Project Vault</h1>
+          <div className="text-[10px] text-muted-foreground tracking-widest">ROT13: pnfrne</div>
+          <div className="flex items-center justify-center gap-4 mt-3 mb-4">
             <Badge variant="outline">Progress: {unlockedProjects.length}/{allProjects.length}</Badge>
             <Badge variant="outline">Challenge: {currentChallenge + 1}/{challenges.length}</Badge>
           </div>

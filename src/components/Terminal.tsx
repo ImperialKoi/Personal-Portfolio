@@ -30,7 +30,8 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
   const [currentPath, setCurrentPath] = useState('daniel/portfolio');
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
-  
+  const snakeAwardedRef = useRef(false);
+  const horrorAwardedRef = useRef(false);
   const snakeGame = useSnakeGame();
   const horrorGame = useHorrorGame();
   const scavengerHunt = useScavengerHunt();
@@ -376,15 +377,58 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         ''
       ];
     },
+    morse: () => {
+      const clue = scavengerHunt.checkSecretCode('morse');
+      if (clue) {
+        toast({ title: '• — • Morse Decoded', description: clue.reward, duration: 4000 });
+        return [
+          '• — • MORSE CODE',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          'Decoded successfully.',
+          ''
+        ];
+      }
+      return [
+        '• — • Morse',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'No new signals detected.',
+        ''
+      ];
+    },
+    caesar: () => {
+      const clue = scavengerHunt.checkSecretCode('caesar');
+      if (clue) {
+        toast({ title: '🔐 Caesar Cipher', description: clue.reward, duration: 4000 });
+        return [
+          '🔐 CAESAR CIPHER',
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+          'Cipher cracked. Rotations aligned.',
+          ''
+        ];
+      }
+      return [
+        '🔐 Caesar',
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+        'Already cracked or invalid.',
+        ''
+      ];
+    },
     'unlock-vault': () => {
-      // Check if user has found all previous clues
-      const requiredCodes = ['konami', 'matrix', 'easteregg', 'hidden'];
-      const foundCodes = scavengerHunt.progress.cluesFound;
-      const hasAllPrevious = requiredCodes.every(code => 
-        foundCodes.some(foundId => scavengerHunt.clues.find(c => c.id === foundId)?.secretCode === code)
-      );
-      
-      if (hasAllPrevious) {
+      // Require all codes + game achievements
+      const requiredIds = [
+        'terminal-secret', // konami
+        'hidden-element',  // matrix
+        'css-secret',      // easteregg
+        'file-explorer',   // hidden
+        'morse-clue',
+        'caesar-clue',
+        'snake-master',
+        'escape-artist',
+      ];
+
+      const hasAllRequirements = requiredIds.every(id => scavengerHunt.progress.cluesFound.includes(id));
+
+      if (hasAllRequirements) {
         const clue = scavengerHunt.checkSecretCode('unlock-vault');
         if (clue) {
           toast({
@@ -413,8 +457,7 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       return [
         '🔐 Vault Access Denied',
         '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-        'You need to find all previous clues first!',
-        'Hint: konami, matrix, easteregg, hidden',
+        'Requirements not met. Find all codes and beat both games (Snake ≥ 50, Escape Room victory).',
         ''
       ];
     }
@@ -582,6 +625,18 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
         return [...gameLines];
       });
       
+      // Award Snake Master when reaching 50 points
+      if (snakeGame.gameState.score >= 50 && !snakeAwardedRef.current) {
+        const already = scavengerHunt.clues.find(c => c.id === 'snake-master')?.found;
+        if (!already) {
+          const clue = scavengerHunt.findClue('snake-master');
+          if (clue) {
+            toast({ title: '🐍 Snake Master!', description: clue.reward, duration: 4000 });
+          }
+        }
+        snakeAwardedRef.current = true;
+      }
+      
       // Auto-exit when game is over
       if (snakeGame.gameState.gameOver) {
         setTimeout(() => {
@@ -610,6 +665,20 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     
     return () => clearInterval(interval);
   }, [isSnakeMode, snakeGame]);
+
+  // Award Escape Artist on victory
+  useEffect(() => {
+    if (isHorrorMode && horrorGame.gameState.victory && !horrorAwardedRef.current) {
+      const already = scavengerHunt.clues.find(c => c.id === 'escape-artist')?.found;
+      if (!already) {
+        const clue = scavengerHunt.findClue('escape-artist');
+        if (clue) {
+          toast({ title: '🗝️ Escape Artist!', description: clue.reward, duration: 4000 });
+        }
+      }
+      horrorAwardedRef.current = true;
+    }
+  }, [isHorrorMode, horrorGame.gameState.victory]);
 
   // Update horror game display
   useEffect(() => {
