@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Maximize2, Minimize2, Play } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSnakeGame } from '@/hooks/useSnakeGame';
+import { useHorrorGame } from '@/hooks/useHorrorGame';
 import { useScavengerHunt } from '@/hooks/useScavengerHunt';
 import { toast } from '@/hooks/use-toast';
 
@@ -25,13 +26,14 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
   const [isMaximized, setIsMaximized] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isSnakeMode, setIsSnakeMode] = useState(false);
+  const [isHorrorMode, setIsHorrorMode] = useState(false);
   const [currentPath, setCurrentPath] = useState('daniel/portfolio');
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
   
   const snakeGame = useSnakeGame();
+  const horrorGame = useHorrorGame();
   const scavengerHunt = useScavengerHunt();
-
   const runPythonCode = async (code: string) => {
     setIsRunning(true);
     setOutput(prev => [...prev, `> Running Python code...`, '']);
@@ -72,6 +74,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       '  ls          - List portfolio contents',
       '  run         - Run the current Python file',
       '  snake       - Play Snake game',
+      '  horror      - Play Horror Escape Room',
       '  projects    - Show project overview',
       '  resume      - Download resume',
       '  hunt        - Check scavenger hunt progress',
@@ -100,6 +103,11 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       setIsSnakeMode(true);
       snakeGame.startGame();
       return snakeGame.renderGame();
+    },
+    horror: () => {
+      setIsHorrorMode(true);
+      horrorGame.resetGame();
+      return horrorGame.renderGame();
     },
     projects: () => [
       '📁 PROJECT PORTFOLIO',
@@ -447,6 +455,28 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
       return;
     }
 
+    // Handle horror game typed actions
+    if (isHorrorMode) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setIsHorrorMode(false);
+        horrorGame.resetGame();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const action = input.trim();
+        if (action.length > 0) {
+          setOutput(prev => [...prev, `$ ${input}`, '']);
+          horrorGame.processAction(action);
+          setHistory(prev => [...prev, input]);
+          setHistoryIndex(-1);
+          setInput('');
+        }
+        return;
+      }
+    }
+
     if (e.key === 'Enter') {
       handleCommand(input);
     } else if (e.key === 'ArrowUp') {
@@ -507,9 +537,9 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     };
   }, []);
 
-  // Animate output display (skip animation in snake mode for better performance)
+  // Animate output display (skip animation in snake/horror modes for better performance)
   useEffect(() => {
-    if (isSnakeMode) {
+    if (isSnakeMode || isHorrorMode) {
       setDisplayedOutput(output);
       return;
     }
@@ -581,6 +611,20 @@ Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
     return () => clearInterval(interval);
   }, [isSnakeMode, snakeGame]);
 
+  // Update horror game display
+  useEffect(() => {
+    if (isHorrorMode) {
+      const gameLines = horrorGame.renderGame();
+      setOutput(prev => {
+        const lastCommandIndex = prev.lastIndexOf('$ horror');
+        if (lastCommandIndex !== -1) {
+          return [...prev.slice(0, lastCommandIndex + 1), '', ...gameLines];
+        }
+        return [...gameLines];
+      });
+    }
+  }, [isHorrorMode, horrorGame.gameState]);
+  
   return (
     <div className={`bg-[#1e1e1e] text-[#d4d4d4] flex flex-col ${isMaximized ? 'fixed inset-0 z-50' : 'h-full'}`}>
       <div className="flex items-center justify-between bg-[#2d2d30] px-4 py-2 border-b border-[#3e3e42]">
