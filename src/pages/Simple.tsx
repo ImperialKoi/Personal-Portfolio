@@ -14,7 +14,7 @@ import Lenis from '@studio-freight/lenis';
 import { useScavengerHunt } from '@/hooks/useScavengerHunt';
 import { HiddenElement } from '@/components/HiddenElement';
 import { ScavengerHuntProgress } from '@/components/ScavengerHuntProgress';
-import LoadingScreen from '@/components/LoadingScreen';
+import { toast } from '@/hooks/use-toast';
 
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false);
@@ -25,14 +25,8 @@ export default function Simple() {
   const projectsRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
   
-  // Per-route loading overlay
-  const location = useLocation();
-  const storageKey = `loader_shown_${location.pathname}`;
-  const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    if (sessionStorage.getItem(storageKey)) setShowLoader(false);
-    else setShowLoader(true);
-  }, [storageKey]);
+  // Scavenger hunt
+  const scavengerHunt = useScavengerHunt();
   
   // Scroll tracking for animations
   const { scrollY } = useScroll();
@@ -255,17 +249,6 @@ Tools: Git, Docker, AWS, Firebase
   const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  if (showLoader) {
-    return (
-      <LoadingScreen
-        onComplete={() => {
-          sessionStorage.setItem(storageKey, '1');
-          setShowLoader(false);
-        }}
-      />
-    );
-  }
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>

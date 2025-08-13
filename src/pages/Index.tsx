@@ -7,7 +7,6 @@ import { StatusBar } from '@/components/StatusBar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
 import { BootSequence } from '@/components/BootSequence';
-import LoadingScreen from '@/components/LoadingScreen';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { generateFileStructure, getFileContent, getFileUrl } from '@/utils/fileDiscovery';
@@ -157,14 +156,6 @@ const Index = () => {
   const [isBooting, setIsBooting] = useState(location.pathname !== '/terminal');
   const navigate = useNavigate();
 
-  // Page-specific loading screen (once per session per route)
-  const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    const key = `loader_shown_${location.pathname}`;
-    if (!sessionStorage.getItem(key)) setShowLoader(true);
-    else setShowLoader(false);
-  }, [location.pathname]);
-
   const handleBootComplete = (mode: 'default' | 'simple' = 'default') => {
     setIsBooting(false);
     if (mode === 'simple') {
@@ -173,18 +164,6 @@ const Index = () => {
       navigate('/terminal');
     }
   };
-
-  // Show loader before BootSequence and before terminal mode
-  if (showLoader) {
-    return (
-      <LoadingScreen
-        onComplete={() => {
-          sessionStorage.setItem(`loader_shown_${location.pathname}`, '1');
-          setShowLoader(false);
-        }}
-      />
-    );
-  }
 
   if (isBooting) {
     return <BootSequence onBootComplete={handleBootComplete} />;
