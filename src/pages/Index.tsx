@@ -7,7 +7,6 @@ import { StatusBar } from '@/components/StatusBar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { TabBar } from '@/components/TabBar';
 import { BootSequence } from '@/components/BootSequence';
-import { LoadingScreen } from '@/components/LoadingScreen';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { generateFileStructure, getFileContent, getFileUrl } from '@/utils/fileDiscovery';
@@ -155,38 +154,19 @@ const PortfolioIDE = () => {
 const Index = () => {
   const location = useLocation();
   const [isBooting, setIsBooting] = useState(location.pathname !== '/terminal');
-  const [showInitialLoading, setShowInitialLoading] = useState(true);
-  const [showTerminalLoading, setShowTerminalLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleInitialLoadingComplete = () => {
-    setShowInitialLoading(false);
-  };
-
   const handleBootComplete = (mode: 'default' | 'simple' = 'default') => {
+    setIsBooting(false);
     if (mode === 'simple') {
       navigate('/simple');
     } else {
-      setShowTerminalLoading(true);
-      setIsBooting(false);
+      navigate('/terminal');
     }
   };
 
-  const handleTerminalLoadingComplete = () => {
-    setShowTerminalLoading(false);
-    navigate('/terminal');
-  };
-
-  if (showInitialLoading) {
-    return <LoadingScreen onComplete={handleInitialLoadingComplete} />;
-  }
-
   if (isBooting) {
     return <BootSequence onBootComplete={handleBootComplete} />;
-  }
-
-  if (showTerminalLoading) {
-    return <LoadingScreen onComplete={handleTerminalLoadingComplete} />;
   }
 
   return <PortfolioIDE />;
