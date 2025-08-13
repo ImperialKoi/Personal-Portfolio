@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import LoadingScreen from '@/components/LoadingScreen';
 
 const NotFound = () => {
   const location = useLocation();
@@ -10,6 +11,25 @@ const NotFound = () => {
       location.pathname
     );
   }, [location.pathname]);
+
+  // Per-route loading overlay
+  const storageKey = `loader_shown_${location.pathname}`;
+  const [showLoader, setShowLoader] = useState(true);
+  useEffect(() => {
+    if (sessionStorage.getItem(storageKey)) setShowLoader(false);
+    else setShowLoader(true);
+  }, [storageKey]);
+
+  if (showLoader) {
+    return (
+      <LoadingScreen
+        onComplete={() => {
+          sessionStorage.setItem(`loader_shown_${location.pathname}`, '1');
+          setShowLoader(false);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

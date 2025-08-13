@@ -10,6 +10,8 @@ import { useScavengerHunt } from '@/hooks/useScavengerHunt';
 import { HiddenElement } from '@/components/HiddenElement';
 import { ScavengerHuntProgress } from '@/components/ScavengerHuntProgress';
 import { toast } from '@/hooks/use-toast';
+import { useLocation } from 'react-router-dom';
+import LoadingScreen from '@/components/LoadingScreen';
 
 // Import game components
 import { 
@@ -228,6 +230,15 @@ export default function Projects() {
   const [showResult, setShowResult] = useState(false);
   const [allUnlocked, setAllUnlocked] = useState(false);
   
+  // Per-route loading overlay
+  const location = useLocation();
+  const storageKey = `loader_shown_${location.pathname}`;
+  const [showLoader, setShowLoader] = useState(true);
+  useEffect(() => {
+    if (sessionStorage.getItem(storageKey)) setShowLoader(false);
+    else setShowLoader(true);
+  }, [storageKey]);
+  
   // Scavenger hunt
   const scavengerHunt = useScavengerHunt();
 
@@ -288,6 +299,17 @@ export default function Projects() {
     setChallenges(shuffled);
     setGameStarted(true);
   };
+
+  if (showLoader) {
+    return (
+      <LoadingScreen
+        onComplete={() => {
+          sessionStorage.setItem(storageKey, '1');
+          setShowLoader(false);
+        }}
+      />
+    );
+  }
 
   if (!gameStarted) {
     return (
