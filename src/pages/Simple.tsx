@@ -149,18 +149,18 @@ export default function Simple() {
     { name: 'Node.js', level: 85, icon: Database },
     { name: 'PostgreSQL', level: 80, icon: Database },
     { name: 'Next.js', level: 88, icon: Globe },
-    { name: 'React Native', level: 75, icon: Smartphone },
+    { name: 'Python', level: 75, icon: Smartphone },
   ];
 
   const projects = [
     {
-      title: 'Candit',
-      sub: 'Smart E-commerce',
-      description: 'Amazon-like shopping platform with AI recommendations and secure payments',
-      tech: ['React', 'Node.js', 'PostgreSQL', 'TensorFlow', 'Stripe'],
-      github: 'https://github.com/danielxu/candit',
-      live: 'https://candit-demo.com',
-      image: "/placeholder.svg?height=160&width=320",
+      title: 'RecessHacks',
+      sub: 'A Internation Hackathon',
+      description: 'The 5th iteration of a classic highschool international hackathon.',
+      tech: ['Next', 'Node.js', 'PostgreSQL', 'Argon2', 'NodeMailer'],
+      github: 'https://github.com/Recess-Hacks/recess-hacks',
+      live: 'https://recess-hacks.vercel.app',
+      image: "/recess-hacks.png",
       category: 'Full-Stack'
     },
     {
@@ -168,9 +168,9 @@ export default function Simple() {
       sub: 'Neural Network Builder',
       description: 'Visual drag-and-drop interface for building and training neural networks',
       tech: ['React', 'TypeScript', 'TensorFlow.js', 'D3.js', 'WebGL'],
-      github: 'https://github.com/danielxu/blocksnet',
-      live: 'https://blocksnet-demo.com',
-      image: "/placeholder.svg?height=160&width=320",
+      github: 'https://github.com/ImperialKoi/BlocksNet',
+      live: 'https://blocks-net.vercel.app/',
+      image: "/blocks-net.png",
       category: 'AI/ML'
     },
     {
@@ -178,9 +178,9 @@ export default function Simple() {
       sub: 'AI Calendar',
       description: 'Smart scheduling with AI-powered optimization and conflict resolution',
       tech: ['React', 'OpenAI GPT-4', 'Supabase', 'FullCalendar'],
-      github: 'https://github.com/danielxu/calicalender',
-      live: 'https://calicalender-demo.com',
-      image: "/placeholder.svg?height=160&width=320",
+      github: 'https://github.com/ImperialKoi/CaliCalender',
+      live: 'https://calender-app-tan.vercel.app/calendar',
+      image: "/cali-calendar.png",
       category: 'AI/Productivity'
     },
     {
@@ -188,9 +188,9 @@ export default function Simple() {
       sub: 'AI ideas generator',
       description: 'AI generates, judges, and codes the perfect hackathon project for you',
       tech: ['React', 'OpenAI', 'Claude AI', 'TypeScript'],
-      github: 'https://github.com/danielxu/hackathon-ideas',
-      live: 'https://hackathon-ideas-demo.com',
-      image: "/placeholder.svg?height=160&width=320",
+      github: 'https://github.com/ImperialKoi/HackathonIdeaGenerator',
+      live: 'https://hackathon-idea-generator-chi.vercel.app/',
+      image: "/hackathon-ideas-gen.png",
       category: 'AI Tools'
     },
     {
@@ -198,20 +198,20 @@ export default function Simple() {
       sub: 'Cancer Detection',
       description: 'AI-powered camera app for early skin cancer detection and diagnosis',
       tech: ['React Native', 'TensorFlow', 'Computer Vision', 'Medical AI'],
-      github: 'https://github.com/danielxu/skinscope',
-      live: 'https://skinscope-demo.com',
-      image: "/placeholder.svg?height=160&width=320",
+      github: 'https://github.com/ImperialKoi/SkinScope',
+      live: 'https://skin-scope.vercel.app/',
+      image: "/skinscope.png",
       category: 'Healthcare AI'
     },
     {
-      title: 'AIPoster',
-      sub: 'Infographic Generator',
-      description: 'AI-powered tool for creating beautiful infographics with smart layouts',
-      tech: ['React', 'Canvas API', 'OpenAI', 'Design AI'],
-      github: 'https://github.com/danielxu/aiposter',
-      live: 'https://aiposter-demo.com',
-      image: "/placeholder.svg?height=160&width=320",
-      category: 'Design AI'
+      title: 'Personal Portfolio',
+      sub: "Daniel's Personal Portfolio",
+      description: 'Simple and Fun Personal Portfolio with an IDE',
+      tech: ['React', 'ShadCN', 'OpenAI', 'Three.js'],
+      github: 'https://github.com/ImperialKoi/Personal-Portfolio',
+      live: 'https://daniel-xu.vercel.app',
+      image: "/faux-canvas.png",
+      category: 'Personal Portfolio'
     }
   ];
 
