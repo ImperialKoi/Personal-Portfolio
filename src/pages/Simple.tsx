@@ -12,9 +12,6 @@ import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import Lenis from '@studio-freight/lenis';
 import { useScavengerHunt } from '@/hooks/useScavengerHunt';
-import { HiddenElement } from '@/components/HiddenElement';
-import { ScavengerHuntProgress } from '@/components/ScavengerHuntProgress';
-import { toast } from '@/hooks/use-toast';
 
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false);
@@ -157,51 +154,63 @@ export default function Simple() {
 
   const projects = [
     {
-      title: 'Candit - Smart E-commerce',
+      title: 'Candit',
+      sub: 'Smart E-commerce',
       description: 'Amazon-like shopping platform with AI recommendations and secure payments',
       tech: ['React', 'Node.js', 'PostgreSQL', 'TensorFlow', 'Stripe'],
       github: 'https://github.com/danielxu/candit',
       live: 'https://candit-demo.com',
+      image: "/placeholder.svg?height=160&width=320",
       category: 'Full-Stack'
     },
     {
-      title: 'BlocksNet - Neural Network Builder',
+      title: 'BlocksNet',
+      sub: 'Neural Network Builder',
       description: 'Visual drag-and-drop interface for building and training neural networks',
       tech: ['React', 'TypeScript', 'TensorFlow.js', 'D3.js', 'WebGL'],
       github: 'https://github.com/danielxu/blocksnet',
       live: 'https://blocksnet-demo.com',
+      image: "/placeholder.svg?height=160&width=320",
       category: 'AI/ML'
     },
     {
-      title: 'CaliCalender - AI Calendar',
+      title: 'CaliCalender',
+      sub: 'AI Calendar',
       description: 'Smart scheduling with AI-powered optimization and conflict resolution',
       tech: ['React', 'OpenAI GPT-4', 'Supabase', 'FullCalendar'],
       github: 'https://github.com/danielxu/calicalender',
       live: 'https://calicalender-demo.com',
+      image: "/placeholder.svg?height=160&width=320",
       category: 'AI/Productivity'
     },
     {
       title: 'HackathonIdeasGenerator',
+      sub: 'AI ideas generator',
       description: 'AI generates, judges, and codes the perfect hackathon project for you',
       tech: ['React', 'OpenAI', 'Claude AI', 'TypeScript'],
       github: 'https://github.com/danielxu/hackathon-ideas',
       live: 'https://hackathon-ideas-demo.com',
+      image: "/placeholder.svg?height=160&width=320",
       category: 'AI Tools'
     },
     {
-      title: 'SkinScope - Cancer Detection',
+      title: 'SkinScope',
+      sub: 'Cancer Detection',
       description: 'AI-powered camera app for early skin cancer detection and diagnosis',
       tech: ['React Native', 'TensorFlow', 'Computer Vision', 'Medical AI'],
       github: 'https://github.com/danielxu/skinscope',
       live: 'https://skinscope-demo.com',
+      image: "/placeholder.svg?height=160&width=320",
       category: 'Healthcare AI'
     },
     {
-      title: 'AIPoster - Infographic Generator',
+      title: 'AIPoster',
+      sub: 'Infographic Generator',
       description: 'AI-powered tool for creating beautiful infographics with smart layouts',
       tech: ['React', 'Canvas API', 'OpenAI', 'Design AI'],
       github: 'https://github.com/danielxu/aiposter',
       live: 'https://aiposter-demo.com',
+      image: "/placeholder.svg?height=160&width=320",
       category: 'Design AI'
     }
   ];
@@ -370,7 +379,7 @@ Tools: Git, Docker, AWS, Firebase
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.4 }}
               >
-                <Button size="lg" className="hover-scale group">
+                <Button size="lg" className="hover-scale group" onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}>
                   <Mail className="mr-2 h-5 w-5" />
                   Contact me!
                 </Button>
@@ -403,22 +412,6 @@ Tools: Git, Docker, AWS, Firebase
                   }}
                 />
                 
-                {/* Hidden Matrix Element */}
-                <HiddenElement
-                  id="matrix-element"
-                  onFound={(id) => {
-                    const clue = scavengerHunt.findClue('hidden-element');
-                    if (clue) {
-                      toast({
-                        title: "🔴 Matrix Element Found!",
-                        description: clue.reward,
-                        duration: 4000,
-                      });
-                    }
-                  }}
-                  hint="The Matrix has you..."
-                  className="absolute top-1/4 right-1/4 w-8 h-8"
-                />
               </div>
               {/* Background gradient */}
               <motion.div 
@@ -507,7 +500,7 @@ Tools: Git, Docker, AWS, Firebase
                       key={stat.label}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      transition={{ type: "spring", stiffness: 200, delay: 0.3 + index * 0.1 }}
                       viewport={{ once: true }}
                     >
                       <Card className="hover-scale text-center relative">
@@ -608,13 +601,19 @@ Tools: Git, Docker, AWS, Firebase
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <CardContainer key={project.title} className="inter-var">
-                  <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-primary/[0.1] dark:bg-card dark:border-white/[0.2] border-black/[0.1] w-auto h-auto rounded-xl p-6 border">
+                  <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-primary/[0.1] dark:bg-card dark:border-white/[0.2] border-black/[0.1] w-auto h-[29rem] rounded-xl p-6 border">
                     <GlowingEffect disabled={false} proximity={200} />
                     <CardItem
                       translateZ="50"
-                      className="text-xl font-bold text-neutral-600 dark:text-white"
+                      className="text-xl font-bold text-black dark:text-white"
                     >
                       {project.title}
+                    </CardItem>
+                    <CardItem
+                      translateZ="50"
+                      className="text-lg font-bold text-gray-500 dark:text-white"
+                    >
+                      {project.sub}
                     </CardItem>
                     <CardItem
                       as="p"
@@ -624,9 +623,11 @@ Tools: Git, Docker, AWS, Firebase
                       {project.description}
                     </CardItem>
                     <CardItem translateZ="100" className="w-full mt-4">
-                      <div className="h-40 w-full bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl group-hover/card:shadow-xl flex items-center justify-center">
-                        <Code className="h-16 w-16 text-primary/50" />
-                      </div>
+                      <img
+                          src={project.image}
+                          alt={`${project.title} project screenshot`}
+                          className="h-40 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                      />
                     </CardItem>
                     <CardItem translateZ="80" className="w-full mt-4">
                       <div className="flex flex-wrap gap-2">
@@ -683,7 +684,7 @@ Tools: Git, Docker, AWS, Firebase
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="hover-scale group">
+              <Button size="lg" className="hover-scale group" onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}>
                 <Mail className="mr-2 h-5 w-5" />
                 Get In Touch
               </Button>
@@ -695,13 +696,28 @@ Tools: Git, Docker, AWS, Firebase
             
             {/* Social Links */}
             <div className="flex gap-4 justify-center mt-8">
-              <Button variant="outline" size="icon" className="hover-scale">
+            <Button
+                variant="outline"
+                size="icon"
+                className="hover-scale bg-transparent"
+                onClick={() => window.open("https://github.com/ImperialKoi", "_blank")}
+              >
                 <Github className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="hover-scale">
+              <Button
+                variant="outline"
+                size="icon"
+                className="hover-scale bg-transparent"
+                onClick={() => window.open("https://www.linkedin.com/in/daniel-xu-876272368/", "_blank")}
+              >
                 <Linkedin className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="hover-scale">
+              <Button
+                variant="outline"
+                size="icon"
+                className="hover-scale bg-transparent"
+                onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}
+              >
                 <Mail className="h-5 w-5" />
               </Button>
             </div>
@@ -717,16 +733,6 @@ Tools: Git, Docker, AWS, Firebase
           </div>
         </footer>
       </div>
-      
-      {/* Scavenger Hunt Progress */}
-      {scavengerHunt.isActive && (
-        <ScavengerHuntProgress
-          progress={scavengerHunt.progress}
-          clues={scavengerHunt.clues}
-          onReset={scavengerHunt.resetHunt}
-          nextClue={scavengerHunt.getNextClue()}
-        />
-      )}
     </div>
   );
 }
