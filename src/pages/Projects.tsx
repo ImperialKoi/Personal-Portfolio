@@ -97,10 +97,10 @@ const baseChallenges = [
     title: "CSS Color Game",
     description: "Match the color with its hex code!",
     colors: [
-      { hex: "#3B82F6", name: "blue-500" },
-      { hex: "#EF4444", name: "red-500" },
-      { hex: "#10B981", name: "green-500" },
-      { hex: "#F59E0B", name: "amber-500" }
+      { hex: "#3b82f6", name: "blue-500" },
+      { hex: "#00a6f4", name: "sky-500" },
+      { hex: "#155dfc", name: "blue-600" },
+      { hex: "#0084d1", name: "sky-600" }
     ],
     hint: "Common Tailwind colors",
     icon: Shuffle
@@ -188,12 +188,12 @@ const baseChallenges = [
   {
     id: 15,
     type: 'pixel-perfect',
-    title: "CSS Precision",
-    description: "Click exactly on the center of the target!",
-    tolerance: 15, // pixels
+    title: "Difference Hunter",
+    description: "Find the square that doesn't match!",
+    tolerance: 15,
     targetCount: 5,
     timeLimit: 15,
-    hint: "Precision is key!",
+    hint: "Compare each square carefully",
     icon: Target
   }
 ];
@@ -234,35 +234,45 @@ export default function Projects() {
   const currentChallengeData = challenges[currentChallenge];
   const progress = challenges.length > 0 ? ((currentChallenge + 1) / challenges.length) * 100 : 0;
 
+  // Main completion handler — unlocks exactly one locked project on success
   const handleChallengeComplete = useCallback((isCorrect: boolean) => {
+    // show immediate feedback
     setShowResult(true);
-    
-    // Only unlock project if challenge was completed successfully
+
     if (isCorrect) {
-      const nextProjectIndex = unlockedProjects.length;
-      if (nextProjectIndex < allProjects.length) {
-        setUnlockedProjects([...unlockedProjects, nextProjectIndex]);
-      }
+      // Unlock one random locked project using functional update (prevents race conditions)
+      setUnlockedProjects(prev => {
+        const allIndices = allProjects.map((_, i) => i);
+        const locked = allIndices.filter(i => !prev.includes(i));
+        if (locked.length === 0) return prev; // nothing to do
+        const choice = locked[Math.floor(Math.random() * locked.length)];
+        const next = [...prev, choice];
+
+        // If we've just unlocked the last one, mark allUnlocked
+        if (next.length === allProjects.length) {
+          setAllUnlocked(true);
+        }
+        return next;
+      });
     }
 
+    // After a brief display of the result, advance to the next challenge (wraps around)
     setTimeout(() => {
-      if (currentChallenge < challenges.length - 1) {
-        setCurrentChallenge(currentChallenge + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
-      } else {
-        setAllUnlocked(true);
-        // Only show projects that were actually unlocked
-        if (unlockedProjects.length === allProjects.length) {
-          setUnlockedProjects(Array.from({ length: allProjects.length }, (_, i) => i));
-        }
-      }
+      setShowResult(false);
+      setSelectedAnswer(null);
+      setCurrentChallenge(prev => {
+        // wrap to keep cycling through the challenge pool until allUnlocked becomes true
+        const poolSize = Math.max(challenges.length, 1);
+        return (prev + 1) % poolSize;
+      });
     }, 2000);
-  }, [currentChallenge, unlockedProjects, challenges.length, allProjects.length]);
+  }, [challenges.length, allProjects.length, allProjects]);
 
+  // Quiz answer handler — use handleChallengeComplete with the right boolean
   const handleQuizAnswer = (answerIndex) => {
     setSelectedAnswer(answerIndex);
-    handleChallengeComplete(answerIndex === currentChallengeData.correct);
+    const isCorrect = !!(currentChallengeData && answerIndex === currentChallengeData.correct);
+    handleChallengeComplete(isCorrect);
   };
 
   const resetGame = () => {
@@ -372,11 +382,7 @@ export default function Projects() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-1">🎮 Project Vault</h1>
-          <div className="text-[10px] text-muted-foreground tracking-widest">ROT13: pnfrne</div>
-          <div className="flex items-center justify-center gap-4 mt-3 mb-4">
-            <Badge variant="outline">Progress: {unlockedProjects.length}/{allProjects.length}</Badge>
-            <Badge variant="outline">Challenge: {currentChallenge + 1}/{challenges.length}</Badge>
-          </div>
+          <div className="text-[10px] text-muted-foreground tracking-widest mb-8">ROT13: pnfrne</div>
           <Progress value={progress} className="w-full max-w-md mx-auto" />
         </div>
 
@@ -535,12 +541,7 @@ export default function Projects() {
                             transition={{ duration: 0.3 }}
                           >
                             <div className="text-center">
-                              <motion.div
-                                animate={{ rotate: [0, 360] }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                              >
-                                <Lock className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                              </motion.div>
+                              <Lock className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                               <p className="text-sm text-muted-foreground">Locked</p>
                             </div>
                           </motion.div>

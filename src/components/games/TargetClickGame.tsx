@@ -85,7 +85,7 @@ export const TargetClickGame = ({ challenge, onComplete }: TargetClickGameProps)
       </div>
       
       {/* Full-page overlay for targets */}
-      <div className="fixed inset-0 pointer-events-none z-10">
+      <div className="fixed inset-0 pointer-events-none z-[100]">
         {targets.map((target) => (
           <motion.button
             key={target.id}
