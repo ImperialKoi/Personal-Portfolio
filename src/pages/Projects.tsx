@@ -232,7 +232,10 @@ export default function Projects() {
   const scavengerHunt = useScavengerHunt();
 
   const currentChallengeData = challenges[currentChallenge];
-  const progress = challenges.length > 0 ? ((currentChallenge + 1) / challenges.length) * 100 : 0;
+  const totalProjects = allProjects.length;
+  const unlockedCount = unlockedProjects.length;
+  const progress = totalProjects > 0 ? (unlockedCount / totalProjects) * 100 : 0;
+
 
   // Main completion handler — unlocks exactly one locked project on success
   const handleChallengeComplete = useCallback((isCorrect: boolean) => {
