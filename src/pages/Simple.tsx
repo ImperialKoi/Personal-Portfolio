@@ -210,7 +210,7 @@ export default function Simple() {
       tech: ['React', 'ShadCN', 'OpenAI', 'Three.js'],
       github: 'https://github.com/ImperialKoi/Personal-Portfolio',
       live: 'https://daniel-xu.vercel.app',
-      image: "/faux-canvas.png",
+      image: "/faux-canvas1.png",
       category: 'Personal Portfolio'
     }
   ];
