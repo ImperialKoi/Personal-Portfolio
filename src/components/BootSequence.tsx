@@ -19,7 +19,7 @@ const bootMessages = [
   "[OK] All systems operational",
   "Welcome to Daniel Xu Portfolio IDE v2.1.0",
   "",
-  "System ready. Press any key to continue..."
+  "System ready. Press 'T' or 'S' to continue..."
 ];
 
 export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
