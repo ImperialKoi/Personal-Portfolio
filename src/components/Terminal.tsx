@@ -139,50 +139,21 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       ''
     ],
     resume: () => {
-      // Create a fake resume blob and trigger download
-      const resumeContent = `
-DANIEL XU
-Software Engineer & Full-Stack Developer
-Email: daniel.xu@email.com | Phone: (555) 123-4567
-GitHub: github.com/danielxu | LinkedIn: linkedin.com/in/danielxu
+      const a = document.createElement("a")
+      a.href = "/Resume.pdf"
+      a.download = "Daniel_Resume.pdf"
+      a.target = "_blank"
 
-EXPERIENCE
-Senior Software Engineer | TechCorp Inc. | 2022-Present
-• Led development of microservices architecture serving 1M+ users
-• Implemented CI/CD pipelines reducing deployment time by 60%
-• Mentored team of 5 junior developers
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
 
-Full-Stack Developer | StartupXYZ | 2020-2022
-• Built scalable web applications using React, Node.js, and AWS
-• Optimized database queries improving response time by 40%
-• Collaborated with cross-functional teams on product roadmap
-
-EDUCATION
-Bachelor of Science in Computer Science | State University | 2020
-• Magna Cum Laude, GPA: 3.8/4.0
-• Relevant Coursework: Data Structures, Algorithms, Database Systems
-
-SKILLS
-Languages: JavaScript, Python, TypeScript, Java, SQL
-Frameworks: React, Node.js, Django, Express, Next.js
-Tools: Git, Docker, AWS, MongoDB, PostgreSQL, Redis
-      `;
-      
-      const blob = new Blob([resumeContent], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'daniel_xu_resume.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      
       return [
-        '📄 Downloading resume...',
-        'daniel_xu_resume.txt saved to Downloads folder',
-        ''
-      ];
+        "📄 Downloading resume...",
+        "Resume.pdf download initiated",
+        "If download doesn't start, check that Resume.pdf exists in your public folder",
+        "",
+      ]
     },
     cd: (args: string[]) => {
       if (args.length === 0) {

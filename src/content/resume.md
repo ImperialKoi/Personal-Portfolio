@@ -1,11 +1,13 @@
 # Daniel Xu
 
-**ImperialKoi** • (647) 875‑0619 • imperialkoi9@gmail.com • [github.com/ImperialKoi](https://github.com/ImperialKoi)
+**ImperialKoi** • (647) 875‑0619 • imperialkoi9@gmail.com • (https://www.linkedin.com/in/daniel-xu-876272368/) (https://github.com/ImperialKoi)
 
 ---
 
 ## Professional Summary
-Proactive and results-driven Full Stack Developer with hands‑on experience building dynamic, responsive web applications using React.js, Next.js, and Node.js. Passionate about creating intuitive user interfaces and leveraging back‑end technologies to deliver seamless digital experiences. Proven leader in team environments—attended eight hackathons and consistently delivered innovative projects under pressure.
+Proactive and results-driven Full Stack Developer with hands‑on experience building dynamic, responsive web applications using React.js, Next.js, and Node.js. 
+Passionate about creating intuitive user interfaces and leveraging back‑end technologies to deliver seamless digital experiences. 
+Proven leader in team environments—attended eight hackathons and consistently delivered innovative projects under pressure.
 
 ---
 

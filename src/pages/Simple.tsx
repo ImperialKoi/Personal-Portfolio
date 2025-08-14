@@ -216,43 +216,12 @@ export default function Simple() {
   ];
 
   const downloadResume = () => {
-    const resumeContent = `
-DANIEL XU
-Software Engineer & Full-Stack Developer
-Email: daniel.xu@email.com | Phone: (555) 123-4567
-GitHub: github.com/danielxu | LinkedIn: linkedin.com/in/danielxu
-
-EXPERIENCE
-Senior Software Engineer | TechCorp Inc. | 2022-Present
-• Led development of microservices architecture serving 1M+ users
-• Implemented CI/CD pipelines reducing deployment time by 60%
-• Mentored junior developers and conducted code reviews
-
-Full-Stack Developer | StartupXYZ | 2020-2022
-• Built responsive web applications using React and Node.js
-• Designed and optimized database schemas for high performance
-• Collaborated with UX team to implement pixel-perfect designs
-
-EDUCATION
-Bachelor of Science in Computer Science | University of California | 2020
-
-SKILLS
-Languages: JavaScript, TypeScript, Python, SQL
-Frontend: React, Next.js, Vue.js, HTML/CSS, Tailwind CSS
-Backend: Node.js, Express, Django, RESTful APIs
-Databases: PostgreSQL, MongoDB, Redis
-Tools: Git, Docker, AWS, Firebase
-`;
-    
-    const blob = new Blob([resumeContent], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'daniel_xu_resume.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    const a = document.createElement("a")
+    a.href = "/Resume.pdf"
+    a.download = "Daniel_Resume.pdf"
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   };
 
   const scrollToSection = (ref: React.RefObject<HTMLElement>) => {

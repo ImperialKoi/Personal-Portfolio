@@ -8,9 +8,8 @@ export const SKINSCOPE = {
   category:    "Healthcare",
   status:      "Live",
   description: "A life‑saving mobile application for early skin cancer detection using AI.",
-  summary: `
-A revolutionary app that uses cutting‑edge AI to detect potential skin cancer through smartphone camera analysis, providing early warnings and connecting users with healthcare professionals.
-  `.trim(),
+  summary:     `A revolutionary app that uses cutting‑edge AI to detect potential skin cancer through smartphone camera analysis, providing early warnings and connecting users
+                with healthcare professionals.`,
   criticalFeatures: [
     "📸 AI‑powered real‑time camera analysis for lesion detection",
     "🧠 Custom‑trained CNN model with 94% accuracy",

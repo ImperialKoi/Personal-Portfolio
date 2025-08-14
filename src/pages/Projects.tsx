@@ -34,7 +34,7 @@ import { CALICALENDER } from '@/content/projects/calicalender.tsx';
 import { HACKATHONIDEASGENERATOR } from '@/content/projects/hackathon-ideas-generator.tsx';
 import { AIPOSTER } from '@/content/projects/aiposter.tsx';
 import { SKINSCOPE } from '@/content/projects/skinscope.tsx';
-import { ECOSCAN } from '@/content/projects/logoscan.tsx';
+import { ECOSCAN } from '@/content/projects/logoscan';
 import { RECESSHACKS } from '@/content/projects/recess-hacks.tsx';
 
 // Import school projects

@@ -24,7 +24,6 @@ Full‑stack developer passionate about building dynamic, responsive web applica
 
 ## 🛠️ Skills
 
-```javascript
 const programming_skills = {
   frontend:   ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
   backend:    ['Node.js', 'Python', 'Django', 'Flask', 'PostgreSQL'],
@@ -34,11 +33,11 @@ const programming_skills = {
 };
 const other_skills = {
   sports:               ["Badminton": "provincial competitor", "Basketball and Volleyball": "for fun", "Running": "excercise"],
-  extracurriculars:     [ "Link Crew": "Executive", "East Asian Student Association": "Executive", "Data Science and AI": "Co‑President & Founder", "DECA": "Provincial Contestant", "Math Society": "Honors Roll for Multiple Contests", "Tedx": "Helped Organize Yearly Events"],
+  extracurriculars:     [ "Link Crew": "Executive", "East Asian Student Association": "Executive", "Data Science and AI": "Co‑President & Founder", "DECA": "Provincial Contestant", 
+                          "Math Society": "Honors Roll for Multiple Contests", "Tedx": "Helped Organize Yearly Events"],
   languages:            ["English": "native", "French": "working proficiency", "Mandarin Chinese": "native"],
   hobbies:              ["Chess", "Boardgames (play me!)", "Cards", "Catan", "Public Speaking (get me on a stage)", "CODING!"]
 }
-```
 
 “Code is like humor. When you have to explain it, it’s bad.” — Cory House
 
