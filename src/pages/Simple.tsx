@@ -179,7 +179,7 @@ export default function Simple() {
       description: 'Smart scheduling with AI-powered optimization and conflict resolution',
       tech: ['React', 'OpenAI GPT-4', 'Supabase', 'FullCalendar'],
       github: 'https://github.com/ImperialKoi/CaliCalender',
-      live: 'https://calender-app-tan.vercel.app/calendar',
+      live: 'https://calender-app-tan.vercel.app/',
       image: "/cali-calendar.png",
       category: 'AI/Productivity'
     },
