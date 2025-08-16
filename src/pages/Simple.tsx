@@ -143,6 +143,13 @@ export default function Simple() {
     };
   }, []);
 
+  const stats = [
+    { number: "35+", label: "Projects Built" },
+    { number: "2+", label: "Years Coding" },
+    { number: "3", label: "Hackathons Organized" },
+    { number: "2×", label: "Hackathons Won" }
+  ]
+
   const skills = [
     { name: 'React', level: 95, icon: Code },
     { name: 'TypeScript', level: 90, icon: Code },
@@ -411,7 +418,7 @@ export default function Simple() {
             </div>
             
             <div className="grid md:grid-cols-2 gap-16 items-center">
-              <motion.div 
+              <motion.div
                 className="space-y-6"
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -419,39 +426,23 @@ export default function Simple() {
                 viewport={{ once: true }}
               >
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  With 5+ years of comprehensive experience in web application development, 
-                  I have polished my skills in both frontend and backend development. In addition 
-                  to my hands-on experience in web development, my education has also played a 
-                  critical role in providing a strong foundation for my career.
+                  I'm a Grade 11 student at <span className="font-medium text-foreground">Abbey Park High School</span>, passionate about building web applications and organizing community tech events. I am currently organizing <span className="font-semibold">three</span> hackathons at school and have previously won <span className="font-semibold">two</span> hackathons. I enjoy mentoring peers, collaborating on projects, and turning ideas into working prototypes.
                 </p>
-                
+
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">
-                      B.Sc (Hons) in Computer Science
-                    </h3>
-                    <p className="text-primary font-medium mb-2">University of California | 2018 ~ 2020</p>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">Abbey Park High School</h3>
+                    <p className="text-primary font-medium mb-2">Grade 11 · Student Organizer</p>
                     <ul className="text-muted-foreground space-y-1">
-                      <li>• Studied computer science, software development, DevOps</li>
-                      <li>• Graduated with First Class Honours</li>
-                      <li>• Got merit in 7 modules out of 9</li>
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">
-                      Full-Stack Development Bootcamp
-                    </h3>
-                    <p className="text-primary font-medium mb-2">Tech Academy | 2017 - 2018</p>
-                    <ul className="text-muted-foreground space-y-1">
-                      <li>• Studied modules specializing in web development</li>
-                      <li>• Completed with overall Excellence</li>
+                      <li>• Organizing 3 school hackathons focused on beginner-friendly projects</li>
+                      <li>• Won 2 hackathons as a competitor — experience pitching and rapid prototyping</li>
+                      <li>• Active in the school tech community and mentoring junior students</li>
                     </ul>
                   </div>
                 </div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="space-y-4"
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -459,12 +450,7 @@ export default function Simple() {
                 viewport={{ once: true }}
               >
                 <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { number: "15+", label: "Projects Completed" },
-                    { number: "5+", label: "Years Experience" },
-                    { number: "1M+", label: "Users Served" },
-                    { number: "100%", label: "Client Satisfaction" }
-                  ].map((stat, index) => (
+                  {stats.map((stat, index) => (
                     <motion.div
                       key={stat.label}
                       initial={{ opacity: 0, y: 20 }}
@@ -475,7 +461,7 @@ export default function Simple() {
                       <Card className="hover-scale text-center relative">
                         <GlowingEffect disabled={false} proximity={150} />
                         <CardContent className="p-6">
-                          <motion.div 
+                          <motion.div
                             className="text-3xl font-bold text-primary mb-2"
                             initial={{ scale: 0 }}
                             whileInView={{ scale: 1 }}
