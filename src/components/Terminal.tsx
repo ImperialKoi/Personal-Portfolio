@@ -675,7 +675,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
           <span className="ml-2 text-[#cccccc] text-sm">Terminal</span>
         </div>
         <div className="flex items-center space-x-2">
-          {activeFile?.endsWith('.py') && (
+          {/* {activeFile?.endsWith('.py') && (
             <button
               onClick={() => runPythonCode(fileContent || '')}
               disabled={isRunning || !fileContent}
@@ -684,7 +684,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
               <Play className="w-3 h-3" />
               <span>{isRunning ? 'Running...' : 'Run'}</span>
             </button>
-          )}
+          )} */}
           <button
             onClick={() => setIsMaximized(!isMaximized)}
             className="text-[#cccccc] hover:text-white transition-colors"
