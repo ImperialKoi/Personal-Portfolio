@@ -247,7 +247,7 @@ export default function Simple() {
             <div
               key={section.id}
               className={`
-                w-8 h-8 border-2 border-primary/30 cursor-pointer
+                md:w-8 md:h-8 w-[1.5rem] h-[1.5rem] border-2 border-primary/30 cursor-pointer
                 transition-all duration-300 ease-in-out
                 hover:rotate-45 hover:border-primary hover:bg-primary/20
                 ${isActive ? 'bg-primary/20 border-primary rotate-12' : 'hover:shadow-lg'}
@@ -261,7 +261,7 @@ export default function Simple() {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <Icon className={`
-                h-4 w-4 transition-all duration-300
+                md:h-4 md:w-4 w-[1rem] h-[1rem] transition-all duration-300
                 ${isActive ? 'text-primary' : 'text-muted-foreground'}
                 group-hover:text-primary group-hover:scale-110
               `} />
@@ -289,7 +289,7 @@ export default function Simple() {
         <section 
           ref={heroRef} 
           data-section="hero"
-          className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
+          className="min-h-screen flex items-center justify-center relative overflow-hidden md:pt-16 pt-24"
         >
           <motion.div 
             className="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center animate-fade-in"
@@ -683,7 +683,7 @@ export default function Simple() {
         <footer className="py-8 border-t border-border bg-card/30">
           <div className="container mx-auto px-6 text-center">
             <p className="text-muted-foreground">
-              © 2024 Daniel Xu. All rights reserved. Built with ❤️ using React & TypeScript.
+              © 2025 Daniel Xu. All rights reserved. Built with ❤️ using React & TypeScript.
             </p>
           </div>
         </footer>
