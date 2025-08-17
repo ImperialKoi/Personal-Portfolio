@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+"use client"
+
+import { useState, useEffect } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface BootSequenceProps {
-  onBootComplete: (mode?: 'default' | 'simple') => void;
+  onBootComplete: (mode?: "default" | "simple") => void
 }
 
 const bootMessages = [
@@ -10,7 +13,7 @@ const bootMessages = [
   "Starting system services...",
   "[OK] Mounted /dev/portfolio",
   "[OK] Started portfolio web server",
-  "[OK] Started file system daemon", 
+  "[OK] Started file system daemon",
   "[OK] Started terminal service",
   "[OK] Started code editor service",
   "Checking file system integrity...",
@@ -19,79 +22,88 @@ const bootMessages = [
   "[OK] All systems operational",
   "Welcome to Daniel Xu Portfolio IDE v2.1.0",
   "",
-  "System ready. Press 'T' or 'S' to continue..."
-];
+  "",
+]
 
 export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [isComplete, setIsComplete] = useState(false);
-  const [showCursor, setShowCursor] = useState(true);
+  const [messages, setMessages] = useState<string[]>([])
+  const [isComplete, setIsComplete] = useState(false)
+  const [showCursor, setShowCursor] = useState(true)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
-    let messageIndex = 0;
-    let timeoutId: NodeJS.Timeout;
-    let isMounted = true;
+    let messageIndex = 0
+    let timeoutId: NodeJS.Timeout
+    let isMounted = true
 
     const addNextMessage = () => {
       if (messageIndex < bootMessages.length && isMounted) {
-        setMessages(prev => [...prev, bootMessages[messageIndex]]);
-        messageIndex++;
-        
+        if (messageIndex === bootMessages.length - 1) {
+          const finalMessage = isMobile
+            ? "System ready. Press anywhere to continue..."
+            : "System ready. Press 'T' or 'S' to continue..."
+          setMessages((prev) => [...prev, finalMessage])
+        } else {
+          setMessages((prev) => [...prev, bootMessages[messageIndex]])
+        }
+        messageIndex++
+
         // Vary the timing for more realistic boot feel
-        const delay = messageIndex === bootMessages.length ? 1500 : Math.random() * 200 + 100;
-        timeoutId = setTimeout(addNextMessage, delay);
+        const delay = messageIndex === bootMessages.length ? 1500 : Math.random() * 200 + 100
+        timeoutId = setTimeout(addNextMessage, delay)
       } else if (isMounted) {
-        setIsComplete(true);
+        setIsComplete(true)
       }
-    };
+    }
 
     // Reset state when component mounts
-    setMessages([]);
-    setIsComplete(false);
+    setMessages([])
+    setIsComplete(false)
 
     // Start the boot sequence
-    const initialDelay = setTimeout(addNextMessage, 500);
+    const initialDelay = setTimeout(addNextMessage, 500)
 
     // Cursor blinking
     const cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 500);
+      setShowCursor((prev) => !prev)
+    }, 500)
 
     // Allow user to skip by pressing any key
     const handleKeyPress = (e: KeyboardEvent) => {
       if (isComplete) {
-        if (e.key === 't' || e.key === 'T') {
-          onBootComplete('default');
-        } else if (e.key === 's' || e.key === 'S') {
-          onBootComplete('simple');
+        if (e.key === "t" || e.key === "T") {
+          onBootComplete("default")
+        } else if (e.key === "s" || e.key === "S") {
+          onBootComplete("simple")
         } else {
-          onBootComplete('default');
+          onBootComplete("default")
         }
-      } else if (e.key === 't' || e.key === 'T') {
-        onBootComplete('default');
-      } else if (e.key === 's' || e.key === 'S') {
-        onBootComplete('simple');
+      } else if (e.key === "t" || e.key === "T") {
+        onBootComplete("default")
+      } else if (e.key === "s" || e.key === "S") {
+        onBootComplete("simple")
       }
-    };
+    }
 
     const handleClick = () => {
       if (isComplete) {
-        onBootComplete('default');
+        // On mobile, always go to simple mode; on desktop, go to default
+        onBootComplete(isMobile ? "simple" : "default")
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleKeyPress);
-    window.addEventListener('click', handleClick);
+    window.addEventListener("keydown", handleKeyPress)
+    window.addEventListener("click", handleClick)
 
     return () => {
-      isMounted = false;
-      clearTimeout(initialDelay);
-      clearTimeout(timeoutId);
-      clearInterval(cursorInterval);
-      window.removeEventListener('keydown', handleKeyPress);
-      window.removeEventListener('click', handleClick);
-    };
-  }, [onBootComplete]);
+      isMounted = false
+      clearTimeout(initialDelay)
+      clearTimeout(timeoutId)
+      clearInterval(cursorInterval)
+      window.removeEventListener("keydown", handleKeyPress)
+      window.removeEventListener("click", handleClick)
+    }
+  }, [onBootComplete, isMobile])
 
   return (
     <div className="h-screen bg-black text-green-400 font-mono overflow-hidden">
@@ -102,31 +114,31 @@ export const BootSequence = ({ onBootComplete }: BootSequenceProps) => {
             <span className="animate-pulse">Loading system...</span>
           </div>
         )}
-        
+
         {messages.map((message, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className="whitespace-pre-wrap animate-fade-in"
-            style={{ 
-              animationDelay: `${index * 0.05}s`
+            style={{
+              animationDelay: `${index * 0.05}s`,
             }}
           >
             {message}
           </div>
         ))}
-        
-        {showCursor && !isComplete && (
-          <span className="inline-block w-2 h-4 bg-green-400 animate-pulse"></span>
-        )}
+
+        {showCursor && !isComplete && <span className="inline-block w-2 h-4 bg-green-400 animate-pulse"></span>}
       </div>
-      
+
       {isComplete && (
         <div className="fixed bottom-8 left-8 right-8 text-center text-green-300 animate-pulse text-lg">
           <div className="flex items-center justify-center space-x-4">
-            <span>Press 'T' for Portfolio IDE or 'S' for Simple Mode...</span>
+            <span>
+              {isMobile ? "Press anywhere to continue..." : "Press 'T' for Portfolio IDE or 'S' for Simple Mode..."}
+            </span>
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
