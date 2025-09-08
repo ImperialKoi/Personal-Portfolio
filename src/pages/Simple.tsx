@@ -1,35 +1,56 @@
-import { useEffect, useRef, useState } from 'react';
-import { Github, Linkedin, Mail, MapPin, Download, ExternalLink, Code, Database, Globe, Smartphone, Terminal, ChevronDown, Moon, Sun, User, Briefcase, MessageSquare, Trophy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import developerIllustration from '@/assets/developer-illustration.png';
-import AnimatedUnderline from '@/components/AnimatedUnderline';
-import { cn } from '@/lib/utils';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform } from 'framer-motion';
-import { Navbar } from '@/components/Navbar';
-import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
-import { GlowingEffect } from '@/components/ui/glowing-effect';
-import Lenis from '@studio-freight/lenis';
-import { useScavengerHunt } from '@/hooks/useScavengerHunt';
+"use client"
+
+import type React from "react"
+
+import { useEffect, useRef, useState } from "react"
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Download,
+  ExternalLink,
+  Code,
+  Database,
+  Globe,
+  Smartphone,
+  ChevronDown,
+  User,
+  Briefcase,
+  MessageSquare,
+  Trophy,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import developerIllustration from "@/assets/developer-illustration.png"
+import AnimatedUnderline from "@/components/AnimatedUnderline"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { Navbar } from "@/components/Navbar"
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card"
+import { GlowingEffect } from "@/components/ui/glowing-effect"
+import Lenis from "@studio-freight/lenis"
+import { useScavengerHunt } from "@/hooks/useScavengerHunt"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
+import { ScrollTrigger } from "gsap/all"
 
 export default function Simple() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
-  const heroRef = useRef<HTMLElement>(null);
-  const aboutRef = useRef<HTMLElement>(null);
-  const skillsRef = useRef<HTMLElement>(null);
-  const projectsRef = useRef<HTMLElement>(null);
-  const contactRef = useRef<HTMLElement>(null);
-  
+  const [darkMode, setDarkMode] = useState(false)
+  const [activeSection, setActiveSection] = useState("hero")
+  const heroRef = useRef<HTMLElement>(null)
+  const aboutRef = useRef<HTMLElement>(null)
+  const skillsRef = useRef<HTMLElement>(null)
+  const projectsRef = useRef<HTMLElement>(null)
+  const contactRef = useRef<HTMLElement>(null)
+
   // Scavenger hunt
-  const scavengerHunt = useScavengerHunt();
-  
+  const scavengerHunt = useScavengerHunt()
+
   // Scroll tracking for animations
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 1000], [0, -200]);
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 300], [1, 0.8]);
+  const { scrollY } = useScroll()
+  const parallaxY = useTransform(scrollY, [0, 1000], [0, -200])
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0])
+  const heroScale = useTransform(scrollY, [0, 300], [1, 0.8])
 
   // Add state for underline animation
   const [underlineInView, setUnderlineInView] = useState({
@@ -37,16 +58,132 @@ export default function Simple() {
     skills: false,
     projects: false,
     contact: false,
-  });
+  })
 
   // Navigation sections
   const navigationSections = [
-    { id: 'hero', icon: User, label: 'Home', ref: heroRef },
-    { id: 'about', icon: User, label: 'About', ref: aboutRef },
-    { id: 'skills', icon: Code, label: 'Skills', ref: skillsRef },
-    { id: 'projects', icon: Briefcase, label: 'Projects', ref: projectsRef },
-    { id: 'contact', icon: MessageSquare, label: 'Contact', ref: contactRef },
-  ];
+    { id: "hero", icon: User, label: "Home", ref: heroRef },
+    { id: "about", icon: User, label: "About", ref: aboutRef },
+    { id: "skills", icon: Code, label: "Skills", ref: skillsRef },
+    { id: "projects", icon: Briefcase, label: "Projects", ref: projectsRef },
+    { id: "contact", icon: MessageSquare, label: "Contact", ref: contactRef },
+  ]
+
+  useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
+    const desiredVisibleSpin = 0 // change perceived spin
+    const maskFullRotation = 180
+    const imageCounterRotation = -(maskFullRotation - desiredVisibleSpin)
+
+    // initial visual setup using skew to make a parallelogram
+    gsap.set(".mask-clip-path", {
+      // do NOT use clip-path here — we rely on skew + borderRadius
+      width: "60vw",
+      height: "60vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+      transformOrigin: "50% 50%",
+      borderRadius: "28px", // <- increase to make it more round
+      scale: 1,
+      rotation: 0,
+      skewX: -14, // parallelogram slant; reduce magnitude for gentler slant
+    })
+
+    // counter-skew the image so it remains visually straight
+    gsap.set(".mask-clip-path img", {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      transformOrigin: "50% 50%",
+      rotation: 0,
+      skewX: 14, // inverse of container skewX
+    })
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#clip",
+        start: "center center",
+        end: "+=200 center",
+        scrub: 1,
+        pin: true,
+        pinSpacing: true,
+      },
+    })
+
+    // mask does the full 360 (still a parallelogram)
+    tl.to(
+      ".mask-clip-path",
+      {
+        scale: 2.2,
+        rotation: maskFullRotation,
+        // keep skewX static (or animate slightly if you want)
+        ease: "sine.inOut",
+      },
+      0,
+    )
+
+    // image counter-rotates to reduce perceived spin and keep it straight
+    tl.to(
+      ".mask-clip-path img",
+      {
+        rotation: imageCounterRotation,
+        // keep the image's skew to visually cancel container skew;
+        // if you animate skew you may want to sync the inverse here too
+        ease: "sine.inOut",
+      },
+      0,
+    )
+
+    // Skills section animations
+    gsap.set(".skill-item", { opacity: 0, y: 50, scale: 0.8 })
+    gsap.set(".skill-progress", { width: "0%" })
+
+    ScrollTrigger.create({
+      trigger: ".skills-section",
+      start: "top 70%",
+      end: "bottom 30%",
+      onEnter: () => {
+        gsap.to(".skill-item", {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "back.out(1.7)",
+        })
+
+        // Animate progress bars with delay
+        gsap.to(".skill-progress", {
+          width: (index, target) => target.getAttribute("data-level") + "%",
+          duration: 1.5,
+          delay: 0.5,
+          stagger: 0.1,
+          ease: "power2.out",
+        })
+      },
+      onLeave: () => {
+        gsap.to(".skill-item", {
+          opacity: 0.3,
+          scale: 0.95,
+          duration: 0.5,
+          stagger: 0.05,
+        })
+      },
+      onEnterBack: () => {
+        gsap.to(".skill-item", {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.05,
+        })
+      },
+    })
+
+    return tl
+  })
 
   // Initialize smooth scrolling
   useEffect(() => {
@@ -56,27 +193,27 @@ export default function Simple() {
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 2,
-    });
+    })
 
     function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+      lenis.raf(time)
+      requestAnimationFrame(raf)
     }
-    requestAnimationFrame(raf);
+    requestAnimationFrame(raf)
 
     return () => {
-      lenis.destroy();
-    };
-  }, []);
+      lenis.destroy()
+    }
+  }, [])
 
   // Theme toggle
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark")
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark")
     }
-  }, [darkMode]);
+  }, [darkMode])
 
   // Scroll animations and active section tracking
   useEffect(() => {
@@ -85,142 +222,142 @@ export default function Simple() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             // Add animation class
-            entry.target.classList.add('animate-fade-in');
-            
+            entry.target.classList.add("animate-fade-in")
+
             // Update active section
-            const sectionId = entry.target.getAttribute('data-section');
+            const sectionId = entry.target.getAttribute("data-section")
             if (sectionId) {
-              setActiveSection(sectionId);
+              setActiveSection(sectionId)
             }
           }
-        });
+        })
       },
-      { threshold: 0.3, rootMargin: '-100px 0px -100px 0px' }
-    );
+      { threshold: 0.3, rootMargin: "-100px 0px -100px 0px" },
+    )
 
-    const refs = [heroRef, aboutRef, skillsRef, projectsRef, contactRef];
+    const refs = [heroRef, aboutRef, skillsRef, projectsRef, contactRef]
     refs.forEach((ref) => {
       if (ref.current) {
-        observer.observe(ref.current);
+        observer.observe(ref.current)
       }
-    });
+    })
 
     return () => {
       refs.forEach((ref) => {
         if (ref.current) {
-          observer.unobserve(ref.current);
+          observer.unobserve(ref.current)
         }
-      });
-    };
-  }, []);
+      })
+    }
+  }, [])
 
   // Scroll animations for underline
   useEffect(() => {
     const sectionRefs = [
-      { id: 'about', ref: aboutRef },
-      { id: 'skills', ref: skillsRef },
-      { id: 'projects', ref: projectsRef },
-      { id: 'contact', ref: contactRef },
-    ];
+      { id: "about", ref: aboutRef },
+      { id: "skills", ref: skillsRef },
+      { id: "projects", ref: projectsRef },
+      { id: "contact", ref: contactRef },
+    ]
     const observer = new window.IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const sectionId = entry.target.getAttribute('data-section');
+          const sectionId = entry.target.getAttribute("data-section")
           if (sectionId && entry.isIntersecting) {
-            setUnderlineInView((prev) => ({ ...prev, [sectionId]: true }));
+            setUnderlineInView((prev) => ({ ...prev, [sectionId]: true }))
           }
-        });
+        })
       },
-      { threshold: 0.3, rootMargin: '-100px 0px -100px 0px' }
-    );
+      { threshold: 0.3, rootMargin: "-100px 0px -100px 0px" },
+    )
     sectionRefs.forEach(({ ref }) => {
-      if (ref.current) observer.observe(ref.current);
-    });
+      if (ref.current) observer.observe(ref.current)
+    })
     return () => {
       sectionRefs.forEach(({ ref }) => {
-        if (ref.current) observer.unobserve(ref.current);
-      });
-    };
-  }, []);
+        if (ref.current) observer.unobserve(ref.current)
+      })
+    }
+  }, [])
 
   const stats = [
     { number: "35+", label: "Projects Built" },
     { number: "2+", label: "Years Coding" },
     { number: "3", label: "Hackathons Organized" },
-    { number: "2×", label: "Hackathons Won" }
+    { number: "2×", label: "Hackathons Won" },
   ]
 
   const skills = [
-    { name: 'React', level: 95, icon: Code },
-    { name: 'TypeScript', level: 90, icon: Code },
-    { name: 'Node.js', level: 85, icon: Database },
-    { name: 'PostgreSQL', level: 80, icon: Database },
-    { name: 'Next.js', level: 88, icon: Globe },
-    { name: 'Python', level: 75, icon: Smartphone },
-  ];
+    { name: "React", level: 95, icon: Code },
+    { name: "TypeScript", level: 90, icon: Code },
+    { name: "Node.js", level: 85, icon: Database },
+    { name: "PostgreSQL", level: 80, icon: Database },
+    { name: "Next.js", level: 88, icon: Globe },
+    { name: "Python", level: 75, icon: Smartphone },
+  ]
 
   const projects = [
     {
-      title: 'RecessHacks',
-      sub: 'A Internation Hackathon',
-      description: 'The 5th iteration of a classic highschool international hackathon.',
-      tech: ['Next', 'Node.js', 'PostgreSQL', 'Argon2', 'NodeMailer'],
-      github: 'https://github.com/Recess-Hacks/recess-hacks',
-      live: 'https://recess-hacks.vercel.app',
+      title: "RecessHacks",
+      sub: "A Internation Hackathon",
+      description: "The 5th iteration of a classic highschool international hackathon.",
+      tech: ["Next", "Node.js", "PostgreSQL", "Argon2", "NodeMailer"],
+      github: "https://github.com/Recess-Hacks/recess-hacks",
+      live: "https://recess-hacks.vercel.app",
       image: "/recess-hacks.png",
-      category: 'Full-Stack'
+      category: "Full-Stack",
     },
     {
-      title: 'BlocksNet',
-      sub: 'Neural Network Builder',
-      description: 'Visual drag-and-drop interface for building and training neural networks',
-      tech: ['React', 'TypeScript', 'TensorFlow.js', 'D3.js', 'WebGL'],
-      github: 'https://github.com/ImperialKoi/BlocksNet',
-      live: 'https://blocks-net.vercel.app/',
+      title: "BlocksNet",
+      sub: "Neural Network Builder",
+      description: "Visual drag-and-drop interface for building and training neural networks",
+      tech: ["React", "TypeScript", "TensorFlow.js", "D3.js", "WebGL"],
+      github: "https://github.com/ImperialKoi/BlocksNet",
+      live: "https://blocks-net.vercel.app/",
       image: "/blocks-net.png",
-      category: 'AI/ML'
+      category: "AI/ML",
     },
     {
-      title: 'CaliCalender',
-      sub: 'AI Calendar',
-      description: 'Smart scheduling with AI-powered optimization and conflict resolution',
-      tech: ['React', 'OpenAI GPT-4', 'Supabase', 'FullCalendar'],
-      github: 'https://github.com/ImperialKoi/CaliCalender',
-      live: 'https://calender-app-tan.vercel.app/',
+      title: "CaliCalender",
+      sub: "AI Calendar",
+      description: "Smart scheduling with AI-powered optimization and conflict resolution",
+      tech: ["React", "OpenAI GPT-4", "Supabase", "FullCalendar"],
+      github: "https://github.com/ImperialKoi/CaliCalender",
+      live: "https://calender-app-tan.vercel.app/",
       image: "/cali-calendar.png",
-      category: 'AI/Productivity'
+      category: "AI/Productivity",
     },
     {
-      title: 'HackathonIdeasGenerator',
-      sub: 'AI ideas generator',
-      description: 'AI generates, judges, and codes the perfect hackathon project for you',
-      tech: ['React', 'OpenAI', 'Claude AI', 'TypeScript'],
-      github: 'https://github.com/ImperialKoi/HackathonIdeaGenerator',
-      live: 'https://hackathon-idea-generator-chi.vercel.app/',
+      title: "HackathonIdeasGenerator",
+      sub: "AI ideas generator",
+      description: "AI generates, judges, and codes the perfect hackathon project for you",
+      tech: ["React", "OpenAI", "Claude AI", "TypeScript"],
+      github: "https://github.com/ImperialKoi/HackathonIdeaGenerator",
+      live: "https://hackathon-idea-generator-chi.vercel.app/",
       image: "/hackathon-ideas-gen.png",
-      category: 'AI Tools'
+      category: "AI Tools",
     },
     {
-      title: 'SkinScope',
-      sub: 'Cancer Detection',
-      description: 'AI-powered camera app for early skin cancer detection and diagnosis',
-      tech: ['React Native', 'TensorFlow', 'Computer Vision', 'Medical AI'],
-      github: 'https://github.com/ImperialKoi/SkinScope',
-      live: 'https://skin-scope.vercel.app/',
+      title: "SkinScope",
+      sub: "Cancer Detection",
+      description: "AI-powered camera app for early skin cancer detection and diagnosis",
+      tech: ["React Native", "TensorFlow", "Computer Vision", "Medical AI"],
+      github: "https://github.com/ImperialKoi/SkinScope",
+      live: "https://skin-scope.vercel.app/",
       image: "/skinscope.png",
-      category: 'Healthcare AI'
+      category: "Healthcare AI",
     },
     {
-      title: 'Personal Portfolio',
+      title: "Personal Portfolio",
       sub: "Daniel's Personal Portfolio",
-      description: 'Simple and Fun Personal Portfolio with an IDE',
-      tech: ['React', 'ShadCN', 'OpenAI', 'Three.js'],
-      github: 'https://github.com/ImperialKoi/Personal-Portfolio',
-      live: 'https://daniel-xu.vercel.app',
+      description: "Simple and Fun Personal Portfolio with an IDE",
+      tech: ["React", "ShadCN", "OpenAI", "Three.js"],
+      github: "https://github.com/ImperialKoi/Personal-Portfolio",
+      live: "https://daniel-xu.vercel.app",
       image: "/faux-canvas1.png",
-      category: 'Personal Portfolio'
-    }
-  ];
+      category: "Personal Portfolio",
+    },
+  ]
 
   const downloadResume = () => {
     const a = document.createElement("a")
@@ -229,20 +366,20 @@ export default function Simple() {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-  };
+  }
 
   const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+    ref.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? "dark" : ""}`}>
       {/* Left Navigation Squares */}
       <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 space-y-3">
         {navigationSections.map((section, index) => {
-          const Icon = section.icon;
-          const isActive = activeSection === section.id;
-          
+          const Icon = section.icon
+          const isActive = activeSection === section.id
+
           return (
             <div
               key={section.id}
@@ -250,8 +387,8 @@ export default function Simple() {
                 md:w-8 md:h-8 w-[1.5rem] h-[1.5rem] border-2 border-primary/30 cursor-pointer
                 transition-all duration-300 ease-in-out
                 hover:rotate-45 hover:border-primary hover:bg-primary/20
-                ${isActive ? 'bg-primary/20 border-primary rotate-12' : 'hover:shadow-lg'}
-                ${!darkMode ? 'hover:bg-foreground/10' : 'hover:bg-primary/30'}
+                ${isActive ? "bg-primary/20 border-primary rotate-12" : "hover:shadow-lg"}
+                ${!darkMode ? "hover:bg-foreground/10" : "hover:bg-primary/30"}
                 backdrop-blur-sm bg-background/80
                 flex items-center justify-center
                 group
@@ -260,13 +397,15 @@ export default function Simple() {
               title={section.label}
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <Icon className={`
+              <Icon
+                className={`
                 md:h-4 md:w-4 w-[1rem] h-[1rem] transition-all duration-300
-                ${isActive ? 'text-primary' : 'text-muted-foreground'}
+                ${isActive ? "text-primary" : "text-muted-foreground"}
                 group-hover:text-primary group-hover:scale-110
-              `} />
+              `}
+              />
             </div>
-          );
+          )
         })}
       </div>
 
@@ -274,36 +413,38 @@ export default function Simple() {
       <Navbar
         activeSection={activeSection}
         onSectionSelect={(sectionId) => {
-          const section = navigationSections.find(s => s.id === sectionId);
+          const section = navigationSections.find((s) => s.id === sectionId)
           if (section && section.ref && section.ref.current) {
-            scrollToSection(section.ref);
+            scrollToSection(section.ref)
           }
         }}
         darkMode={darkMode}
         onToggleTheme={() => setDarkMode(!darkMode)}
-        onTerminal={() => { window.location.href = '/terminal'; }}
+        onTerminal={() => {
+          window.location.href = "/terminal"
+        }}
       />
 
       <div className="min-h-screen bg-background text-foreground">
         {/* Hero Section */}
-        <section 
-          ref={heroRef} 
+        <section
+          ref={heroRef}
           data-section="hero"
           className="min-h-screen flex items-center justify-center relative overflow-hidden md:pt-16 pt-24"
         >
-          <motion.div 
+          <motion.div
             className="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center animate-fade-in"
             style={{ opacity: heroOpacity, scale: heroScale }}
           >
             {/* Left side - Text content */}
-            <motion.div 
+            <motion.div
               className="space-y-6"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <div className="space-y-2">
-                <motion.div 
+                <motion.div
                   className="text-sm text-muted-foreground uppercase tracking-wide"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -311,7 +452,7 @@ export default function Simple() {
                 >
                   Passionate Programmer • Freelancer • Full-Stack Developer
                 </motion.div>
-                <motion.p 
+                <motion.p
                   className="text-primary text-lg"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -319,7 +460,7 @@ export default function Simple() {
                 >
                   Hi my name is
                 </motion.p>
-                <motion.h1 
+                <motion.h1
                   className="text-5xl md:text-7xl font-bold text-foreground"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -327,7 +468,7 @@ export default function Simple() {
                 >
                   Daniel Xu
                 </motion.h1>
-                <motion.h2 
+                <motion.h2
                   className="text-2xl md:text-3xl text-primary font-semibold"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -336,34 +477,39 @@ export default function Simple() {
                   A Full-stack Developer
                 </motion.h2>
               </div>
-              
-              <motion.p 
+
+              <motion.p
                 className="text-lg text-muted-foreground max-w-lg leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.2 }}
               >
-                I am a Full-Stack Developer with a passion for delivering exceptional results.
-                With my expertise in React and Next.js on the frontend, and Node.js, Express, 
-                and PostgreSQL on the backend, I bring a unique combination of technical skills 
-                and creative problem-solving to every project I work on.
-                <span className="block mt-2 text-xs tracking-widest text-muted-foreground select-text">-- --- .-. ... .</span>
+                I am a Full-Stack Developer with a passion for delivering exceptional results. With my expertise in
+                React and Next.js on the frontend, and Node.js, Express, and PostgreSQL on the backend, I bring a unique
+                combination of technical skills and creative problem-solving to every project I work on.
+                <span className="block mt-2 text-xs tracking-widest text-muted-foreground select-text">
+                  -- --- .-. ... .
+                </span>
               </motion.p>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.4 }}
               >
-                <Button size="lg" className="hover-scale group" onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}>
+                <Button
+                  size="lg"
+                  className="hover-scale group"
+                  onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}
+                >
                   <Mail className="mr-2 h-5 w-5" />
                   Contact me!
                 </Button>
               </motion.div>
             </motion.div>
-            
+
             {/* Right side - Illustration */}
-            <motion.div 
+            <motion.div
               className="relative animate-scale-in"
               style={{ y: parallaxY }}
               initial={{ opacity: 0, x: 50 }}
@@ -371,33 +517,32 @@ export default function Simple() {
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               <div className="relative z-10">
-                <motion.img 
-                  src={developerIllustration} 
+                <motion.img
+                  src={developerIllustration}
                   alt="Developer illustration"
                   className="w-full max-w-md mx-auto hover-scale"
                   whileHover={{ scale: 1.05, rotate: 2 }}
-                  animate={{ 
+                  animate={{
                     y: [0, -20, 0],
                     rotate: [0, 2, -2, 0],
-                    scale: [1, 1.02, 1]
+                    scale: [1, 1.02, 1],
                   }}
-                  transition={{ 
-                    duration: 4, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
+                  transition={{
+                    duration: 4,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
                   }}
                 />
-                
               </div>
               {/* Background gradient */}
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 rounded-full blur-3xl"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
               />
             </motion.div>
           </motion.div>
-          
+
           {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
             <span className="text-sm text-muted-foreground">Scroll</span>
@@ -406,17 +551,13 @@ export default function Simple() {
         </section>
 
         {/* About Section */}
-        <section 
-          ref={aboutRef} 
-          data-section="about"
-          className="py-20 bg-card/30"
-        >
+        <section ref={aboutRef} data-section="about" className="py-20 bg-card/30">
           <div className="max-w-6xl mx-auto px-8">
             <div className="text-center mb-10">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Who am I?</h2>
               <AnimatedUnderline draw={underlineInView.about} className="max-w-xs mx-auto" />
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <motion.div
                 className="space-y-6"
@@ -426,7 +567,11 @@ export default function Simple() {
                 viewport={{ once: true }}
               >
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  I'm a Grade 11 student at <span className="font-medium text-foreground">Abbey Park High School</span>, passionate about building web applications and organizing community tech events. I am currently organizing <span className="font-semibold">three</span> hackathons at school and have previously won <span className="font-semibold">two</span> hackathons. I enjoy mentoring peers, collaborating on projects, and turning ideas into working prototypes.
+                  I'm a Grade 11 student at <span className="font-medium text-foreground">Abbey Park High School</span>,
+                  passionate about building web applications and organizing community tech events. I am currently
+                  organizing <span className="font-semibold">three</span> hackathons at school and have previously won{" "}
+                  <span className="font-semibold">two</span> hackathons. I enjoy mentoring peers, collaborating on
+                  projects, and turning ideas into working prototypes.
                 </p>
 
                 <div className="space-y-6">
@@ -482,29 +627,18 @@ export default function Simple() {
         </section>
 
         {/* Skills Section */}
-        <section 
-          ref={skillsRef} 
-          data-section="skills"
-          className="py-20"
-        >
+        <section ref={skillsRef} data-section="skills" className="py-20 skills-section">
           <div className="max-w-6xl mx-auto px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">My Skills</h2>
               <AnimatedUnderline draw={underlineInView.skills} className="max-w-xs mx-auto" />
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-12">
               {skills.map((skill, index) => {
-                const Icon = skill.icon;
+                const Icon = skill.icon
                 return (
-                  <motion.div 
-                    key={skill.name}
-                    className="space-y-3"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
+                  <div key={skill.name} className="space-y-3 skill-item">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Icon className="h-6 w-6 text-primary" />
@@ -513,27 +647,20 @@ export default function Simple() {
                       <span className="text-sm text-muted-foreground">{skill.level}%</span>
                     </div>
                     <div className="w-full bg-secondary/30 rounded-full h-2">
-                      <motion.div
-                        className="h-2 bg-gradient-to-r from-primary to-primary/80 rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1.5, delay: index * 0.1 }}
-                        viewport={{ once: true }}
+                      <div
+                        className="h-2 bg-gradient-to-r from-primary to-primary/80 rounded-full skill-progress"
+                        data-level={skill.level}
                       />
                     </div>
-                  </motion.div>
-                );
+                  </div>
+                )
               })}
             </div>
           </div>
         </section>
 
         {/* Projects Section */}
-        <section 
-          ref={projectsRef} 
-          data-section="projects"
-          className="py-20 bg-card/30"
-        >
+        <section ref={projectsRef} data-section="projects" className="py-20 bg-card/30">
           <div className="max-w-6xl mx-auto px-8">
             <div className="text-center mb-10">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Featured Projects</h2>
@@ -542,32 +669,21 @@ export default function Simple() {
                 Here are some of my recent projects that showcase my skills and passion for development.
               </p>
               <div className="flex justify-center">
-                <Button 
-                  size="lg" 
-                  className="hover-scale group"
-                  onClick={() => window.location.href = '/projects'}
-                >
-                  <Trophy className="mr-2 h-5 w-5" />
-                  🎮 Play Project Vault Game
+                <Button size="lg" className="hover-scale group" onClick={() => (window.location.href = "/projects")}>
+                  <Trophy className="mr-2 h-5 w-5" />🎮 Play Project Vault Game
                 </Button>
               </div>
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <CardContainer key={project.title} className="inter-var">
                   <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-primary/[0.1] dark:bg-card dark:border-white/[0.2] border-black/[0.1] w-auto h-[29rem] rounded-xl p-6 border">
                     <GlowingEffect disabled={false} proximity={200} />
-                    <CardItem
-                      translateZ="50"
-                      className="text-xl font-bold text-black dark:text-white"
-                    >
+                    <CardItem translateZ="50" className="text-xl font-bold text-black dark:text-white">
                       {project.title}
                     </CardItem>
-                    <CardItem
-                      translateZ="50"
-                      className="text-lg font-bold text-gray-500 dark:text-white"
-                    >
+                    <CardItem translateZ="50" className="text-lg font-bold text-gray-500 dark:text-white">
                       {project.sub}
                     </CardItem>
                     <CardItem
@@ -579,9 +695,9 @@ export default function Simple() {
                     </CardItem>
                     <CardItem translateZ="100" className="w-full mt-4">
                       <img
-                          src={project.image}
-                          alt={`${project.title} project screenshot`}
-                          className="h-40 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                        src={project.image || "/placeholder.svg"}
+                        alt={`${project.title} project screenshot`}
+                        className="h-40 w-full object-cover rounded-xl group-hover/card:shadow-xl"
                       />
                     </CardItem>
                     <CardItem translateZ="80" className="w-full mt-4">
@@ -623,35 +739,35 @@ export default function Simple() {
         </section>
 
         {/* Contact Section */}
-        <section 
-          ref={contactRef} 
-          data-section="contact"
-          className="py-20"
-        >
+        <section ref={contactRef} data-section="contact" className="py-20">
           <div className="max-w-6xl mx-auto px-8 text-center">
             <div className="mb-10 text-center">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Let's Work Together</h2>
               <AnimatedUnderline draw={underlineInView.contact} className="max-w-xs mx-auto mb-2" />
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                I'm always open to discussing new opportunities and interesting projects. 
-                Feel free to reach out if you'd like to collaborate!
+                I'm always open to discussing new opportunities and interesting projects. Feel free to reach out if
+                you'd like to collaborate!
               </p>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="hover-scale group" onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}>
+              <Button
+                size="lg"
+                className="hover-scale group"
+                onClick={() => window.open("https://mailto:imperialkoi9@gmail.com", "_blank")}
+              >
                 <Mail className="mr-2 h-5 w-5" />
                 Get In Touch
               </Button>
-              <Button variant="outline" size="lg" className="hover-scale" onClick={downloadResume}>
+              <Button variant="outline" size="lg" className="hover-scale bg-transparent" onClick={downloadResume}>
                 <Download className="mr-2 h-5 w-5" />
                 Download Resume
               </Button>
             </div>
-            
+
             {/* Social Links */}
             <div className="flex gap-4 justify-center mt-8">
-            <Button
+              <Button
                 variant="outline"
                 size="icon"
                 className="hover-scale bg-transparent"
@@ -689,5 +805,5 @@ export default function Simple() {
         </footer>
       </div>
     </div>
-  );
+  )
 }
