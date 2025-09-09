@@ -22,7 +22,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import developerIllustration from "@/assets/developer-illustration.png"
 import AnimatedUnderline from "@/components/AnimatedUnderline"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Navbar } from "@/components/Navbar"
@@ -33,6 +32,7 @@ import { useScavengerHunt } from "@/hooks/useScavengerHunt"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/all"
+import { CometCard } from "@/components/ui/comet-card"
 
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false)
@@ -42,6 +42,7 @@ export default function Simple() {
   const skillsRef = useRef<HTMLElement>(null)
   const projectsRef = useRef<HTMLElement>(null)
   const contactRef = useRef<HTMLElement>(null)
+  const expandRealityRef = useRef<HTMLElement>(null)
 
   // Scavenger hunt
   const scavengerHunt = useScavengerHunt()
@@ -58,6 +59,7 @@ export default function Simple() {
     skills: false,
     projects: false,
     contact: false,
+    expandReality: false,
   })
 
   // Navigation sections
@@ -67,75 +69,43 @@ export default function Simple() {
     { id: "skills", icon: Code, label: "Skills", ref: skillsRef },
     { id: "projects", icon: Briefcase, label: "Projects", ref: projectsRef },
     { id: "contact", icon: MessageSquare, label: "Contact", ref: contactRef },
+    { id: "expandReality", icon: Globe, label: "Expand Your Reality", ref: expandRealityRef },
   ]
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger)
 
-    const desiredVisibleSpin = 0 // change perceived spin
-    const maskFullRotation = 180
-    const imageCounterRotation = -(maskFullRotation - desiredVisibleSpin)
-
-    // initial visual setup using skew to make a parallelogram
-    gsap.set(".mask-clip-path", {
-      // do NOT use clip-path here — we rely on skew + borderRadius
-      width: "60vw",
-      height: "60vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      overflow: "hidden",
-      transformOrigin: "50% 50%",
-      borderRadius: "28px", // <- increase to make it more round
-      scale: 1,
-      rotation: 0,
-      skewX: -14, // parallelogram slant; reduce magnitude for gentler slant
+    gsap.set(".comet-card-container", {
+      width: "20rem", // 320px initial width
+      height: "24rem", // 384px initial height
+      opacity: 1, // Start visible
     })
 
-    // counter-skew the image so it remains visually straight
-    gsap.set(".mask-clip-path img", {
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      transformOrigin: "50% 50%",
-      rotation: 0,
-      skewX: 14, // inverse of container skewX
+    ScrollTrigger.create({
+      trigger: "#expand-reality",
+      start: "top 80%",
+      onEnter: () => {
+        gsap.fromTo(".comet-card-container", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" })
+      },
     })
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: "#clip",
+        trigger: "#expand-reality",
         start: "center center",
-        end: "+=200 center",
+        end: "+=800 center",
         scrub: 1,
         pin: true,
         pinSpacing: true,
       },
     })
 
-    // mask does the full 360 (still a parallelogram)
-    tl.to(
-      ".mask-clip-path",
-      {
-        scale: 2.2,
-        rotation: maskFullRotation,
-        // keep skewX static (or animate slightly if you want)
-        ease: "sine.inOut",
-      },
-      0,
-    )
-
-    // image counter-rotates to reduce perceived spin and keep it straight
-    tl.to(
-      ".mask-clip-path img",
-      {
-        rotation: imageCounterRotation,
-        // keep the image's skew to visually cancel container skew;
-        // if you animate skew you may want to sync the inverse here too
-        ease: "sine.inOut",
-      },
-      0,
-    )
+    tl.to(".comet-card-container", {
+      width: "100vw",
+      height: "100vh",
+      duration: 1,
+      ease: "power2.out",
+    })
 
     // Skills section animations
     gsap.set(".skill-item", { opacity: 0, y: 50, scale: 0.8 })
@@ -181,6 +151,120 @@ export default function Simple() {
         })
       },
     })
+
+    // Expand Your Reality section animations
+    gsap.set(".expand-text", { opacity: 0, y: 50 })
+    gsap.set(".expand-subtitle", { opacity: 0, y: 50 })
+    gsap.set(".expand-description", { opacity: 0, y: 50 })
+
+    ScrollTrigger.create({
+      trigger: "#expand-reality",
+      start: "top center",
+      end: "bottom center",
+      onEnter: () => {
+        gsap.to(".expand-text", {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+        })
+        gsap.to(".expand-subtitle", {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: 0.2,
+          ease: "back.out(1.7)",
+        })
+        gsap.to(".expand-description", {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: 0.4,
+          ease: "back.out(1.7)",
+        })
+      },
+      onLeave: () => {
+        gsap.to(".expand-text", {
+          opacity: 0,
+          y: 50,
+          duration: 0.5,
+        })
+        gsap.to(".expand-subtitle", {
+          opacity: 0,
+          y: 50,
+          duration: 0.5,
+        })
+        gsap.to(".expand-description", {
+          opacity: 0,
+          y: 50,
+          duration: 0.5,
+        })
+      },
+      onEnterBack: () => {
+        gsap.to(".expand-text", {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+        })
+        gsap.to(".expand-subtitle", {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+        })
+        gsap.to(".expand-description", {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+        })
+      },
+    })
+
+    // Text animations during card expansion
+    tl.to(
+      ".expand-text",
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      },
+      0.2,
+    )
+
+    tl.to(
+      ".expand-subtitle",
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      },
+      0.4,
+    )
+
+    tl.to(
+      ".expand-description",
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      },
+      0.6,
+    )
+
+    // Fade out text as animation completes
+    tl.to(
+      [".expand-text", ".expand-subtitle", ".expand-description"],
+      {
+        opacity: 0,
+        y: -20,
+        duration: 0.2,
+        stagger: 0.1,
+        ease: "power2.in",
+      },
+      0.8,
+    )
 
     return tl
   })
@@ -235,7 +319,7 @@ export default function Simple() {
       { threshold: 0.3, rootMargin: "-100px 0px -100px 0px" },
     )
 
-    const refs = [heroRef, aboutRef, skillsRef, projectsRef, contactRef]
+    const refs = [heroRef, aboutRef, skillsRef, projectsRef, contactRef, expandRealityRef]
     refs.forEach((ref) => {
       if (ref.current) {
         observer.observe(ref.current)
@@ -258,6 +342,7 @@ export default function Simple() {
       { id: "skills", ref: skillsRef },
       { id: "projects", ref: projectsRef },
       { id: "contact", ref: contactRef },
+      { id: "expandReality", ref: expandRealityRef },
     ]
     const observer = new window.IntersectionObserver(
       (entries) => {
@@ -518,7 +603,7 @@ export default function Simple() {
             >
               <div className="relative z-10">
                 <motion.img
-                  src={developerIllustration}
+                  src="/developer-coding-illustration.jpg"
                   alt="Developer illustration"
                   className="w-full max-w-md mx-auto hover-scale"
                   whileHover={{ scale: 1.05, rotate: 2 }}
@@ -656,6 +741,31 @@ export default function Simple() {
                 )
               })}
             </div>
+          </div>
+        </section>
+
+        {/* Expand Your Reality Section */}
+        <section
+          id="expand-reality"
+          ref={expandRealityRef}
+          data-section="expandReality"
+          className="relative h-screen flex items-center justify-center overflow-hidden"
+        >
+          <div className="comet-card-container absolute">
+            <CometCard className="w-full h-full">
+              <div className="w-full h-full bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 rounded-xl flex items-center justify-center">
+                <img
+                  src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop&crop=center"
+                  alt="Cosmic nebula"
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              </div>
+              <div className="absolute bottom-8 left-8 space-y-2">
+                <h3 className="text-2xl font-bold text-white">Expand Your Reality</h3>
+                <p className="text-purple-200 text-sm">Beyond the ordinary</p>
+                <p className="text-purple-300 text-xs">Where innovation meets imagination</p>
+              </div>
+            </CometCard>
           </div>
         </section>
 
