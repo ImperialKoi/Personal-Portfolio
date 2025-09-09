@@ -59,46 +59,97 @@ const MatrixTrail = () => {
     id: number
     x: number
     y: number
+    vx: number
+    vy: number
     char: string
     opacity: number
+    size: number
     timestamp: number
   }>>([])
+
+  const lastMousePos = useRef({ x: 0, y: 0 })
+  const lastMouseVelocity = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
     let trailId = 0
 
     const handleMouseMove = (e: MouseEvent) => {
-      const chars = ['0', '1']
-      const char = chars[Math.floor(Math.random() * chars.length)]
+      const currentX = e.clientX
+      const currentY = e.clientY
 
-      const newTrail = {
-        id: trailId++,
-        x: e.clientX,
-        y: e.clientY,
-        char,
-        opacity: 1,
-        timestamp: Date.now()
+      // Calculate velocity
+      const velocityX = currentX - lastMousePos.current.x
+      const velocityY = currentY - lastMousePos.current.y
+
+      // Only create trails if mouse is moving
+      if (Math.abs(velocityX) > 1 || Math.abs(velocityY) > 1) {
+        lastMouseVelocity.current = { x: velocityX, y: velocityY }
+
+        // Create multiple particles in a cone shape
+        const particleCount = Math.min(8, Math.max(3, Math.abs(velocityX) + Math.abs(velocityY)) / 3)
+
+        for (let i = 0; i < particleCount; i++) {
+          const chars = ['0', '1']
+          const char = chars[Math.floor(Math.random() * chars.length)]
+
+          // Calculate backwards direction (opposite of velocity)
+          const backwardX = -velocityX
+          const backwardY = -velocityY
+
+          // Add cone spread (random angle within 60 degrees)
+          const spreadAngle = (Math.random() - 0.5) * Math.PI / 3 // 60 degrees spread
+          const magnitude = Math.sqrt(backwardX * backwardX + backwardY * backwardY)
+          const baseAngle = Math.atan2(backwardY, backwardX)
+          const finalAngle = baseAngle + spreadAngle
+
+          // Calculate particle velocity with random magnitude
+          const speed = (0.5 + Math.random() * 1.5) * Math.min(magnitude * 0.3, 8)
+          const particleVx = Math.cos(finalAngle) * speed
+          const particleVy = Math.sin(finalAngle) * speed
+
+          // Random offset from mouse position
+          const offsetX = (Math.random() - 0.5) * 20
+          const offsetY = (Math.random() - 0.5) * 20
+
+          const newTrail = {
+            id: trailId++,
+            x: currentX + offsetX,
+            y: currentY + offsetY,
+            vx: particleVx,
+            vy: particleVy,
+            char,
+            opacity: 0.8 + Math.random() * 0.2,
+            size: 0.8 + Math.random() * 0.4,
+            timestamp: Date.now()
+          }
+
+          setTrails(prev => [...prev.slice(-30), newTrail])
+        }
       }
 
-      setTrails(prev => [...prev.slice(-8), newTrail]) // Keep only last 20 trails
+      lastMousePos.current = { x: currentX, y: currentY }
     }
 
-    // Fade out trails over time
-    const fadeInterval = setInterval(() => {
+    // Update particle positions and fade them out
+    const updateInterval = setInterval(() => {
       setTrails(prev => prev
         .map(trail => ({
           ...trail,
-          opacity: Math.max(0, trail.opacity - 0.05)
+          x: trail.x + trail.vx,
+          y: trail.y + trail.vy,
+          vx: trail.vx * 0.98, // Slight deceleration
+          vy: trail.vy * 0.98,
+          opacity: Math.max(0, trail.opacity - 0.03)
         }))
-        .filter(trail => trail.opacity > 0)
+        .filter(trail => trail.opacity > 0.05)
       )
-    }, 50)
+    }, 16) // ~60fps
 
     window.addEventListener('mousemove', handleMouseMove)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
-      clearInterval(fadeInterval)
+      clearInterval(updateInterval)
     }
   }, [])
 
@@ -107,13 +158,15 @@ const MatrixTrail = () => {
       {trails.map(trail => (
         <div
           key={trail.id}
-          className="absolute text-green-400 font-mono text-sm font-bold select-none"
+          className="absolute text-green-400 font-mono font-bold select-none"
           style={{
             left: trail.x - 6,
             top: trail.y - 12,
             opacity: trail.opacity,
-            textShadow: `0 0 10px rgba(34, 197, 94, ${trail.opacity})`,
-            transition: 'opacity 0.1s ease-out'
+            fontSize: `${trail.size}rem`,
+            textShadow: `0 0 ${10 * trail.opacity}px rgba(34, 197, 94, ${trail.opacity * 0.8})`,
+            transform: `scale(${trail.size})`,
+            transition: 'none'
           }}
         >
           {trail.char}
