@@ -42,8 +42,37 @@ export const CometCard = ({
     const handleScroll = () => {
       const scrollY = window.scrollY
       const shouldExpand = scrollY >= expandScrollDistance
-      console.log('Scroll Y:', scrollY, 'Threshold:', expandScrollDistance, 'Should expand:', shouldExpand)
       setIsExpanded(shouldExpand)
+      
+      // Show/hide skills content based on expansion
+      const skillsContent = document.querySelector('.skills-content')
+      if (skillsContent) {
+        if (shouldExpand) {
+          skillsContent.classList.remove('opacity-0')
+          skillsContent.classList.add('opacity-100')
+          
+          // Trigger skills animation when expanded
+          setTimeout(() => {
+            const skillItems = document.querySelectorAll('.skill-item')
+            const skillProgress = document.querySelectorAll('.skill-progress')
+            
+            skillItems.forEach((item, index) => {
+              item.style.opacity = '1'
+              item.style.transform = 'translateY(0) scale(1)'
+              item.style.transition = `all 0.8s ease ${index * 0.15}s`
+            })
+            
+            skillProgress.forEach((progress, index) => {
+              const level = progress.getAttribute('data-level') || progress.style.width
+              progress.style.width = level
+              progress.style.transition = `width 1.5s ease ${0.5 + index * 0.1}s`
+            })
+          }, 100)
+        } else {
+          skillsContent.classList.remove('opacity-100')
+          skillsContent.classList.add('opacity-0')
+        }
+      }
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -57,8 +86,6 @@ export const CometCard = ({
 
   // Handle mouse tracking
   useEffect(() => {
-    console.log('Mouse tracking effect - isExpanded:', isExpanded)
-    
     if (isExpanded) {
       // Reset to neutral position when expanded
       x.set(0)

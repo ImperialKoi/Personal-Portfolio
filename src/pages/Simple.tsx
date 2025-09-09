@@ -42,7 +42,6 @@ export default function Simple() {
   const skillsRef = useRef<HTMLElement>(null)
   const projectsRef = useRef<HTMLElement>(null)
   const contactRef = useRef<HTMLElement>(null)
-  const expandRealityRef = useRef<HTMLElement>(null)
 
   // Scavenger hunt
   const scavengerHunt = useScavengerHunt()
@@ -69,7 +68,6 @@ export default function Simple() {
     { id: "skills", icon: Code, label: "Skills", ref: skillsRef },
     { id: "projects", icon: Briefcase, label: "Projects", ref: projectsRef },
     { id: "contact", icon: MessageSquare, label: "Contact", ref: contactRef },
-    { id: "expandReality", icon: Globe, label: "Expand Your Reality", ref: expandRealityRef },
   ]
 
   useGSAP(() => {
@@ -290,6 +288,19 @@ export default function Simple() {
     }
   }, [])
 
+  // Console log scroll Y position
+  useEffect(() => {
+    const handleScroll = () => {
+      console.log('Current scroll Y:', window.scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   // Theme toggle
   useEffect(() => {
     if (darkMode) {
@@ -319,7 +330,7 @@ export default function Simple() {
       { threshold: 0.3, rootMargin: "-100px 0px -100px 0px" },
     )
 
-    const refs = [heroRef, aboutRef, skillsRef, projectsRef, contactRef, expandRealityRef]
+    const refs = [heroRef, aboutRef, skillsRef, projectsRef, contactRef]
     refs.forEach((ref) => {
       if (ref.current) {
         observer.observe(ref.current)
@@ -342,7 +353,6 @@ export default function Simple() {
       { id: "skills", ref: skillsRef },
       { id: "projects", ref: projectsRef },
       { id: "contact", ref: contactRef },
-      { id: "expandReality", ref: expandRealityRef },
     ]
     const observer = new window.IntersectionObserver(
       (entries) => {
@@ -711,59 +721,66 @@ export default function Simple() {
           </div>
         </section>
 
+
+
         {/* Skills Section */}
-        <section ref={skillsRef} data-section="skills" className="py-20 skills-section">
-          <div className="max-w-6xl mx-auto px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">My Skills</h2>
-              <AnimatedUnderline draw={underlineInView.skills} className="max-w-xs mx-auto" />
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-12">
-              {skills.map((skill, index) => {
-                const Icon = skill.icon
-                return (
-                  <div key={skill.name} className="space-y-3 skill-item">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Icon className="h-6 w-6 text-primary" />
-                        <span className="font-semibold text-foreground">{skill.name}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">{skill.level}%</span>
-                    </div>
-                    <div className="w-full bg-secondary/30 rounded-full h-2">
-                      <div
-                        className="h-2 bg-gradient-to-r from-primary to-primary/80 rounded-full skill-progress"
-                        data-level={skill.level}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Expand Your Reality Section */}
         <section
           id="expand-reality"
-          ref={expandRealityRef}
-          data-section="expandReality"
+          data-section="skills"
+          ref={skillsRef}
           className="relative h-screen flex items-center justify-center overflow-hidden"
         >
           <div className="comet-card-container absolute">
-            <CometCard className="w-full h-full">
-              <div className="w-full h-full bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 rounded-xl flex items-center justify-center">
+            <CometCard className="w-full h-full" expandScrollDistance={2000}>
+              <div className="w-full h-full bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 rounded-xl relative overflow-hidden">
+                {/* Background cosmic image */}
                 <img
                   src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop&crop=center"
                   alt="Cosmic nebula"
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-cover rounded-xl opacity-60"
                 />
-              </div>
-              <div className="absolute bottom-8 left-8 space-y-2">
-                <h3 className="text-2xl font-bold text-white">Expand Your Reality</h3>
-                <p className="text-purple-200 text-sm">Beyond the ordinary</p>
-                <p className="text-purple-300 text-xs">Where innovation meets imagination</p>
+
+                {/* Skills Section - Only visible when expanded */}
+                <div className="skills-content absolute inset-0 p-8 flex flex-col justify-center opacity-0 transition-opacity duration-1000">
+                  <div className="max-w-6xl mx-auto w-full">
+                    <div className="text-center mb-16">
+                      <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">My Skills</h2>
+                      <div className="w-32 h-1 bg-white/30 mx-auto rounded-full"></div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {skills.map((skill, index) => {
+                        const Icon = skill.icon
+                        return (
+                          <div
+                            key={skill.name}
+                            className="space-y-3 skill-item bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20"
+                            style={{
+                              opacity: 0,
+                              transform: 'translateY(50px) scale(0.8)',
+                              transition: 'none'
+                            }}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Icon className="h-6 w-6 text-white" />
+                                <span className="font-semibold text-white">{skill.name}</span>
+                              </div>
+                              <span className="text-sm text-white/70">{skill.level}%</span>
+                            </div>
+                            <div className="w-full bg-white/20 rounded-full h-2">
+                              <div
+                                className="h-2 bg-gradient-to-r from-white to-white/80 rounded-full skill-progress"
+                                data-level={`${skill.level}%`}
+                                style={{ width: '0%' }}
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
             </CometCard>
           </div>
