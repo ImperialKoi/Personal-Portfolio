@@ -53,6 +53,76 @@ const SkillsUnderline = () => {
   return <AnimatedUnderline draw={draw} className="max-w-xs mx-auto" />
 }
 
+// Matrix Trail Component
+const MatrixTrail = () => {
+  const [trails, setTrails] = useState<Array<{
+    id: number
+    x: number
+    y: number
+    char: string
+    opacity: number
+    timestamp: number
+  }>>([])
+
+  useEffect(() => {
+    let trailId = 0
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const chars = ['0', '1']
+      const char = chars[Math.floor(Math.random() * chars.length)]
+
+      const newTrail = {
+        id: trailId++,
+        x: e.clientX,
+        y: e.clientY,
+        char,
+        opacity: 1,
+        timestamp: Date.now()
+      }
+
+      setTrails(prev => [...prev.slice(-8), newTrail]) // Keep only last 20 trails
+    }
+
+    // Fade out trails over time
+    const fadeInterval = setInterval(() => {
+      setTrails(prev => prev
+        .map(trail => ({
+          ...trail,
+          opacity: Math.max(0, trail.opacity - 0.05)
+        }))
+        .filter(trail => trail.opacity > 0)
+      )
+    }, 50)
+
+    window.addEventListener('mousemove', handleMouseMove)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      clearInterval(fadeInterval)
+    }
+  }, [])
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-10">
+      {trails.map(trail => (
+        <div
+          key={trail.id}
+          className="absolute text-green-400 font-mono text-sm font-bold select-none"
+          style={{
+            left: trail.x - 6,
+            top: trail.y - 12,
+            opacity: trail.opacity,
+            textShadow: `0 0 10px rgba(34, 197, 94, ${trail.opacity})`,
+            transition: 'opacity 0.1s ease-out'
+          }}
+        >
+          {trail.char}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false)
   const [activeSection, setActiveSection] = useState("hero")
@@ -488,6 +558,9 @@ export default function Simple() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? "dark" : ""}`}>
+      {/* Matrix Trail Effect */}
+      <MatrixTrail />
+
       {/* Left Navigation Squares */}
       <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 space-y-3">
         {navigationSections.map((section, index) => {
