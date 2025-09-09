@@ -34,6 +34,25 @@ import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/all"
 import { CometCard } from "@/components/ui/comet-card"
 
+// Skills Underline Component that listens for trigger event
+const SkillsUnderline = () => {
+  const [draw, setDraw] = useState(false)
+
+  useEffect(() => {
+    const handleTrigger = () => {
+      setDraw(true)
+    }
+
+    window.addEventListener('triggerSkillsUnderline', handleTrigger)
+
+    return () => {
+      window.removeEventListener('triggerSkillsUnderline', handleTrigger)
+    }
+  }, [])
+
+  return <AnimatedUnderline draw={draw} className="max-w-xs mx-auto" />
+}
+
 export default function Simple() {
   const [darkMode, setDarkMode] = useState(false)
   const [activeSection, setActiveSection] = useState("hero")
@@ -613,7 +632,7 @@ export default function Simple() {
             >
               <div className="relative z-10">
                 <motion.img
-                  src="/developer-coding-illustration.jpg"
+                  src="/developer-illustration.png"
                   alt="Developer illustration"
                   className="w-full max-w-md mx-auto hover-scale"
                   whileHover={{ scale: 1.05, rotate: 2 }}
@@ -721,34 +740,32 @@ export default function Simple() {
           </div>
         </section>
 
-
-
         {/* Skills Section */}
         <section
           id="expand-reality"
           data-section="skills"
           ref={skillsRef}
-          className="relative h-screen flex items-center justify-center overflow-hidden"
+          className="relative h-screen flex items-center justify-center overflow-hidden mb-20"
         >
           <div className="comet-card-container absolute">
             <CometCard className="w-full h-full" expandScrollDistance={2000}>
               <div className="w-full h-full bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 rounded-xl relative overflow-hidden">
                 {/* Background cosmic image */}
                 <img
-                  src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop&crop=center"
+                  src="/stars.gif"
                   alt="Cosmic nebula"
                   className="w-full h-full object-cover rounded-xl opacity-60"
                 />
 
                 {/* Skills Section - Only visible when expanded */}
-                <div className="skills-content absolute inset-0 p-8 flex flex-col justify-center opacity-0 transition-opacity duration-1000">
+                <div className="skills-content absolute inset-0 p-8 flex flex-col justify-start pt-32 opacity-0 transition-opacity duration-1000 overflow-y-auto">
                   <div className="max-w-6xl mx-auto w-full">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-12">
                       <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">My Skills</h2>
-                      <div className="w-32 h-1 bg-white/30 mx-auto rounded-full"></div>
+                      <SkillsUnderline />
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
                       {skills.map((skill, index) => {
                         const Icon = skill.icon
                         return (
