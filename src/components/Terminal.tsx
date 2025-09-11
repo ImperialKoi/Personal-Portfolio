@@ -135,7 +135,7 @@ export const Terminal = ({ onToggle, activeFile, fileContent }: TerminalProps) =
       '   Cross-platform fitness tracking and goal setting',
       '',
       'Total Projects: 15+ | Years of Experience: 5+',
-      'GitHub: github.com/danielxu | Portfolio: danielxu.dev',
+      'GitHub: github.com/danielxu | Portfolio: https://daniel-xu.vercel.app/',
       ''
     ],
     resume: () => {
