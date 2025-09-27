@@ -72,6 +72,24 @@ const PortfolioIDE = () => {
     }
   };
 
+  const openRandomFile = () => {
+    const collectFiles = (nodes: FileType[]): string[] => {
+      let out: string[] = [];
+      for (const n of nodes) {
+        if (n.type === 'file') out.push(n.name);
+        if (n.children && n.children.length) out = out.concat(collectFiles(n.children));
+      }
+      return out;
+    };
+
+    const files = collectFiles(fileStructure);
+    if (files.length === 0) return;
+    const pick = files[Math.floor(Math.random() * files.length)];
+    const content = getFileContent(pick);
+    const url = getFileUrl(pick);
+    openFile(pick, content, url);
+  };
+
   const closeTab = (tabId: string) => {
     setTabs(prev => prev.filter(t => t.id !== tabId));
     if (activeFile === tabId && tabs.length > 1) {
@@ -120,7 +138,7 @@ const PortfolioIDE = () => {
           <div className="flex-1">
             <ResizablePanelGroup direction="vertical" className="h-full">
               <ResizablePanel defaultSize={70} minSize={30}>
-                <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} />
+                <Editor content={activeTab?.content || ''} fileName={activeFile} projectUrl={activeTab?.projectUrl} onOpenRandomFile={openRandomFile} />
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel defaultSize={30} minSize={20}>

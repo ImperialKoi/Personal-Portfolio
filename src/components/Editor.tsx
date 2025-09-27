@@ -7,12 +7,13 @@ interface EditorProps {
   content: string
   fileName: string
   projectUrl?: string
+  onOpenRandomFile?: () => void
 }
 
 // Track which files have been seen before
 const seenFiles = new Set<string>()
 
-export const Editor = ({ content, fileName, projectUrl }: EditorProps) => {
+export const Editor = ({ content, fileName, projectUrl, onOpenRandomFile }: EditorProps) => {
   const [displayedContent, setDisplayedContent] = useState("")
   const [isTyping, setIsTyping] = useState(false)
 
@@ -90,6 +91,56 @@ export const Editor = ({ content, fileName, projectUrl }: EditorProps) => {
   }
 
   const language = getLanguageFromExtension(fileName)
+
+  const handleOpenRandom = () => {
+    if (typeof onOpenRandomFile === 'function') {
+      onOpenRandomFile()
+      return
+    }
+
+    try {
+      const ev = new CustomEvent('ide:open-random-file')
+      window.dispatchEvent(ev)
+      return
+    } catch (e) {
+      // fallback to projects page
+      window.location.href = '/projects'
+    }
+  }
+
+  // Show placeholder when there's no content (no open tabs)
+  if (!content) {
+    return (
+      <div className="h-full bg-[#1e1e1e] flex items-center justify-center">
+        <div className="text-center">
+          <div className="mb-6 inline-flex items-center justify-center">
+            {/* simple code glyph */}
+            <img src="/background-diamond.png" alt="diamond-background" className="w-full h-full" />
+          </div>
+
+          <h2 className="text-lg text-[#d6e6eb] mb-4">Daniel-Xu IDE</h2>
+          <p className="text-sm text-[#7f8b90] mb-2">Open a file to start editing</p>
+          <p className="text-sm text-[#7f8b90] mb-6">Type "help" in the terminal to show the list of commands</p>
+
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={handleOpenRandom}
+              className="px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white text-sm rounded"
+            >
+              Open Random File
+            </button>
+
+            <a
+              href="/projects"
+              className="px-3 py-2 border border-[#263238] text-[#cfe9f5] text-sm rounded hover:bg-[#0f171a]"
+            >
+              Browse Projects
+            </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="h-full bg-[#1e1e1e] overflow-auto">
