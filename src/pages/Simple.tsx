@@ -892,30 +892,33 @@ export default function Simple() {
                       <SkillsUnderline />
                     </div>
 
-                    <StickyScroll
-                      content={skills.map((skill) => {
-                        const Icon = skill.icon;
-                        return {
-                          title: skill.name,
-                          description: `Proficiency level: ${skill.level}% - One of my core technical skills that I use regularly in my projects and development work.`,
-                          content: (
-                            <div className="flex flex-col items-center justify-center h-full p-8">
-                              <Icon className="h-24 w-24 text-white mb-4" />
-                              <div className="text-center">
-                                <h3 className="text-3xl font-bold text-white mb-2">{skill.name}</h3>
-                                <div className="w-full bg-white/20 rounded-full h-3 mb-2">
-                                  <div
-                                    className="h-3 bg-white rounded-full transition-all duration-1000"
-                                    style={{ width: `${skill.level}%` }}
-                                  />
+                    <div className="skills-section">
+                      <StickyScroll
+                        content={skills.map((skill) => {
+                          const Icon = skill.icon;
+                          return {
+                            title: skill.name,
+                            description: `Proficiency level: ${skill.level}% - One of my core technical skills that I use regularly in my projects and development work.`,
+                            content: (
+                              <div className="flex flex-col items-center justify-center h-full p-8">
+                                <Icon className="h-24 w-24 text-white mb-4" />
+                                <div className="text-center">
+                                  <h3 className="text-3xl font-bold text-white mb-2">{skill.name}</h3>
+                                  <div className="w-full bg-white/20 rounded-full h-3 mb-2">
+                                    <div
+                                      className="h-3 bg-white rounded-full transition-all duration-1000 skill-progress"
+                                      data-level={skill.level}
+                                      style={{ width: '0%' }}
+                                    />
+                                  </div>
+                                  <span className="text-xl text-white/90">{skill.level}%</span>
                                 </div>
-                                <span className="text-xl text-white/90">{skill.level}%</span>
                               </div>
-                            </div>
-                          ),
-                        };
-                      })}
-                    />
+                            ),
+                          };
+                        })}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
