@@ -627,7 +627,7 @@ export default function Simple() {
                 md:w-8 md:h-8 w-[1.5rem] h-[1.5rem] border-2 border-primary/30 cursor-pointer
                 transition-all duration-300 ease-in-out
                 hover:rotate-45 hover:border-primary hover:bg-primary/20
-                ${isActive ? "bg-primary/20 border-primary rotate-12" : "hover:shadow-lg"}
+                ${isActive ? "border-primary rotate-12" : "hover:shadow-lg"}
                 ${!darkMode ? "hover:bg-foreground/10" : "hover:bg-primary/30"}
                 backdrop-blur-sm bg-background/80
                 flex items-center justify-center
