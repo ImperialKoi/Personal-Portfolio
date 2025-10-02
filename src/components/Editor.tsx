@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { CodeBlock } from "@/components/ui/codeblock"
+import { PixelatedCanvas } from "@/components/ui/pixelated-canvas"
 
 interface EditorProps {
   content: string
@@ -114,8 +115,25 @@ export const Editor = ({ content, fileName, projectUrl, onOpenRandomFile }: Edit
       <div className="h-full bg-[#1e1e1e] flex items-center justify-center">
         <div className="text-center">
           <div className="mb-6 inline-flex items-center justify-center">
-            {/* simple code glyph */}
-            <img src="/background-diamond.png" alt="diamond-background" className="w-full h-full" />
+            <PixelatedCanvas
+              src="/background-diamond.png"
+              width={800}
+              height={600}
+              cellSize={4}
+              dotScale={0.9}
+              shape="square"
+              backgroundColor="#1e1e1e"
+              dropoutStrength={0.1}
+              interactive
+              distortionStrength={0.1}
+              distortionRadius={200}
+              distortionMode="repel"
+              followSpeed={0.2}
+              jitterStrength={4}
+              jitterSpeed={1}
+              sampleAverage
+              className="rounded-xl shadow-lg max-w-full h-auto"
+            />
           </div>
 
           <h2 className="text-lg text-[#d6e6eb] mb-4">Daniel-Xu IDE</h2>
