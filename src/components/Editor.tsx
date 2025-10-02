@@ -117,20 +117,20 @@ export const Editor = ({ content, fileName, projectUrl, onOpenRandomFile }: Edit
           <div className="mb-6 inline-flex items-center justify-center">
             <PixelatedCanvas
               src="/background-diamond.png"
-              width={800}
-              height={600}
+              width={120}
+              height={120}
               cellSize={4}
               dotScale={0.9}
               shape="square"
               backgroundColor="#1e1e1e"
-              dropoutStrength={0.1}
+              dropoutStrength={0.0}
               interactive
               distortionStrength={0.1}
               distortionRadius={200}
               distortionMode="repel"
               followSpeed={0.2}
-              jitterStrength={4}
-              jitterSpeed={1}
+              jitterStrength={0}
+              jitterSpeed={0}
               sampleAverage
               className="rounded-xl shadow-lg max-w-full h-auto"
             />
