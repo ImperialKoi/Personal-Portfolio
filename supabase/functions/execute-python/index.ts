@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: 'Failed to execute Python code: ' + error.message 
+        error: 'Failed to execute Python code: ' + (error instanceof Error ? error.message : String(error)) 
       }),
       { 
         status: 500, 

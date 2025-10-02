@@ -33,6 +33,7 @@ import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/all"
 import { CometCard } from "@/components/ui/comet-card"
+import { StickyScroll } from "@/components/ui/sticky-scroll"
 
 // Skills Underline Component that listens for trigger event
 const SkillsUnderline = () => {
@@ -884,44 +885,37 @@ export default function Simple() {
                 />
 
                 {/* Skills Section - Only visible when expanded */}
-                <div className="skills-content absolute inset-0 p-8 flex flex-col justify-start pt-32 opacity-0 transition-opacity duration-1000 overflow-y-auto">
-                  <div className="max-w-6xl mx-auto w-full">
-                    <div className="text-center mb-12">
+                <div className="skills-content absolute inset-0 p-8 flex flex-col justify-start pt-32 opacity-0 transition-opacity duration-1000 overflow-hidden">
+                  <div className="max-w-6xl mx-auto w-full h-full">
+                    <div className="text-center mb-8">
                       <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">My Skills</h2>
                       <SkillsUnderline />
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8">
-                      {skills.map((skill, index) => {
-                        const Icon = skill.icon
-                        return (
-                          <div
-                            key={skill.name}
-                            className="space-y-3 skill-item bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20"
-                            style={{
-                              opacity: 0,
-                              transform: 'translateY(50px) scale(0.8)',
-                              transition: 'none'
-                            }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Icon className="h-6 w-6 text-white" />
-                                <span className="font-semibold text-white">{skill.name}</span>
+                    <StickyScroll
+                      content={skills.map((skill) => {
+                        const Icon = skill.icon;
+                        return {
+                          title: skill.name,
+                          description: `Proficiency level: ${skill.level}% - One of my core technical skills that I use regularly in my projects and development work.`,
+                          content: (
+                            <div className="flex flex-col items-center justify-center h-full p-8">
+                              <Icon className="h-24 w-24 text-white mb-4" />
+                              <div className="text-center">
+                                <h3 className="text-3xl font-bold text-white mb-2">{skill.name}</h3>
+                                <div className="w-full bg-white/20 rounded-full h-3 mb-2">
+                                  <div
+                                    className="h-3 bg-white rounded-full transition-all duration-1000"
+                                    style={{ width: `${skill.level}%` }}
+                                  />
+                                </div>
+                                <span className="text-xl text-white/90">{skill.level}%</span>
                               </div>
-                              <span className="text-sm text-white/70">{skill.level}%</span>
                             </div>
-                            <div className="w-full bg-white/20 rounded-full h-2">
-                              <div
-                                className="h-2 bg-gradient-to-r from-white to-white/80 rounded-full skill-progress"
-                                data-level={`${skill.level}%`}
-                                style={{ width: '0%' }}
-                              />
-                            </div>
-                          </div>
-                        )
+                          ),
+                        };
                       })}
-                    </div>
+                    />
                   </div>
                 </div>
               </div>
